@@ -33,28 +33,12 @@ allprojects {
 subprojects {
     apply plugin: 'java'
     apply plugin: 'java-library'
-    apply plugin: "maven-publish"
 
-    group 'org.o7-Fire.Glopion.Bootstrapper'
+
+    group 'org.o7.Fire'
     version '4.0.1'
 
-    publishing {
-        repositories {
-            maven {
-                name = "GitHubPackages"
-                url = uri("https://maven.pkg.github.com/o7-Fire/Atomic-Library")
-                credentials {
-                    username = rootProject.getProperties().get("USERNAME")
-                    password = rootProject.getProperties().get("TOKEN")
-                }
-            }
-        }
-        publications {
-            gpr(MavenPublication) {
-                from(components.java)
-            }
-        }
-    }
+
     ext {
         smh = {
             delete "src-gen/"
