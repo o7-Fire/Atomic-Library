@@ -10,7 +10,7 @@
     </parent>
 
 
-    <artifactId>atomic-library-atom/</artifactId>
+    <artifactId>atomic-library-atom</artifactId>
     <version>${parent.version}</version>
 
 

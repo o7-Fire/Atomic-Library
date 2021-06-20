@@ -3,8 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/atomic-library.iml" filepath="$PROJECT_DIR$/atomic-library.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Atomic/atomic-library-atom.iml" filepath="$PROJECT_DIR$/Atomic/atomic-library-atom.iml" />
+      <module fileurl="file://$PROJECT_DIR$/atomic-library-atom/atomic-library-atom.iml" filepath="$PROJECT_DIR$/atomic-library-atom/atomic-library-atom.iml" />
       <module fileurl="file://$PROJECT_DIR$/Desktop/atomic-library-desktop.iml" filepath="$PROJECT_DIR$/Desktop/atomic-library-desktop.iml" />
+      <module fileurl="file://$PROJECT_DIR$/atomic-library-desktop/desktop.iml" filepath="$PROJECT_DIR$/atomic-library-desktop/desktop.iml" />
     </modules>
   </component>
 </project>
