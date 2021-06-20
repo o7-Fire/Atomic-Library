@@ -6,7 +6,7 @@
     <parent>
         <artifactId>atomic-library</artifactId>
         <groupId>org.o7-Fire</groupId>
-        <version>4.0.3</version>
+        <version>4.0.4</version>
     </parent>
 
 
@@ -20,6 +20,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
