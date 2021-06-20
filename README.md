@@ -6,7 +6,7 @@ A frankenstein library that nobody ask for
 <dependency>
     <groupId>org.o7-Fire</groupId>
     <artifactId>atomic-library-atom</artifactId>
-    <version>4.0.3</version>
+    <version>4.0.4</version>
 </dependency>
 ```
 
@@ -15,14 +15,14 @@ A frankenstein library that nobody ask for
 <dependency>
     <groupId>org.o7-Fire</groupId>
     <artifactId>atomic-library-desktop</artifactId>
-    <version>4.0.3</version>
+    <version>4.0.4</version>
 </dependency>
 ```
 
 ```groovy
-implementation "org.o7-Fire:atomic-library-atom:4.0.3"
+implementation "org.o7-Fire:atomic-library-atom:4.0.4"
 ```
 
 ```groovy
-implementation "org.o7-Fire:atomic-library-desktop:4.0.3"
+implementation "org.o7-Fire:atomic-library-desktop:4.0.4"
 ```
