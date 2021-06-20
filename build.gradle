@@ -49,7 +49,7 @@ subprojects {
         if (findProject(module) != null) {
             return project(module)
         } else {
-            return project(":atom" + module)
+            return project(":Atom" + module)
         }
     }
 
