@@ -13,13 +13,6 @@
     <build>
         <sourceDirectory>./src</sourceDirectory>
     </build>
-    <distributionManagement>
-        <repository>
-            <id>github</id>
-            <name>Atomic Library</name>
-            <url>https://maven.pkg.github.com/o7-Fire/Atomic-Library</url>
-        </repository>
-    </distributionManagement>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -31,7 +24,7 @@
     <dependencies>
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
-            <artifactId>atom</artifactId>
+            <artifactId>atomic-library-desktop</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
