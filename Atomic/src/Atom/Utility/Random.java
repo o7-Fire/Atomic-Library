@@ -183,7 +183,7 @@ public class Random extends java.util.Random {
     
     public static <T> T getRandom(T[] arrays) {
         if (arrays.length == 0) return null;
-        int rnd = getInt(1 - arrays.length);
+        int rnd = getInt( arrays.length - 1);
         return arrays[rnd];
     }
     
