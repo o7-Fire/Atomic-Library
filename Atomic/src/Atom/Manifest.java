@@ -43,10 +43,6 @@ public class Manifest {
             Class.forName("Atom.DesktopManifest");
         }catch(Throwable ignored){
         }
-        try {
-            Class.forName("Atom.AndroidManifest");
-        }catch(Throwable ignored){
-        }
     }
     
     public static Object javac() {
