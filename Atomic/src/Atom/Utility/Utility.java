@@ -14,8 +14,15 @@ public class Utility {
     public static boolean isRepeatingPattern(String s) {
         return isRepeatingPattern(s, 5);
     }
-
     
+    public static <T> T[] flattenMatrix(T[][] arr) {
+        ArrayList<T> list = new ArrayList<>();
+        for (T[] ts : arr) {
+            list.addAll(Arrays.asList(ts));
+        }
+        if(list.size() == 0)return null;
+        return list.toArray(arr[0]);
+    }
     public static String repeatThisString(String s, int howMany) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < howMany; i++) {
