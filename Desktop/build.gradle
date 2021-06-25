@@ -15,6 +15,9 @@ dependencies {
     compileOnly( group: 'org.jetbrains', name: 'annotations', version: '20.1.0'){
         because("compile")
     }
+    compileOnly(group: 'org.jfree', name: 'jfreechart', version: '1.5.3'){
+        because("compile")
+    }
 }
 jar{
     dependsOn ":Atomic:jar"
