@@ -27,7 +27,7 @@ public class WordGenerator {
      * @return A string containing the generated word
      * @throws IllegalArgumentException if the word length provided is less than 3
      */
-    public static String newWord(int wordLength) {
+    public static StringBuilder newWord(int wordLength) {
         if (wordLength < 3) {
             throw new IllegalArgumentException("Word lengths must be at least 3 characters long.");
         }
@@ -35,11 +35,11 @@ public class WordGenerator {
         return generateRandomWord(wordLength);
     }
     
-    public static String randomWord() {
+    public static StringBuilder randomWord() {
         return randomWord(Atom.Utility.Random.getInt(32));
     }
     
-    public static String randomWord(int max) {
+    public static StringBuilder randomWord(int max) {
         max += 3;
         return newWord(Atom.Utility.Random.getInt(3, max));
     }
@@ -52,12 +52,13 @@ public class WordGenerator {
         }
     }
     
-    private static String generateRandomWord(int wordLength) {
-        String randomWord;
-        randomWord = getNewWordStart();
+    
+    private static StringBuilder generateRandomWord(int wordLength) {
+        StringBuilder randomWord = new StringBuilder(wordLength);
+        randomWord.append(getNewWordStart());
         
         while (randomWord.length() != wordLength) {
-            randomWord = addCharacter(wordLength, randomWord);
+            addCharacter(wordLength, randomWord);
         }
         
         return randomWord;
@@ -71,29 +72,30 @@ public class WordGenerator {
         return generator.nextInt(upperLimit);
     }
     
-    private static String addCharacter(int wordLength, String currentWord) {
+    private static void addCharacter(int wordLength, StringBuilder currentWord) {
         int mainIndex = getLookupIndex(currentWord);
         int type = getCharacterType(currentWord, wordLength);
         
         while (cannotProgress(mainIndex, type)) {
-            currentWord = backtrack(currentWord);
+             backtrack(currentWord);
             if (currentWord.length() < 2) {
-                currentWord = getNewWordStart();
+                currentWord.setLength(0);
+                currentWord.append(getNewWordStart());
             }
             mainIndex = getLookupIndex(currentWord);
             type = getCharacterType(currentWord, wordLength);
         }
         
-        return currentWord + getNextCharacter(mainIndex, type);
+        currentWord.append(getNextCharacter(mainIndex, type));
     }
     
-    private static int getLookupIndex(String currentWord) {
+    private static int getLookupIndex(StringBuilder currentWord) {
         String lookupCharacters = currentWord.substring(currentWord.length() - 2);
         
         return Arrays.asList(LOOKUP_BIGRAM).indexOf(lookupCharacters);
     }
     
-    private static int getCharacterType(String currentWord, int wordLength) {
+    private static int getCharacterType(StringBuilder currentWord, int wordLength) {
         // Type refers to middle characters(0) or final characters(1)
         if (currentWord.length() == (wordLength - 1)) {
             return 1;
@@ -106,11 +108,15 @@ public class WordGenerator {
         return mainIndex < 0 || NEXT_CHAR_LOOKUP[mainIndex][type].length == 0;
     }
     
-    private static String backtrack(String currentWord) {
+    private static void backtrack(StringBuilder currentWord) {
         if (currentWord.length() < 3) {
-            return "";
+            // ""
+            currentWord.setLength(0);
         }else {
-            return currentWord.substring(0, currentWord.length() - 3);
+            
+            //substring 0, length - 3
+            currentWord.delete(currentWord.length() - 3, currentWord.length());
+            
         }
     }
     
