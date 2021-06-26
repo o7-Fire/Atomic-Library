@@ -20,11 +20,12 @@ public class Utility {
         for (T[] ts : arr) {
             list.addAll(Arrays.asList(ts));
         }
-        if(list.size() == 0)return null;
+        if (list.size() == 0) return null;
         return list.toArray(arr[0]);
     }
+    
     public static String repeatThisString(String s, int howMany) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(howMany);
         for (int i = 0; i < howMany; i++) {
             sb.append(s);
         }
@@ -87,7 +88,7 @@ public class Utility {
     public static String getExtension(File f) {
         String extension = "";
         int i = f.getName().lastIndexOf('.');
-        if (i > 0) {
+        if (i > 0){
             extension = f.getName().substring(i + 1);
         }
         return extension;
@@ -152,11 +153,11 @@ public class Utility {
         StringBuilder sb = new StringBuilder();
         boolean delete = false;
         for (char i : s.toCharArray()) {
-            if (i == openChar) {
+            if (i == openChar){
                 delete = true;
-            }else if (i == closeChar) {
+            }else if (i == closeChar){
                 delete = false;
-            }else {
+            }else{
                 if (delete) continue;
                 sb.append(i);
             }
@@ -227,9 +228,9 @@ public class Utility {
         boolean i = true;
         String k = "";
         for (String d : arg) {
-            if (d.startsWith(prefix)) {
+            if (d.startsWith(prefix)){
                 k = d.replaceFirst(prefix, "");
-            }else {
+            }else{
                 args.put(k, d);
             }
             i = !i;
@@ -242,11 +243,11 @@ public class Utility {
         String version;
         version = System.getProperty("java.version");
         if (version == null || version.isEmpty()) version = System.getProperty("java.runtime.version");
-        if (version.startsWith("1.")) {
+        if (version.startsWith("1.")){
             version = version.substring(2, 3);
-        }else {
+        }else{
             int dot = version.indexOf(".");
-            if (dot != -1) {
+            if (dot != -1){
                 version = version.substring(0, dot);
             }
         }
