@@ -46,7 +46,7 @@ public class DiscordWebhook {
                 doAnother = content.content.substring(1900);
                 content.content = content.content.substring(0, 1900);
             }
-            conn.getOutputStream().write(gson.toJson(content).getBytes(StandardCharsets.UTF_8));
+            conn.getOutputStream().write(gson.toJson(content).getBytes());
             conn.getOutputStream().flush();
             conn.getOutputStream().close();
             conn.getInputStream().close();
