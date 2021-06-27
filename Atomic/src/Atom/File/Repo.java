@@ -74,7 +74,7 @@ public class Repo {
     }
     
     public ArrayList<String> readArrayString(String path) throws IOException {
-        return readArrayString(path, System.lineSeparator());
+        return readArrayString(path, System.getProperty("line.separator"));
     }
     
     public String readString(String path) throws IOException {

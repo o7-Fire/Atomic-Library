@@ -73,7 +73,7 @@ public  class DiscordWebhookStandalone {
         json.put("content", dat);
         json.put("username", username);
         json.put("avatar_url", avatar_url);
-        conn.getOutputStream().write(json.toString().getBytes(StandardCharsets.UTF_8));
+        conn.getOutputStream().write(json.toString().getBytes());
         conn.getOutputStream().flush();
         conn.getOutputStream().close();
         conn.getInputStream().close();

@@ -40,7 +40,7 @@ public class Stream {
         final int bufferSize = 1024;
         final char[] buffer = new char[bufferSize];
         StringBuilder out = new StringBuilder();
-        InputStreamReader in = new InputStreamReader(stream, StandardCharsets.UTF_8);
+        InputStreamReader in = new InputStreamReader(stream);
         
         int charsRead;
         while ((charsRead = in.read()) > 0) {
@@ -57,7 +57,7 @@ public class Stream {
         final int bufferSize = 1024;
         final char[] buffer = new char[bufferSize];
         final StringBuilder out = new StringBuilder();
-        Reader in = new InputStreamReader(stream, StandardCharsets.UTF_8);
+        Reader in = new InputStreamReader(stream);
         int charsRead;
         while ((charsRead = in.read(buffer, 0, buffer.length)) > 0) {
             out.append(buffer, 0, charsRead);

@@ -18,7 +18,7 @@ public class Encoder {
     }
     
     public static String getString(byte[] bytes) {
-        return new String(bytes, StandardCharsets.UTF_8);
+        return new String(bytes);
     }
     
     public static String urlEncodeUTF8(String s) {
