@@ -6,7 +6,18 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Meth {
-    
+    public static double normalizePrecision(long x, long min, long max){
+        double average      = (double) (min + max) / 2;
+        double range        = (double) (max - min) / 2;
+        double normalized_x = (double) (x - average) / range;
+        return normalized_x;
+    }
+    public static float normalize(long x, long min, long max){
+        float average      = (float) (min + max) / 2;
+        float range        = (float) (max - min) / 2;
+        float normalized_x = (float) (x - average) / range;
+        return normalized_x;
+    }
     public static long max(Long[] arr) {
         List<Long> b = Arrays.asList(arr);
         return Collections.max(b);
