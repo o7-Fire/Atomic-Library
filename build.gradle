@@ -12,14 +12,18 @@ buildscript {
         }
         dependencies {
 
-        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.3"
-    }
+            classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.3"
+        }
     }
 }
 
-
+apply plugin: "org.sonarqube"
+sonarqube {
+    properties {
+        property "sonar.projectKey", "o7-Fire_Atomic-Library"
+    }
+}
 allprojects {
-
 
 
     repositories {
@@ -37,12 +41,12 @@ allprojects {
 subprojects {
     apply plugin: 'java'
     apply plugin: 'java-library'
-apply plugin: "org.sonarqube"
-sonarqube {
-  properties {
-    property "sonar.projectKey", "o7-Fire_Atomic-Library"
-  }
-}
+    apply plugin: "org.sonarqube"
+    sonarqube {
+        properties {
+            property "sonar.projectKey", "o7-Fire_Atomic-Library"
+        }
+    }
 
     group 'org.o7.Fire'
     version '4.0.3'
