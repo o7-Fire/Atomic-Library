@@ -45,6 +45,7 @@ subprojects {
     sonarqube {
         properties {
             property "sonar.projectKey", "o7-Fire_Atomic-Library"
+            property "sonar.organization", "o7-ire"
         }
     }
 
