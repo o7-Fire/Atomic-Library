@@ -15,3 +15,4 @@ dependencies {
     implementation "com.github.o7-Fire:Atomic-Library:Desktop:-SNAPSHOT"
 }
 ```
+a
