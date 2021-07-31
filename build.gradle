@@ -146,6 +146,15 @@ subprojects {
         archives sourcesJar
         archives jar
     }
+    sourceSets {
+
+        test {
+            java {
+                srcDirs = ['test']
+            }
+        }
+
+    }
     tasks.withType(JavaCompile) {
         new File(projectDir, "resources/").mkdirs()
         new File(projectDir, "src/").mkdirs()
