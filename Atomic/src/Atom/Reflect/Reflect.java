@@ -1,8 +1,8 @@
 package Atom.Reflect;
 
+import Atom.Encoding.EncoderJson;
 import Atom.Manifest;
 import Atom.Struct.Filter;
-import Atom.Utility.EncoderJson;
 import Atom.Utility.Random;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -23,8 +23,42 @@ public class Reflect {
     
     public static DebugType DEBUG_TYPE;
     public static boolean debug;
+    
     static {
         DEBUG_TYPE = getDebugType();
+    }
+    
+    public static String getPlatform() {
+        String jvmName = System.getProperty("java.vm.name", "").toLowerCase();
+        String osName = System.getProperty("os.name", "").toLowerCase();
+        String osArch = System.getProperty("os.arch", "").toLowerCase();
+        String abiType = System.getProperty("sun.arch.abi", "").toLowerCase();
+        String libPath = System.getProperty("sun.boot.library.path", "").toLowerCase();
+        if (jvmName.startsWith("dalvik") && osName.startsWith("linux")){
+            osName = "android";
+        }else if (jvmName.startsWith("robovm") && osName.startsWith("darwin")){
+            osName = "ios";
+            osArch = "arm";
+        }else if (osName.startsWith("mac os x") || osName.startsWith("darwin")){
+            osName = "macosx";
+        }else{
+            int spaceIndex = osName.indexOf(' ');
+            if (spaceIndex > 0){
+                osName = osName.substring(0, spaceIndex);
+            }
+        }
+        if (osArch.equals("i386") || osArch.equals("i486") || osArch.equals("i586") || osArch.equals("i686")){
+            osArch = "x86";
+        }else if (osArch.equals("amd64") || osArch.equals("x86-64") || osArch.equals("x64")){
+            osArch = "x86_64";
+        }else if (osArch.startsWith("aarch64") || osArch.startsWith("armv8") || osArch.startsWith("arm64")){
+            osArch = "arm64";
+        }else if ((osArch.startsWith("arm")) && ((abiType.equals("gnueabihf")) || (libPath.contains("openjdk-armhf")))){
+            osArch = "armhf";
+        }else if (osArch.startsWith("arm")){
+            osArch = "arm";
+        }
+        return osName + "-" + osArch;
     }
     
     public static DebugType getDebugType() {

@@ -16,9 +16,9 @@
 
 package Atom.File;
 
+import Atom.Encoding.Encoder;
 import Atom.Net.Request;
 import Atom.Struct.InstantFuture;
-import Atom.Utility.Encoder;
 import Atom.Utility.Pool;
 
 import java.io.File;

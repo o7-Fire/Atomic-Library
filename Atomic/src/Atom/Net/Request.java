@@ -16,8 +16,8 @@
 
 package Atom.Net;
 
+import Atom.Encoding.Encoder;
 import Atom.File.FileUtility;
-import Atom.Utility.Encoder;
 import Atom.Utility.Pool;
 
 import java.io.*;

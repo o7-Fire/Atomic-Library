@@ -1,3 +1,6 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 buildscript {
     repositories {
         mavenLocal()
@@ -34,7 +37,14 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
         maven { url 'https://jitpack.io' }
     }
+    try {
+        buildScan {
+            termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+            termsOfServiceAgree = 'yes'
+        }
+    } catch (e){
 
+    }
 }
 
 
@@ -42,16 +52,67 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'java-library'
     apply plugin: "org.sonarqube"
+    apply plugin: 'jacoco'
+    group 'org.o7.Fire'
+    version '5.0'
     sonarqube {
         properties {
             property "sonar.projectKey", "o7-Fire_Atomic-Library"
         }
     }
 
-    group 'org.o7.Fire'
-    version '4.0.3'
-
-
+    jacocoTestReport {
+        reports {
+            xml.enabled true
+        }
+    }
+    test {
+        useJUnitPlatform()
+        finalizedBy(jacocoTestReport)
+        testLogging {
+            // set options for log level LIFECYCLE
+            events TestLogEvent.FAILED,
+                    TestLogEvent.PASSED,
+                    TestLogEvent.SKIPPED,
+                    TestLogEvent.STANDARD_OUT
+            exceptionFormat TestExceptionFormat.FULL
+            showExceptions true
+            showCauses true
+            showStackTraces true
+            ignoreFailures false
+            setWorkingDir(rootProject.projectDir)
+            // set options for log level DEBUG and INFO
+            debug {
+                events TestLogEvent.STARTED,
+                        TestLogEvent.FAILED,
+                        TestLogEvent.PASSED,
+                        TestLogEvent.SKIPPED,
+                        TestLogEvent.STANDARD_ERROR,
+                        TestLogEvent.STANDARD_OUT
+                exceptionFormat TestExceptionFormat.FULL
+            }
+            info.events = debug.events
+            info.exceptionFormat = debug.exceptionFormat
+            maxParallelForks = Runtime.getRuntime().availableProcessors()
+            //forkEvery = 1
+            beforeTest { descriptor ->
+                logger.lifecycle("Running test: " + descriptor)
+            }
+            afterSuite { desc, result ->
+                if (!desc.parent) { // will match the outermost suite
+                    def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} passed, ${result.failedTestCount} failed, ${result.skippedTestCount} skipped)"
+                    def startItem = '|  ', endItem = '  |'
+                    def repeatLength = startItem.length() + output.length() + endItem.length()
+                    println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
+                }
+            }
+        }
+    }
+    dependencies {
+        compileOnly( group: 'org.jetbrains', name: 'annotations', version: '20.1.0')
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    }
     ext {
         smh = {
             delete "src-gen/"
@@ -74,10 +135,7 @@ subprojects {
     task pre {
         smh()
     }
-    dependencies {
 
-
-    }
     task sourcesJar(type: Jar, dependsOn: classes) {
         classifier = 'sources'
         from sourceSets.main.allSource

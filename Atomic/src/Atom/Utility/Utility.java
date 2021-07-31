@@ -9,10 +9,24 @@ import java.util.function.Consumer;
 
 public class Utility {
     
-    public static String jitpack = "https://jitpack.io/";
     
     public static boolean isRepeatingPattern(String s) {
         return isRepeatingPattern(s, 5);
+    }
+    
+    public static int[] flattenMatrix(int[][] arr) {
+        int count = 0;
+        for (int[] i : arr) {
+            count += i.length;
+        }
+        int[] vec = new int[count];
+        int i = 0;
+        for (int[] ts : arr) {
+            for (int e : ts) {
+                vec[i++] = e;
+            }
+        }
+        return vec;
     }
     
     public static <T> T[] flattenMatrix(T[][] arr) {

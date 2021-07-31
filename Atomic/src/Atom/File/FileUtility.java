@@ -1,8 +1,8 @@
 package Atom.File;
 
+import Atom.Encoding.Encoder;
 import Atom.Manifest;
 import Atom.Struct.Filter;
-import Atom.Utility.Encoder;
 
 import java.io.*;
 import java.net.MalformedURLException;

@@ -1,8 +1,6 @@
-package Atom.Utility;
+package Atom.Encoding;
 
 import java.io.*;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class Encoder {
@@ -21,24 +19,6 @@ public class Encoder {
         return new String(bytes);
     }
     
-    public static String urlEncodeUTF8(String s) {
-        try {
-            return URLEncoder.encode(s, "UTF-8");
-        }catch (UnsupportedEncodingException e) {
-            throw new UnsupportedOperationException(e);
-        }
-    }
-    
-    public static String urlEncodeUTF8(Map<String, ?> map) {
-        StringBuilder sb = new StringBuilder();
-        for (Map.Entry<String, ?> entry : map.entrySet()) {
-            if (sb.length() > 0) {
-                sb.append("&");
-            }
-            sb.append(String.format("%s=%s", urlEncodeUTF8(entry.getKey()), urlEncodeUTF8(entry.getValue().toString())));
-        }
-        return sb.toString();
-    }
     
     public static ByteArrayOutputStream toByteArrayOutputStream(InputStream is) throws IOException {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -64,7 +44,7 @@ public class Encoder {
     
     //copied from java
     public static byte[] readAllBytes(InputStream is, int len) throws IOException {
-        if (len < 0) {
+        if (len < 0){
             throw new IllegalArgumentException("len < 0");
         }
         
@@ -83,15 +63,15 @@ public class Encoder {
                 remaining -= n;
             }
             
-            if (nread > 0) {
-                if (MAX_BUFFER_SIZE - total < nread) {
+            if (nread > 0){
+                if (MAX_BUFFER_SIZE - total < nread){
                     throw new OutOfMemoryError("Required array size too large");
                 }
                 total += nread;
-                if (result == null) {
+                if (result == null){
                     result = buf;
-                }else {
-                    if (bufs == null) {
+                }else{
+                    if (bufs == null){
                         bufs = new ArrayList<>();
                         bufs.add(result);
                     }
@@ -102,8 +82,8 @@ public class Encoder {
             // requested have been read then break
         }while (n >= 0 && remaining > 0);
         
-        if (bufs == null) {
-            if (result == null) {
+        if (bufs == null){
+            if (result == null){
                 return new byte[0];
             }
             return result.length == total ? result : Arrays.copyOf(result, total);
@@ -130,7 +110,7 @@ public class Encoder {
         Properties p = new Properties();
         try {
             p.load(new StringReader(s));
-        }catch (IOException e) {
+        }catch(IOException e){
             throw new RuntimeException(e);
         }
         return p;
@@ -140,7 +120,7 @@ public class Encoder {
         StringWriter writer = new StringWriter();
         try {
             p.store(writer, comments + "");
-        }catch (IOException e) {
+        }catch(IOException e){
             throw new RuntimeException(e);
         }
         return writer.getBuffer().toString();

@@ -1,11 +1,12 @@
 package Atom;
 
 
+import Atom.Encoding.Encoder;
 import Atom.File.RepoInternal;
 import Atom.Utility.Digest;
-import Atom.Utility.Encoder;
 
 import java.io.File;
+import java.nio.charset.Charset;
 
 import static Atom.Reflect.Reflect.getCurrentJar;
 
@@ -15,7 +16,7 @@ public class Manifest {
     public static RepoInternal internalRepo = new RepoInternal();
     public static File currentJar = null, currentFolder = null;
     private static String sha256Hash;
-    
+    public static Charset charset = Charset.forName("UTF-8");
     static {
         try {
             currentJar = getCurrentJar();

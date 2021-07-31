@@ -16,6 +16,7 @@
 
 package Atom.Utility;
 
+import Atom.Encoding.Encoder;
 import Atom.File.FileUtility;
 import Atom.Net.Request;
 

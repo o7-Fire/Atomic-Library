@@ -1,4 +1,4 @@
-package Atom.Utility;
+package Atom.Encoding;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -13,7 +13,7 @@ public class EncoderJson {
     public static WeakHashMap<String, JsonElement> cache = new WeakHashMap<>();
     
     public static JsonElement parseJson(String s) {
-        if (!cache.containsKey(s)) {
+        if (!cache.containsKey(s)){
             cache.put(s, JsonParser.parseString(s));
         }
         return cache.get(s);

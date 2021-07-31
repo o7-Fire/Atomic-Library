@@ -2,31 +2,29 @@ package Atom.Struct;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
-public abstract class InstantFuture<V> implements Future<V> {
+@FunctionalInterface
+public interface InstantFuture<V> extends Future<V> {
     @Override
-    public boolean cancel(boolean mayInterruptIfRunning) {
+    public default boolean cancel(boolean mayInterruptIfRunning) {
         return false;
     }
     
     @Override
-    public boolean isCancelled() {
+    public default boolean isCancelled() {
         return false;
     }
     
     @Override
-    public boolean isDone() {
+    public default boolean isDone() {
         return true;
     }
     
- 
+    V get();
     
     @Override
-    public V get(long timeout, @NotNull TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+    public default V get(long timeout, @NotNull TimeUnit unit) {
         return get();
     }
 }
