@@ -16,7 +16,7 @@
 
 package Atom.Time;
 
-import Atom.Utility.Meth;
+import Atom.Math.Meth;
 import Atom.Utility.Utility;
 
 import java.util.concurrent.TimeUnit;
