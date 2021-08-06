@@ -22,6 +22,7 @@ import Atom.Struct.InstantFuture;
 import Atom.Utility.Pool;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -129,6 +130,7 @@ public class Repo {
     
     public InputStream getResourceAsStream(String s) throws IOException {
         URL u = getResource(s);
+        if (u == null) throw new FileNotFoundException(s);
         return u.openStream();
     }
     
