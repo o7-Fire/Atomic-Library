@@ -84,6 +84,5 @@ public class UtilityTest {
         //end
         assert test.delete();
         assert test.exists() == false;
-        
     }
 }
