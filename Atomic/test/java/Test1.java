@@ -1,3 +1,4 @@
+import Atom.API.IPTracker;
 import Atom.Math.Array;
 import Atom.Math.Matrix;
 import Atom.Translation.GoogleTranslate;
@@ -14,6 +15,11 @@ public class Test1 {
     public void translation() throws IOException, ExecutionException, InterruptedException {
         GoogleTranslate.main(new String[]{});
         SaddamHusseinTranslator.main(new String[]{});
+    }
+    
+    @Test
+    public void ipTracker() throws ExecutionException, InterruptedException {
+        IPTracker.main(new String[]{});
     }
     
     @Test
