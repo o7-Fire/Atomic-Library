@@ -13,6 +13,17 @@ public abstract class PoolObject<T> {
     protected final int max;
     protected final ArrayList<T> freeObjects;
     protected int peak;
+    public static final PoolObject<StringBuilder> StringBuilder = new PoolObject<java.lang.StringBuilder>() {
+        @Override
+        protected java.lang.StringBuilder newObject() {
+            return new StringBuilder();
+        }
+        
+        @Override
+        protected void reset(java.lang.StringBuilder object) {
+            object.setLength(0);
+        }
+    };
     
     public PoolObject() {
         this(16, 2147483647);

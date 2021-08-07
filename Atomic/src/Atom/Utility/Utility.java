@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 
 public class Utility {
     
-    
+    @Deprecated
     public static boolean isRepeatingPattern(String s) {
         return isRepeatingPattern(s, 5);
     }
@@ -87,6 +87,7 @@ public class Utility {
         return t;
     }
     
+    @Deprecated
     public static boolean isRepeatingPattern(String s, int maxRepeatingChar) {
         int parsed = s.replaceAll("(.+?)\\1+", "$1").length();
         parsed = parsed + maxRepeatingChar;
@@ -99,6 +100,7 @@ public class Utility {
         return String.format("%s/%s/%s/%s/%s-%s.jar", url, groupId.replace('.', '/'), artifactId, version, artifactId, version);
     }
     
+    @Deprecated
     public static String getExtension(File f) {
         String extension = "";
         int i = f.getName().lastIndexOf('.');
@@ -192,14 +194,18 @@ public class Utility {
         return (s.matches("[0-9]+"));
     }
     
+    //what the fuck, bloat method
+    @Deprecated
     public static String removeFirstChar(String s, int howMany) {
         return s.substring(howMany);
     }
     
+    @Deprecated
     public static String removeFirstChar(String s) {
         return s.substring(1);
     }
     
+    @Deprecated
     public static String[] sliceString(String s, String fix) {
         return s.split(fix, -1);
     }

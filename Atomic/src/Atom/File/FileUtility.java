@@ -3,6 +3,7 @@ package Atom.File;
 import Atom.Encoding.Encoder;
 import Atom.Manifest;
 import Atom.Struct.Filter;
+import Atom.Struct.PoolObject;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -36,10 +37,21 @@ public class FileUtility {
         return files;
     }
     
+    public static String getNameWithoutExtension(String name) {
+        String[] h = name.split("\\.");
+        StringBuilder sb = PoolObject.StringBuilder.obtain();
+        for (int i = 0; i < h.length - 1; i++) {
+            sb.append(h[i]).append(".");
+        }
+        String f = sb.toString();
+        PoolObject.StringBuilder.free(sb);
+        return f.substring(0, f.length() - 1);
+    }
+    
     public static String getExtension(File f) {
         String extension = "";
         int i = f.getName().lastIndexOf('.');
-        if (i > 0) {
+        if (i > 0){
             extension = f.getName().substring(i + 1);
         }
         return extension;
@@ -158,15 +170,15 @@ public class FileUtility {
     }
     
     public static File temp() {
-        File temp = new File(getTempDir(), System.currentTimeMillis() + ".temp");
+        File temp = new File(getTempDir(), System.currentTimeMillis() * System.nanoTime() + ".temp");//when shit too fast, that you got same file
         temp.deleteOnExit();
         return temp;
     }
     
     public static byte[] readAllBytes(File src) throws IOException {
-        InputStream is = new FileInputStream(src);
-        return Encoder.readAllBytes(is);
-        
+        try(InputStream is = new FileInputStream(src)) {
+            return Encoder.readAllBytes(is);
+        }
     }
     
     public static boolean replace(File src, File dst) {
@@ -178,9 +190,13 @@ public class FileUtility {
     }
     
     public static boolean copy(File src, File dst, boolean replace) {
-        if (dst.exists() && replace) return false;
-        try (InputStream in = new FileInputStream(src)) {
-            try (OutputStream out = new FileOutputStream(dst)) {
+        if (!replace){
+            if (dst.exists()) return false;
+        }else{
+            if (!dst.delete()) return false;
+        }
+        try(InputStream in = new FileInputStream(src)) {
+            try(OutputStream out = new FileOutputStream(dst)) {
                 // Transfer bytes from in to out
                 byte[] buf = new byte[1024];
                 int len;
@@ -188,10 +204,11 @@ public class FileUtility {
                     out.write(buf, 0, len);
                 }
                 out.flush();
-                out.close();
+            }catch(IOException e){
+                return false;
             }
             return true;
-        }catch (Throwable t) {
+        }catch(IOException t){
             return false;
         }
     }
