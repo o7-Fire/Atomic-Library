@@ -2,6 +2,7 @@ package Atom.Translation;
 
 import Atom.String.WordGenerator;
 import Atom.Struct.InstantFuture;
+import Atom.Struct.PoolObject;
 import Atom.Utility.Utility;
 
 import java.util.Locale;
@@ -18,6 +19,11 @@ public class SaddamHusseinTranslator implements Translator {
     
     @Override
     public Future<String> translate(Locale from, Locale to, String text) {
-        return (InstantFuture<String>) () -> Utility.capitalizeEnforce(WordGenerator.newWord(text.length() < 4 ? 5 : text.length()).toString());
+        return (InstantFuture<String>) () -> {
+            StringBuilder sb = WordGenerator.randomWord(text.length());
+            String s = Utility.capitalizeEnforce(sb.toString());
+            PoolObject.StringBuilder.free(sb);
+            return s;
+        };
     }
 }

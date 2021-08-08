@@ -58,9 +58,7 @@ public class WordGenerator {
     
     private static StringBuilder generateRandomWord(int wordLength) {
         StringBuilder randomWord = PoolObject.StringBuilder.obtain();
-        randomWord.setLength(wordLength);
         randomWord.append(getNewWordStart());
-    
         while (randomWord.length() != wordLength) {
             addCharacter(wordLength, randomWord);
         }
