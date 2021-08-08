@@ -28,7 +28,7 @@ public class TestingUtility {
                     throw e;
                 }catch(IllegalArgumentException e){
                     if (ignoreIncompatibleParam){
-                        e.printStackTrace();
+                        if (!e.getMessage().equals("Not a primitive: class java.lang.Class")) e.printStackTrace();
                         continue;
                     }
                     throw e;

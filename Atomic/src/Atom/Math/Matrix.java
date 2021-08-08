@@ -3,7 +3,7 @@ package Atom.Math;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Matrix extends Array {
+public class Matrix {
     
     
     public static long[] flattenMatrix(long[][] arr) {
@@ -118,5 +118,46 @@ public class Matrix extends Array {
         }
         if (list.size() == 0) return null;
         return list.toArray(arr[0]);
+    }
+    
+    //TODO automate this reptitive shit or just copy paste idk
+    public static Object[] makeTensor(Class<?> type, int x, int y, int z) {
+        if (type == char.class || type == Character.class) if (type.isPrimitive()) return new char[x][y][z];
+        else return new Character[x][y][z];
+        if (type == boolean.class || type == Boolean.class) if (type.isPrimitive()) return new boolean[x][y][z];
+        else return new Boolean[x][y][z];
+        if (type == int.class || type == Integer.class) if (type.isPrimitive()) return new int[x][y][z];
+        else return new Integer[x][y][z];
+        if (type == long.class || type == Long.class) if (type.isPrimitive()) return new long[x][y][z];
+        else return new Long[x][y][z];
+        if (type == double.class || type == Double.class) if (type.isPrimitive()) return new double[x][y][z];
+        else return new Double[x][y][z];
+        if (type == float.class || type == Float.class) if (type.isPrimitive()) return new float[x][y][z];
+        else return new Float[x][y][z];
+        if (type == short.class || type == Short.class) if (type.isPrimitive()) return new short[x][y][z];
+        else return new Short[x][y][z];
+        if (type == byte.class || type == Byte.class) if (type.isPrimitive()) return new byte[x][y][z];
+        else return new Byte[x][y][z];
+        throw new IllegalArgumentException("Not a primitive: " + type.getClass());
+    }
+    
+    public static Object[] makeMatrix(Class<?> type, int x, int y) {
+        if (type == char.class || type == Character.class) if (type.isPrimitive()) return new char[x][y];
+        else return new Character[x][y];
+        if (type == boolean.class || type == Boolean.class) if (type.isPrimitive()) return new boolean[x][y];
+        else return new Boolean[x][y];
+        if (type == int.class || type == Integer.class) if (type.isPrimitive()) return new int[x][y];
+        else return new Integer[x][y];
+        if (type == long.class || type == Long.class) if (type.isPrimitive()) return new long[x][y];
+        else return new Long[x][y];
+        if (type == double.class || type == Double.class) if (type.isPrimitive()) return new double[x][y];
+        else return new Double[x][y];
+        if (type == float.class || type == Float.class) if (type.isPrimitive()) return new float[x][y];
+        else return new Float[x][y];
+        if (type == short.class || type == Short.class) if (type.isPrimitive()) return new short[x][y];
+        else return new Short[x][y];
+        if (type == byte.class || type == Byte.class) if (type.isPrimitive()) return new byte[x][y];
+        else return new Byte[x][y];
+        throw new IllegalArgumentException("Not a primitive: " + type.getClass());
     }
 }

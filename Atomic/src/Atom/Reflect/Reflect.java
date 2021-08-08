@@ -2,6 +2,7 @@ package Atom.Reflect;
 
 import Atom.Manifest;
 import Atom.Math.Array;
+import Atom.Math.Matrix;
 import Atom.String.WordGenerator;
 import Atom.Struct.Filter;
 import Atom.Utility.Random;
@@ -78,11 +79,33 @@ public class Reflect {
         System.out.println(ints.getClass().getComponentType());
         System.out.println(Array.boxArray(ints).getClass().getComponentType());
         System.out.println(ints.getClass().getComponentType());
+        int[][] matrixs = (int[][]) getRandomPrimitive(matrix.getClass());
+        System.out.println(matrixs.getClass());
     }
     
     public static <T> Object getRandomPrimitiveArray(Class<T> type) {
         if (type.isArray()){
-            throw new IllegalArgumentException("making multidimensional array is hard");
+            Class<?> finalType = type.getComponentType();
+            int rank = 1;
+            while (finalType.getComponentType() != null) {
+                rank++;
+                finalType = finalType.getComponentType();
+            }
+            if (rank == 1){
+                return getRandomPrimitiveArray(finalType);
+            }
+            Object[] array = null;
+            if (rank == 2){
+                array = Matrix.makeMatrix(finalType, Random.getInt(100), Random.getInt(100));
+            }
+            if (rank == 3){
+                array = Matrix.makeTensor(finalType, Random.getInt(100), Random.getInt(100), Random.getInt(100));
+            }
+            if (array != null){
+                Array.random(array);
+                return array;
+            }
+            throw new IllegalArgumentException("Making multidimensional array is hard, rank: " + rank + ", type: " + type);
         }
         if (type.equals(String.class)) return (T) WordGenerator.randomWordArray();
         if (type == char.class || type == Character.class) if (type.isPrimitive()) return Array.randomChar();
@@ -107,7 +130,7 @@ public class Reflect {
     
     public static Object getRandomPrimitive(Class<?> type) {
         if (type.isArray()){
-            return getRandomPrimitiveArray(type.getComponentType());
+            return getRandomPrimitiveArray(type);
         }
         if (type.equals(String.class)) return WordGenerator.randomWord().toString();
         if (type == char.class || type == Character.class) return Random.getChar();
