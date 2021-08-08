@@ -21,6 +21,8 @@ public @interface ParamClamp {
     
     int maxString() default 20;
     
+    boolean skip() default false;
+    
     
 }
 

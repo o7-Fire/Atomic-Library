@@ -1,5 +1,7 @@
 package Atom.Utility;
 
+import Atom.Annotation.ParamClamp;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -47,6 +49,7 @@ public class Random extends java.util.Random {
         return atomicRandom.nextGaussian();
     }
     
+    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static IntStream getInts(long streamSize) {
         return atomicRandom.ints(streamSize);
     }
@@ -55,14 +58,17 @@ public class Random extends java.util.Random {
         return atomicRandom.ints();
     }
     
+    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static IntStream getInts(long streamSize, int randomNumberOrigin, int randomNumberBound) {
         return atomicRandom.ints(streamSize, randomNumberOrigin, randomNumberBound);
     }
     
+    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static IntStream getInts(int randomNumberOrigin, int randomNumberBound) {
         return atomicRandom.ints(randomNumberOrigin, randomNumberBound);
     }
     
+    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static LongStream getLongs(long streamSize) {
         return atomicRandom.longs(streamSize);
     }
@@ -71,14 +77,17 @@ public class Random extends java.util.Random {
         return atomicRandom.longs();
     }
     
+    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static LongStream getLongs(long streamSize, long randomNumberOrigin, long randomNumberBound) {
         return atomicRandom.longs(streamSize, randomNumberOrigin, randomNumberBound);
     }
     
+    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static LongStream getLongs(long randomNumberOrigin, long randomNumberBound) {
         return atomicRandom.longs(randomNumberOrigin, randomNumberBound);
     }
     
+    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static DoubleStream getDoubles(long streamSize) {
         return atomicRandom.doubles(streamSize);
     }
@@ -87,10 +96,12 @@ public class Random extends java.util.Random {
         return atomicRandom.doubles();
     }
     
+    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static DoubleStream getDoubles(long streamSize, double randomNumberOrigin, double randomNumberBound) {
         return atomicRandom.doubles(streamSize, randomNumberOrigin, randomNumberBound);
     }
     
+    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static DoubleStream getDoubles(double randomNumberOrigin, double randomNumberBound) {
         return atomicRandom.doubles(randomNumberOrigin, randomNumberBound);
     }
@@ -99,14 +110,17 @@ public class Random extends java.util.Random {
         return getString(8);
     }
     
+    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static String getString(int length) {
         return getString(length, 125);
     }
     
+    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static String getString(int length, int max) {
         return getString(length, 33, max);
     }
     
+    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static String getString(int length, int min, int max) {
         if (length < 0) return "";
         StringBuilder sb = new StringBuilder();

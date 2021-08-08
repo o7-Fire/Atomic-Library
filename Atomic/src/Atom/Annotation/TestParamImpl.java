@@ -44,6 +44,11 @@ public class TestParamImpl implements ParamClamp {
     }
     
     @Override
+    public boolean skip() {
+        return false;
+    }
+    
+    @Override
     public Class<? extends Annotation> annotationType() {
         return this.getClass();
     }

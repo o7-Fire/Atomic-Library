@@ -23,16 +23,22 @@ public class TestingUtility {
     
     public static void methodFuzzer(Object object, Method[] methods, boolean ignoreIncompatibleParam) throws InvocationTargetException, IllegalAccessException {
         for (Method m : methods) {
+    
             if (Modifier.isPublic(m.getModifiers()) && Modifier.isStatic(m.getModifiers())){
+        
                 Object[] objectParam;
                 try {
-                    objectParam = Reflect.createRandomParam(m);
-                    m.invoke(object, objectParam);
+                    for (int i = 0; i < 5; i++) {
+                        objectParam = Reflect.createRandomParam(m);
+                        m.invoke(object, objectParam);
+                    }
                 }catch(InvocationTargetException e){
                     if (e.getCause() instanceof IllegalArgumentException){
                         if (ignoreMessage.contains(e.getMessage())) continue;
                         if (ignoreIncompatibleParam){
-                            e.printStackTrace();
+                            System.err.println();
+                            System.err.println(e.getCause().getMessage());
+                            System.err.println(m.getDeclaringClass().getCanonicalName() + "." + m.getName());
                             continue;
                         }
                     }
@@ -40,7 +46,9 @@ public class TestingUtility {
                 }catch(IllegalArgumentException e){
                     if (ignoreMessage.contains(e.getMessage())) continue;
                     if (ignoreIncompatibleParam){
-                        e.printStackTrace();
+                        System.err.println();
+                        System.err.println(e.getMessage());
+                        System.err.println(m.getDeclaringClass().getCanonicalName() + "." + m.getName());
                         continue;
                     }
                     throw e;
