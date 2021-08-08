@@ -224,4 +224,8 @@ public class Random extends java.util.Random {
     public static char getChar() {
         return (char) getInt(Character.MIN_VALUE, Character.MAX_VALUE);
     }
+    
+    public static byte getByte(byte min, byte max) {
+        return (byte) (min + (getByte() * (max - min)));
+    }
 }

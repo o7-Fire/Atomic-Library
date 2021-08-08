@@ -1,5 +1,7 @@
 package Atom.Reflect;
 
+import Atom.Annotation.ParamClamp;
+import Atom.Annotation.TestParamImpl;
 import Atom.Manifest;
 import Atom.Math.Array;
 import Atom.Math.Matrix;
@@ -124,23 +126,34 @@ public class Reflect {
         else return Array.boxArray(Array.randomShort());
         if (type == byte.class || type == Byte.class) if (type.isPrimitive()) return Array.randomByte();
         else return Array.boxArray(Array.randomByte());
-        
+    
         throw new IllegalArgumentException("Not a primitive array: " + type);
     }
     
+    static ParamClamp testParam = new TestParamImpl();
+    
     public static Object getRandomPrimitive(Class<?> type) {
+        return getRandomPrimitive(type, null);
+    }
+    
+    public static Object getRandomPrimitive(Class<?> type, ParamClamp param) {
+        boolean paramed = param != null;
         if (type.isArray()){
             return getRandomPrimitiveArray(type);
         }
-        if (type.equals(String.class)) return WordGenerator.randomWord().toString();
+        if (type.equals(String.class))
+            return paramed ? WordGenerator.newWord(Random.getInt(param.minString(), param.maxString())).toString() : WordGenerator.randomWord().toString();
         if (type == char.class || type == Character.class) return Random.getChar();
         if (type == boolean.class || type == Boolean.class) return Random.getBool();
-        if (type == int.class || type == Integer.class) return Random.getInt();
-        if (type == long.class || type == Long.class) return Random.getLong();
+        if (type == int.class || type == Integer.class)
+            return paramed ? Random.getInt(param.minInteger(), param.maxInteger()) : Random.getInt();
+        if (type == long.class || type == Long.class)
+            return paramed ? Random.getLong(param.minLong(), param.maxLong()) : Random.getLong();
         if (type == double.class || type == Double.class) return Random.getDouble();
         if (type == float.class || type == Float.class) return Random.getFloat();
         if (type == short.class || type == Short.class) return Random.getShort();
-        if (type == byte.class || type == Byte.class) return Random.getByte();
+        if (type == byte.class || type == Byte.class)
+            return paramed ? Random.getByte(param.minByte(), param.maxByte()) : Random.getByte();
         
         throw new IllegalArgumentException("Not a primitive: " + type);
     }
@@ -149,9 +162,10 @@ public class Reflect {
         Object[] objectParam = new Object[m.getParameterTypes().length];
         if (objectParam.length == 0) return objectParam;
         Class<?>[] parameterTypes = m.getParameterTypes();
+        ParamClamp param = m.getAnnotation(ParamClamp.class);
         for (int i = 0; i < parameterTypes.length; i++) {
             Class<?> e = parameterTypes[i];
-            objectParam[i] = getRandomPrimitive(e);
+            objectParam[i] = getRandomPrimitive(e, param);
         }
         return objectParam;
     }
