@@ -1,6 +1,8 @@
 package Atom.Reflect;
 
 import Atom.Manifest;
+import Atom.Math.Array;
+import Atom.String.WordGenerator;
 import Atom.Struct.Filter;
 import Atom.Utility.Random;
 
@@ -70,9 +72,69 @@ public class Reflect {
         return DebugType.None;
     }
     
+    public static void main(String[] args) {
+        int[] ints = Array.randomInteger();
+        int[][] matrix = new int[2][2];
+        System.out.println(ints.getClass().getComponentType());
+        System.out.println(Array.boxArray(ints).getClass().getComponentType());
+        System.out.println(ints.getClass().getComponentType());
+    }
+    
+    public static <T> Object getRandomPrimitiveArray(Class<T> type) {
+        if (type.isArray()){
+            throw new IllegalArgumentException("making multidimensional array is hard");
+        }
+        if (type.equals(String.class)) return (T) WordGenerator.randomWordArray();
+        if (type == char.class || type == Character.class) if (type.isPrimitive()) return Array.randomChar();
+        else return Array.boxArray(Array.randomChar());
+        if (type == boolean.class || type == Boolean.class) if (type.isPrimitive()) return Array.randomBoolean();
+        else return Array.boxArray(Array.randomBoolean());
+        if (type == int.class || type == Integer.class) if (type.isPrimitive()) return Array.randomInteger();
+        else return Array.boxArray(Array.randomInteger());
+        if (type == long.class || type == Long.class) if (type.isPrimitive()) return Array.randomLong();
+        else return Array.boxArray(Array.randomLong());
+        if (type == double.class || type == Double.class) if (type.isPrimitive()) return Array.randomDouble();
+        else return Array.boxArray(Array.randomDouble());
+        if (type == float.class || type == Float.class) if (type.isPrimitive()) return Array.randomFloat();
+        else return Array.boxArray(Array.randomFloat());
+        if (type == short.class || type == Short.class) if (type.isPrimitive()) return Array.randomShort();
+        else return Array.boxArray(Array.randomShort());
+        if (type == byte.class || type == Byte.class) if (type.isPrimitive()) return Array.randomByte();
+        else return Array.boxArray(Array.randomByte());
+        
+        throw new IllegalArgumentException("Not a primitive array: " + type);
+    }
+    
+    public static Object getRandomPrimitive(Class<?> type) {
+        if (type.isArray()){
+            return getRandomPrimitiveArray(type.getComponentType());
+        }
+        if (type.equals(String.class)) return WordGenerator.randomWord().toString();
+        if (type == char.class || type == Character.class) return Random.getChar();
+        if (type == boolean.class || type == Boolean.class) return Random.getBool();
+        if (type == int.class || type == Integer.class) return Random.getInt();
+        if (type == long.class || type == Long.class) return Random.getLong();
+        if (type == double.class || type == Double.class) return Random.getDouble();
+        if (type == float.class || type == Float.class) return Random.getFloat();
+        if (type == short.class || type == Short.class) return Random.getShort();
+        if (type == byte.class || type == Byte.class) return Random.getByte();
+        
+        throw new IllegalArgumentException("Not a primitive: " + type);
+    }
+    
+    public static Object[] createRandomParam(Method m) {
+        Object[] objectParam = new Object[m.getParameterTypes().length];
+        if (objectParam.length == 0) return objectParam;
+        Class<?>[] parameterTypes = m.getParameterTypes();
+        for (int i = 0; i < parameterTypes.length; i++) {
+            Class<?> e = parameterTypes[i];
+            objectParam[i] = getRandomPrimitive(e);
+        }
+        return objectParam;
+    }
+    
     public enum DebugType {AgentLib, IntellijAgent, DevEnvironment, UserPreference, None}
     
-
     
     public static int callerOffset() {
         int def = 1;
@@ -118,22 +180,32 @@ public class Reflect {
         return Thread.currentThread().getStackTrace()[callerOffset() + 2];
     }
     
+    public static Object[] parseStringToPrimitiveArray(String[] datas, Class<?>[] types) {
+        if (datas.length != types.length)
+            throw new IllegalArgumentException("Data and Type length not match: " + datas.length + ", " + types.length);
+        Object[] objects = new Object[types.length];
+        for (int i = 0; i < objects.length; i++) {
+            objects[i] = parseStringToPrimitive(datas[i], types[i]);
+        }
+        return objects;
+    }
+    
     public static Object parseStringToPrimitive(String data, Class<?> type) {
         if (type.equals(String.class)) return data;
         if (data.length() == 0) return null;
         
-        if (type.getName().equals(boolean.class.getName())) {
+        if (type == boolean.class || type == Boolean.class){
             if (data.equalsIgnoreCase("true")) return true;
             else if (data.equalsIgnoreCase("false")) return false;
             else return null;
         }
-        
-        if (type.getName().equals(int.class.getName())) return Integer.parseInt(data);
-        if (type.getName().equals(long.class.getName())) return Long.parseLong(data);
-        if (type.getName().equals(double.class.getName())) return Double.parseDouble(data);
-        if (type.getName().equals(float.class.getName())) return Float.parseFloat(data);
-        if (type.getName().equals(short.class.getName())) return Short.parseShort(data);
-        if (type.getName().equals(byte.class.getName())) return Byte.parseByte(data);
+        if (type == char.class || type == Character.class) return data.toCharArray()[0];
+        if (type == int.class || type == Integer.class) return Integer.parseInt(data);
+        if (type == long.class || type == Long.class) return Long.parseLong(data);
+        if (type == double.class || type == Double.class) return Double.parseDouble(data);
+        if (type == float.class || type == Float.class) return Float.parseFloat(data);
+        if (type == short.class || type == Short.class) return Short.parseShort(data);
+        if (type == byte.class || type == Byte.class) return Byte.parseByte(data);
         
         return null;
     }

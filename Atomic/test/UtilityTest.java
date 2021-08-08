@@ -1,13 +1,13 @@
-
-
 import Atom.File.FileUtility;
 import Atom.Math.Array;
 import Atom.Utility.Random;
+import Atom.Utility.TestingUtility;
 import Atom.Utility.Utility;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 public class UtilityTest {
@@ -26,13 +26,28 @@ public class UtilityTest {
         assert Utility.shrinkChar("aaaaabbbbbcccccccccc").equals("abc");
         assert Arrays.equals(Utility.sliceInt("111111,2222222,333333,4444444", ","), new int[]{111111, 2222222, 333333, 4444444});
         assert Utility.shuffle("aaabbbccc").equals("aaabbbccc") == false;
-        
+    
+    }
+    
+    @Test
+    void randomUtility() throws InvocationTargetException, IllegalAccessException {
+        assert Random.getInt() != Random.getInt();
+        assert Random.getInt(0, 100) != Random.getInt(0, 100);
+        assert Random.getInt(100) != Random.getInt();
+        assert Random.getDouble(2, 100) > 1;
+        assert Random.getDouble(100) != Random.getDouble(100);
+        assert Random.getLong() != Random.getLong();
+        assert Random.getLong(100) != Random.getLong();
+        assert Random.getFloat(2, 100) > 1;
+        assert Random.getFloat(100) != Random.getFloat(100);
+        assert Random.getBool() != Random.getBool();
+        assert Random.getBool(0.1f) != Random.getBool();
+        TestingUtility.methodFuzzer(Random.class.getDeclaredMethods(), false);
     }
     
     @Test
     public void FileUtility() throws IOException {
         File test = FileUtility.temp(), test2 = FileUtility.temp(), test3 = FileUtility.temp();
-        
         //start
         assert FileUtility.getCurrentWorkingDir().exists();
         assert test.exists() == false;

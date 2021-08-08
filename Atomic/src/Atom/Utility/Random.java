@@ -210,4 +210,18 @@ public class Random extends java.util.Random {
     public static float getFloat(float max) {
         return getFloat(0, max);
     }
+    
+    public static short getShort() {
+        return (short) getInt(Short.MIN_VALUE, Short.MAX_VALUE);
+    }
+    
+    public static byte getByte() {
+        byte[] bytes = new byte[1];
+        getNextBytes(bytes);
+        return bytes[0];
+    }
+    
+    public static char getChar() {
+        return (char) getInt(Character.MIN_VALUE, Character.MAX_VALUE);
+    }
 }

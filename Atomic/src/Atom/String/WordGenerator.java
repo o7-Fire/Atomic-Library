@@ -1,5 +1,8 @@
 package Atom.String;
 
+import Atom.Struct.PoolObject;
+import Atom.Utility.Random;
+
 import java.util.Arrays;
 
 /**
@@ -54,13 +57,14 @@ public class WordGenerator {
     
     
     private static StringBuilder generateRandomWord(int wordLength) {
-        StringBuilder randomWord = new StringBuilder(wordLength);
+        StringBuilder randomWord = PoolObject.StringBuilder.obtain();
+        randomWord.setLength(wordLength);
         randomWord.append(getNewWordStart());
-        
+    
         while (randomWord.length() != wordLength) {
             addCharacter(wordLength, randomWord);
         }
-        
+    
         return randomWord;
     }
     
@@ -116,7 +120,7 @@ public class WordGenerator {
             
             //substring 0, length - 3
             currentWord.delete(currentWord.length() - 3, currentWord.length());
-            
+    
         }
     }
     
@@ -124,5 +128,23 @@ public class WordGenerator {
         int characterIndex = generateRandomIndex(NEXT_CHAR_LOOKUP[mainIndex][type].length);
         
         return NEXT_CHAR_LOOKUP[mainIndex][type][characterIndex];
+    }
+    
+    public static String[] randomWordArray(int howMany) {
+        String[] strings = new String[howMany];
+        return randomWordArray(strings);
+    }
+    
+    public static String[] randomWordArray(String[] strings) {
+        for (int i = 0; i < strings.length; i++) {
+            StringBuilder sb = randomWord();
+            strings[i] = sb.toString();
+            PoolObject.StringBuilder.free(sb);
+        }
+        return strings;
+    }
+    
+    public static String[] randomWordArray() {
+        return randomWordArray(Random.getInt(100));
     }
 }
