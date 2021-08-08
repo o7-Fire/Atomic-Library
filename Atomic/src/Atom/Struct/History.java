@@ -1,5 +1,6 @@
 package Atom.Struct;
 
+//linked list.....
 public class History<T> {
     T Old, Neu;
     long old, neu;

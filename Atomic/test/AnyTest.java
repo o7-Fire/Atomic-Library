@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
-public class Test1 {
+public class AnyTest {
     @Test
     public void translation() throws IOException, ExecutionException, InterruptedException {
         GoogleTranslate.main(new String[]{});
