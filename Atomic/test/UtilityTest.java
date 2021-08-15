@@ -41,6 +41,7 @@ public class UtilityTest {
         assert Random.getLong(-200, 100) != Random.getLong();
         assert Random.getFloat(100) > 1;
         assert Random.getFloat(-100, 100) != Random.getFloat();
+        Random.main(new String[]{});
         TestingUtility.methodFuzzer(Random.class.getDeclaredMethods(), true);
     }
     

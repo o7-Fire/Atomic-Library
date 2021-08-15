@@ -39,19 +39,18 @@ public class Cache {
     
     public static URL tryCache(String url) {
         try {
-            return tryCache(new URL(url));
-        }catch (Throwable ignored) {}
-        try {
-            return new URL(url);
-        }catch (Throwable t) {
-            throw new IllegalArgumentException(t);
+            URL urls = new URL(url);
+            return tryCache(urls);
+        }catch(MalformedURLException e){
+            throw new IllegalArgumentException(e);
         }
+    
     }
     
     public static URL tryCache(URL u) {
         try {
             return http(u);
-        }catch (Throwable ignored) {}
+        }catch(IOException ignored){}
         return u;
     }
     

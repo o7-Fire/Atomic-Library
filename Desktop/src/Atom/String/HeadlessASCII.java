@@ -1,20 +1,24 @@
 package Atom.String;
 
+import Atom.Struct.FunctionalPoolObject;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class HeadlessASCII {
-    public static String generateFromImage(BufferedImage bufferedImage, String a, String b){
+    public static String generateFromImage(BufferedImage bufferedImage, String a, String b) {
         int height = bufferedImage.getHeight(), width = bufferedImage.getWidth();
-        
-        StringBuilder stringBuilder = new StringBuilder();
+    
+        StringBuilder stringBuilder = FunctionalPoolObject.StringBuilder.obtain();
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                stringBuilder.append(bufferedImage.getRaster().getSampleDouble(x,y, 0) > 0.5f ? a : b);
+                stringBuilder.append(bufferedImage.getRaster().getSampleDouble(x, y, 0) > 0.5f ? a : b);
             }
             stringBuilder.append(System.lineSeparator());
         }
-        return stringBuilder.toString();
+        String s = stringBuilder.toString();
+        FunctionalPoolObject.StringBuilder.free(stringBuilder);
+        return s;
     }
     public static String generateFromWord(String text, int width, int height, String a, String b){
         return generateFromWord(text,width,height,24,12,a,b);

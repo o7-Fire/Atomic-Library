@@ -1,5 +1,7 @@
 package Atom.Encoding;
 
+import Atom.Struct.FunctionalPoolObject;
+
 import java.io.UnsupportedEncodingException;
 import java.net.*;
 import java.nio.charset.Charset;
@@ -32,13 +34,15 @@ public class EncoderURL {
     }
     
     public static String encodeUTF8(Map<String, ?> map) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = FunctionalPoolObject.StringBuilder.obtain();
         for (Map.Entry<String, ?> entry : map.entrySet()) {
             if (sb.length() > 0){
                 sb.append("&");
             }
             sb.append(String.format("%s=%s", encodeUTF8(entry.getKey()), encodeUTF8(entry.getValue().toString())));
         }
-        return sb.toString();
+        String s = sb.toString();
+        FunctionalPoolObject.StringBuilder.free(sb);
+        return s;
     }
 }

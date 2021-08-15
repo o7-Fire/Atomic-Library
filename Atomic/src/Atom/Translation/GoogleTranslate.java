@@ -1,6 +1,7 @@
 package Atom.Translation;
 
 import Atom.Encoding.EncoderURL;
+import Atom.Struct.FunctionalPoolObject;
 import Atom.Utility.Pool;
 import org.jsoup.parser.Parser;
 
@@ -58,10 +59,12 @@ public class GoogleTranslate extends CachedTranslator {
         connection.setConnectTimeout(5000);
         connection.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36");
         try(BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), charset()))) {
-            StringBuilder html = new StringBuilder();
+            StringBuilder html = FunctionalPoolObject.StringBuilder.obtain();
             String line;
             while ((line = br.readLine()) != null) html.append(line).append("\n");
-            return html.toString();
+            String s = html.toString();
+            FunctionalPoolObject.StringBuilder.free(html);
+            return s;
         }
     }
     

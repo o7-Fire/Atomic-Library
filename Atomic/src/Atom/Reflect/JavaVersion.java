@@ -1,5 +1,7 @@
 package Atom.Reflect;
 
+import Atom.Struct.FunctionalPoolObject;
+
 public final class JavaVersion {
     private static final int majorJavaVersion = determineMajorJavaVersion();
     
@@ -32,18 +34,20 @@ public final class JavaVersion {
     
     private static int extractBeginningInt(String javaVersion) {
         try {
-            StringBuilder num = new StringBuilder();
-            
+            StringBuilder num = FunctionalPoolObject.StringBuilder.obtain();
+            ;
+    
             for (int i = 0; i < javaVersion.length(); ++i) {
                 char c = javaVersion.charAt(i);
-                if (!Character.isDigit(c)) {
+                if (!Character.isDigit(c)){
                     break;
                 }
-                
+        
                 num.append(c);
             }
-            
-            return Integer.parseInt(num.toString());
+            String s = num.toString();
+            FunctionalPoolObject.StringBuilder.free(num);
+            return Integer.parseInt(s);
         }catch (NumberFormatException var4) {
             return -1;
         }

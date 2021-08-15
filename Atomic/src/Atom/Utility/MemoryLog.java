@@ -16,8 +16,10 @@
 
 package Atom.Utility;
 
+import Atom.Struct.FunctionalPoolObject;
+
 public class MemoryLog extends Log {
-    protected StringBuilder sb = new StringBuilder();
+    protected StringBuilder sb = FunctionalPoolObject.StringBuilder.obtain();
     
     @Override
     protected void output(Object raw) {

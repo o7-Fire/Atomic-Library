@@ -1,6 +1,7 @@
 package Atom.Utility;
 
 
+import Atom.Struct.FunctionalPoolObject;
 import com.google.gson.Gson;
 
 import java.io.*;
@@ -47,16 +48,18 @@ public class Utility {
     }
     
     public static String classArrayToStringArray(Iterable<Class<?>> classes, boolean canonical) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = FunctionalPoolObject.StringBuilder.obtain();
         sb.append("[");
         for (Class<?> aClass : classes) {
             if (canonical) sb.append(aClass.getCanonicalName());
             else sb.append(aClass.getSimpleName());
             sb.append(", ");
         }
-        
+    
         sb.append("]");
-        return sb.toString();
+        String s = sb.toString();
+        FunctionalPoolObject.StringBuilder.free(sb);
+        return s;
     }
     
     public static void getInput(Map<String, Consumer<String>> map) {
@@ -166,7 +169,7 @@ public class Utility {
     }
     
     public static String removal(String s, char openChar, char closeChar) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = FunctionalPoolObject.StringBuilder.obtain();
         boolean delete = false;
         for (char i : s.toCharArray()) {
             if (i == openChar){
@@ -178,16 +181,20 @@ public class Utility {
                 sb.append(i);
             }
         }
-        return sb.toString();
+        String ss = sb.toString();
+        FunctionalPoolObject.StringBuilder.free(sb);
+        return ss;
     }
     
     public static String shrinkChar(String s) {
         char[] chars = s.toCharArray();
         Set<Character> cr = new LinkedHashSet<>();
         for (char c : chars) cr.add(c);
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = FunctionalPoolObject.StringBuilder.obtain();
         for (Character chr : cr) sb.append(chr);
-        return sb.toString();
+        String ss = sb.toString();
+        FunctionalPoolObject.StringBuilder.free(sb);
+        return ss;
     }
     
     public static boolean containIntOnly(String s) {
@@ -280,12 +287,15 @@ public class Utility {
     }
     
     public static String joiner(Object[] datas, Object prefix) {
-        StringBuilder data = new StringBuilder();
+        StringBuilder data = FunctionalPoolObject.StringBuilder.obtain();
         for (int i = 0; i < datas.length; i++) {
             data.append(datas[i]);
             if (i != datas.length - 1) data.append(prefix);
         }
-        return data.toString();
+    
+        String s = data.toString();
+        FunctionalPoolObject.StringBuilder.free(data);
+        return s;
     }
     
     public static void convertThreadToInputListener(Consumer<String> listener) throws IOException {

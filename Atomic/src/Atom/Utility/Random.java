@@ -1,10 +1,12 @@
 package Atom.Utility;
 
 import Atom.Annotation.ParamClamp;
+import Atom.Math.Array;
+import Atom.String.WordGenerator;
+import Atom.Struct.FunctionalPoolObject;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
@@ -12,7 +14,7 @@ import java.util.stream.LongStream;
 //Random get more random when used really often
 public class Random extends java.util.Random {
     private static final java.util.Random atomicRandom = new java.util.Random();
-    
+    public static final Map<Class<?>, Supplier<?>> randomSupplier = new HashMap<>();
     public static synchronized void seed(long seed) {
         atomicRandom.setSeed(seed);
     }
@@ -120,15 +122,52 @@ public class Random extends java.util.Random {
         return getString(length, 33, max);
     }
     
-    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
-    public static String getString(int length, int min, int max) {
-        if (length < 0) return "";
-        StringBuilder sb = new StringBuilder();
-        
-        for (int i = 0; i < length; i++) {
-            sb.append((char) getInt(min, max));
-        }
-        return sb.toString();
+    public static final HashSet<Class<?>> primitiveClazz = new HashSet<>();
+    
+    //what the fuck im doing
+    static {
+        primitiveClazz.addAll(Arrays.asList(int.class, boolean.class, short.class, long.class, float.class, double.class, byte.class, char.class));
+        randomSupplier.put(boolean.class, Random::getBool);
+        randomSupplier.put(byte.class, Random::getByte);
+        randomSupplier.put(short.class, Random::getShort);
+        randomSupplier.put(char.class, Random::getChar);
+        randomSupplier.put(int.class, Random::getInt);
+        randomSupplier.put(long.class, Random::getLong);
+        randomSupplier.put(float.class, Random::getFloat);
+        randomSupplier.put(double.class, Random::getDouble);
+        randomSupplier.put(Boolean.class, Random::getBool);
+        randomSupplier.put(Byte.class, Random::getByte);
+        randomSupplier.put(Short.class, Random::getShort);
+        randomSupplier.put(Character.class, Random::getChar);
+        randomSupplier.put(Integer.class, Random::getInt);
+        randomSupplier.put(Long.class, Random::getLong);
+        randomSupplier.put(Float.class, Random::getFloat);
+        randomSupplier.put(Double.class, Random::getDouble);
+        //
+        randomSupplier.put(boolean[].class, Array::randomBoolean);
+        randomSupplier.put(byte[].class, Array::randomByte);
+        randomSupplier.put(short[].class, Array::randomShort);
+        randomSupplier.put(char[].class, Array::randomChar);
+        randomSupplier.put(int[].class, Array::randomInteger);
+        randomSupplier.put(long[].class, Array::randomLong);
+        randomSupplier.put(float[].class, Array::randomFloat);
+        randomSupplier.put(double[].class, Array::randomDouble);
+        randomSupplier.put(Boolean[].class, () -> Array.boxArray(Array.randomBoolean()));
+        randomSupplier.put(Byte[].class, () -> Array.boxArray(Array.randomByte()));
+        randomSupplier.put(Short[].class, () -> Array.boxArray(Array.randomShort()));
+        randomSupplier.put(Character[].class, () -> Array.boxArray(Array.randomChar()));
+        randomSupplier.put(Integer[].class, () -> Array.boxArray(Array.randomInteger()));
+        randomSupplier.put(Long[].class, () -> Array.boxArray(Array.randomLong()));
+        randomSupplier.put(Float[].class, () -> Array.boxArray(Array.randomFloat()));
+        randomSupplier.put(Double[].class, () -> Array.boxArray(Array.randomDouble()));
+        //
+        randomSupplier.put(Class.class, Random::getRandomPrimitiveClass);//java moment
+        randomSupplier.put(StringBuilder.class, FunctionalPoolObject.StringBuilder::obtain);
+        randomSupplier.put(String.class, WordGenerator::randomString);
+        randomSupplier.put(String[].class, WordGenerator::randomWordArray);
+        randomSupplier.put(CharSequence.class, WordGenerator::randomWord);
+        randomSupplier.put(Object.class, randomSupplier.get(String.class));
+        randomSupplier.put(Object[].class, randomSupplier.get(Long[].class));
     }
     
     public static int getRandomColor() {
@@ -235,11 +274,39 @@ public class Random extends java.util.Random {
         return bytes[0];
     }
     
+    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    public static String getString(int length, int min, int max) {
+        if (length < 0) return "";
+        StringBuilder sb = FunctionalPoolObject.StringBuilder.obtain();
+        
+        for (int i = 0; i < length; i++) {
+            sb.append((char) getInt(min, max));
+        }
+        String s = sb.toString();
+        FunctionalPoolObject.StringBuilder.free(sb);
+        return s;
+    }
+    
     public static char getChar() {
         return (char) getInt(Character.MIN_VALUE, Character.MAX_VALUE);
     }
     
     public static byte getByte(byte min, byte max) {
         return (byte) (min + (getByte() * (max - min)));
+    }
+    
+    public static Locale getLocale() {
+        return Random.getRandom(Locale.getAvailableLocales());
+    }
+    
+    public static void main(String[] args) {
+        for (Map.Entry<Class<?>, Supplier<?>> s : randomSupplier.entrySet()) {
+            Object o = s.getValue().get();
+            assert s.getKey().isInstance(o) || s.getKey() == o.getClass();
+        }
+    }
+    
+    public static Class<?> getRandomPrimitiveClass() {
+        return getRandom(primitiveClazz);
     }
 }

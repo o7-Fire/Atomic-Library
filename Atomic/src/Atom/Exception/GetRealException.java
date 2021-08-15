@@ -17,7 +17,5 @@ public class GetRealException extends RuntimeException {
         super(cause);
     }
     
-    protected GetRealException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
+    
 }

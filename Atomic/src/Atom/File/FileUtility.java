@@ -3,7 +3,7 @@ package Atom.File;
 import Atom.Encoding.Encoder;
 import Atom.Manifest;
 import Atom.Struct.Filter;
-import Atom.Struct.PoolObject;
+import Atom.Struct.FunctionalPoolObject;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -39,12 +39,12 @@ public class FileUtility {
     
     public static String getNameWithoutExtension(String name) {
         String[] h = name.split("\\.");
-        StringBuilder sb = PoolObject.StringBuilder.obtain();
+        StringBuilder sb = FunctionalPoolObject.StringBuilder.obtain();
         for (int i = 0; i < h.length - 1; i++) {
             sb.append(h[i]).append(".");
         }
         String f = sb.toString();
-        PoolObject.StringBuilder.free(sb);
+        FunctionalPoolObject.StringBuilder.free(sb);
         return f.substring(0, f.length() - 1);
     }
     

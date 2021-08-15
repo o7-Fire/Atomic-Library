@@ -6,24 +6,18 @@
 package Atom.Struct;
 
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public abstract class PoolObject<T> {
+public abstract class PoolObject<T> implements ObjectPoolPattern<T> {
     protected final int max;
-    protected final ArrayList<T> freeObjects;
+    public static final Map<Class<?>, PoolObject<?>> pools = Collections.synchronizedMap(new HashMap<>());
     protected int peak;
-    public static final PoolObject<StringBuilder> StringBuilder = new PoolObject<java.lang.StringBuilder>() {
-        @Override
-        protected java.lang.StringBuilder newObject() {
-            return new StringBuilder();
-        }
-        
-        @Override
-        protected void reset(java.lang.StringBuilder object) {
-            object.setLength(0);
-        }
-    };
+    protected final List<T> freeObjects;
+    
+    public static <E> PoolObject<E> getPool(Class<E> eClass) {
+        if (pools.containsKey(eClass)) return (PoolObject<E>) pools.get(eClass);
+        return null;
+    }
     
     public PoolObject() {
         this(16, 2147483647);
@@ -36,6 +30,38 @@ public abstract class PoolObject<T> {
     public PoolObject(int initialCapacity, int max) {
         this.freeObjects = new ArrayList<>(initialCapacity);
         this.max = max;
+    }
+    
+    public static <E> E get(Class<E> eClass) {
+        PoolObject<E> poolObject = getPool(eClass);
+        if (poolObject == null) return null;
+        return poolObject.obtain();
+    }
+    
+    public static void release(java.lang.Object o) {
+        PoolObject poolObject = getPool(o.getClass());
+        if (poolObject != null) poolObject.free(o);
+    }
+    
+    @Override
+    public void free(Iterable<T> Iterable) {
+        if (Iterable == null){
+            throw new IllegalArgumentException("Iterable cannot be null.");
+        }else{
+            List<T> freeObjects = this.freeObjects;
+            int max = this.max;
+            for (T object : Iterable) {
+                if (object != null){
+                    if (freeObjects.size() < max){
+                        freeObjects.add(object);
+                    }
+                    
+                    this.reset(object);
+                }
+            }
+            
+            this.peak = Math.max(this.peak, freeObjects.size());
+        }
     }
     
     public int getPeak() {
@@ -52,11 +78,14 @@ public abstract class PoolObject<T> {
         return this.freeObjects.size() == 0 ? this.newObject() : this.freeObjects.remove(0);
     }
     
+    /**
+     * Return to list or ignore if the list is full
+     */
     public void free(T object) {
-        if (object == null) {
+        if (object == null){
             throw new IllegalArgumentException("object cannot be null.");
-        }else {
-            if (this.freeObjects.size() < this.max) {
+        }else{
+            if (this.freeObjects.size() < this.max){
                 this.freeObjects.add(object);
                 this.peak = Math.max(this.peak, this.freeObjects.size());
             }
@@ -69,28 +98,9 @@ public abstract class PoolObject<T> {
         if (object instanceof Object) {
             ((Object) object).reset();
         }
-        
+    
     }
     
-    public void freeAll(List<T> objects) {
-        if (objects == null) {
-            throw new IllegalArgumentException("objects cannot be null.");
-        }else {
-            List<T> freeObjects = this.freeObjects;
-            int max = this.max;
-            for (T object : objects) {
-                if (object != null) {
-                    if (freeObjects.size() < max) {
-                        freeObjects.add(object);
-                    }
-                    
-                    this.reset(object);
-                }
-            }
-            
-            this.peak = Math.max(this.peak, freeObjects.size());
-        }
-    }
     
     public void clear() {
         this.freeObjects.clear();

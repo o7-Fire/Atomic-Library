@@ -1,6 +1,8 @@
 package Atom.Net;
 
 
+import Atom.Struct.FunctionalPoolObject;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -8,7 +10,6 @@ import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -88,7 +89,7 @@ public  class DiscordWebhookStandalone {
         long lastFlush = System.currentTimeMillis();
         final long[] nextFlush = {lastFlush + flushInterval};
         if (printStream == null) printStream = new PrintStream(new OutputStream() {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = FunctionalPoolObject.StringBuilder.obtain();
             
             @Override
             public void write(int b) throws IOException {
@@ -98,12 +99,15 @@ public  class DiscordWebhookStandalone {
             @Override
             public void flush() throws IOException {
                 if (nextFlush[0] > System.currentTimeMillis()) return;
+                String s = sb.toString();
                 executorService.submit(() -> {
                     try {
-                        post(sb.toString());
-                    }catch(IOException e){ }
+                        post(s);
+            
+                    }catch(IOException e){}
                 });
-                sb = new StringBuilder();
+                FunctionalPoolObject.StringBuilder.free(sb);
+                sb = FunctionalPoolObject.StringBuilder.obtain();
                 nextFlush[0] = System.currentTimeMillis() + flushInterval;
             }
         }, true);
@@ -121,7 +125,8 @@ public  class DiscordWebhookStandalone {
         }
         
         public String javaStringLiteral(String str) {
-            StringBuilder sb = new StringBuilder("\"");
+            StringBuilder sb = FunctionalPoolObject.StringBuilder.obtain();
+            sb.append("\"");
             for (int i = 0; i < str.length(); i++) {
                 char c = str.charAt(i);
                 if (c == '\n'){
@@ -141,12 +146,14 @@ public  class DiscordWebhookStandalone {
                 }
             }
             sb.append("\"");
-            return sb.toString();
+            String s = sb.toString();
+            FunctionalPoolObject.StringBuilder.free(sb);
+            return s;
         }
         
         @Override
         public String toString() {
-            StringBuilder builder = new StringBuilder();
+            StringBuilder builder = FunctionalPoolObject.StringBuilder.obtain();
             Set<Map.Entry<String, Object>> entrySet = map.entrySet();
             builder.append("{");
             
@@ -171,11 +178,12 @@ public  class DiscordWebhookStandalone {
                     }
                     builder.append("]");
                 }
-                
+    
                 builder.append(++i == entrySet.size() ? "}" : ",");
             }
-            
-            return builder.toString();
+            String s = builder.toString();
+            FunctionalPoolObject.StringBuilder.free(builder);
+            return s;
         }
         
         private String quote(String string) {

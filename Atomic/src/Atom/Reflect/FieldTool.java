@@ -1,5 +1,6 @@
 package Atom.Reflect;
 
+import Atom.Struct.FunctionalPoolObject;
 import Atom.Utility.Random;
 
 import java.lang.reflect.Field;
@@ -43,7 +44,7 @@ public class FieldTool {
     }
     
     public static String getFieldDetails(Object o, Class<?> clazz, boolean all, int maxDat) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = FunctionalPoolObject.StringBuilder.obtain();
         HashMap<String, Field> fe = new HashMap<>();
         for (Field f : clazz.getDeclaredFields())
             fe.put(f.getName(), f);
@@ -58,14 +59,16 @@ public class FieldTool {
                 String dat = f.get(o).toString();
                 if (dat.length() > maxDat) dat = dat.substring(0, maxDat) + "....";
                 sb.append(f.getName()).append("=").append(dat).append("\n");
-            }catch (Throwable ignored) {}
+            }catch(Throwable ignored){}
         }
         try {
             String dat = (String) clazz.getMethod("toString").invoke(o);
             if (dat.length() > maxDat) dat = dat.substring(0, maxDat) + "....";
             sb.append("toString").append("=").append(dat).append("\n");
-        }catch (Throwable ignored) {}
-        return sb.toString();
+        }catch(Throwable ignored){}
+        String s = sb.toString();
+        FunctionalPoolObject.StringBuilder.free(sb);
+        return s;
     }
     
     public static Field getField(Class<?> clazz, String name, Object object) {

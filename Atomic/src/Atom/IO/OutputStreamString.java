@@ -1,5 +1,7 @@
 package Atom.IO;
 
+import Atom.Struct.FunctionalPoolObject;
+
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -11,7 +13,7 @@ public class OutputStreamString extends OutputStream {
     }
     
     public OutputStreamString() {
-        this(new StringBuilder());
+        this(FunctionalPoolObject.StringBuilder.obtain());
     }
     
     @Override

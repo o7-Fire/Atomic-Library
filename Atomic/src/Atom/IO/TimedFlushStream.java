@@ -1,5 +1,7 @@
 package Atom.IO;
 
+import Atom.Struct.FunctionalPoolObject;
+
 import java.io.IOException;
 import java.util.function.Consumer;
 
@@ -21,8 +23,10 @@ public class TimedFlushStream extends OutputStreamString {
         onFlush.accept(toString());
         reset();
     }
-    public void reset(){
-        stringBuilder = new StringBuilder();
+    public void reset() {
+        if (stringBuilder != null) FunctionalPoolObject.StringBuilder.free(stringBuilder);
+        stringBuilder = FunctionalPoolObject.StringBuilder.obtain();
+        ;
         nextFlush[0] = System.currentTimeMillis() + interval;
     }
 }

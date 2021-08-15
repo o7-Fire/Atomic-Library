@@ -7,6 +7,7 @@ import Atom.Math.Array;
 import Atom.Math.Matrix;
 import Atom.String.WordGenerator;
 import Atom.Struct.Filter;
+import Atom.Struct.FunctionalPoolObject;
 import Atom.Utility.Random;
 
 import java.io.File;
@@ -19,15 +20,18 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 public class Reflect {
     
     public static DebugType DEBUG_TYPE;
     public static boolean debug;
-    
+    public static final HashSet<String> legalMainSignature = new HashSet<>();
     static {
         DEBUG_TYPE = getDebugType();
+        String s = "public static void main(String a[])\n" + "static public void main(String a[])\n" + "public static void main(String[] a)\n" + "static public void main(String[] a)\n" + "public static void main(String... a)\n" + "static public void main(String... a)";
+        legalMainSignature.addAll(Arrays.asList(s.split("\\n")));
     }
     
     public static String getPlatform() {
@@ -83,6 +87,11 @@ public class Reflect {
         System.out.println(ints.getClass().getComponentType());
         int[][] matrixs = (int[][]) getRandomPrimitive(matrix.getClass());
         System.out.println(matrixs.getClass());
+        Object tensor = java.lang.reflect.Array.newInstance(int.class, 1, 2, 3);
+        System.out.println(tensor);
+        Array.random(tensor);
+        System.out.println(Arrays.deepToString((Object[]) tensor));
+    
     }
     
     public static <T> Object getRandomPrimitiveArray(Class<T> type) {
@@ -103,12 +112,13 @@ public class Reflect {
             if (rank == 3){
                 array = Matrix.makeTensor(finalType, Random.getInt(100), Random.getInt(100), Random.getInt(100));
             }
-            if (array != null){
-                Array.random(array);
-                return array;
-            }
-            throw new IllegalArgumentException("Making multidimensional array is hard, rank: " + rank + ", type: " + type);
+            if (array == null)
+                array = (Object[]) java.lang.reflect.Array.newInstance(finalType, Array.getRandomDimension(rank));
+            Array.random(array);
+            return array;
+    
         }
+    
         if (type.equals(String.class)) return (T) WordGenerator.randomWordArray();
         if (type == char.class || type == Character.class) if (type.isPrimitive()) return Array.randomChar();
         else return Array.boxArray(Array.randomChar());
@@ -264,7 +274,8 @@ public class Reflect {
     }
     
     public static StringBuilder getRestartArg() {
-        StringBuilder cli = new StringBuilder();
+        StringBuilder cli = FunctionalPoolObject.StringBuilder.obtain();
+        ;
         cli.append(System.getProperty("java.home")).append(File.separator).append("bin").append(File.separator).append("java").append(OS.isWindows ? ".exe " : " ");
         try {
             for (String jvmArg : ManagementFactory.getRuntimeMXBean().getInputArguments()) {

@@ -1,8 +1,8 @@
 package Atom.Translation;
 
 import Atom.String.WordGenerator;
+import Atom.Struct.FunctionalPoolObject;
 import Atom.Struct.InstantFuture;
-import Atom.Struct.PoolObject;
 import Atom.Utility.Utility;
 
 import java.util.Locale;
@@ -21,16 +21,16 @@ public class SaddamHusseinTranslator implements Translator {
     @Override
     public Future<String> translate(Locale from, Locale to, String text) {
         return (InstantFuture<String>) () -> {
-            StringBuilder sb = PoolObject.StringBuilder.obtain();
+            StringBuilder sb = FunctionalPoolObject.StringBuilder.obtain();
             for (String s : text.split(" ")) {
                 StringBuilder sbb = WordGenerator.randomWord(s.length());
                 sb.append(sbb);
                 sb.append(" ");
-                PoolObject.StringBuilder.free(sbb);
+                FunctionalPoolObject.StringBuilder.free(sbb);
             }
     
             String s = Utility.capitalizeEnforce(sb.toString());
-            PoolObject.StringBuilder.free(sb);
+            FunctionalPoolObject.StringBuilder.free(sb);
             return s.trim();
         };
     }

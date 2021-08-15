@@ -1,35 +1,63 @@
 package Atom.Struct;
 
-//linked list.....
-public class History<T> {
-    T Old, Neu;
-    long old, neu;
+import Atom.Exception.CircularReferenceException;
+import Atom.Time.Time;
+import org.jetbrains.annotations.Nullable;
+
+import java.io.Serializable;
+import java.util.concurrent.TimeUnit;
+
+//linked list..... ftw
+public class History<T> implements Serializable {
+    protected final T current;
+    protected final long currentTime;
+    protected History<T> past;
+    protected transient History<T> future;//circular ref
+    protected Time time;
     
-    public History(T type) {
-        Neu = type;
-        neu = System.currentTimeMillis();
+    {
+        if (past != null && past.future == null) past.future = this;
+        if (future != null && future.past == null) future.past = this;
     }
     
-    public T getOld() {
-        return Old;
+    public History(T val) {
+        this(val, null);
     }
     
-    public T getNew() {
-        return Neu;
+    public History(T value, History<T> past) {
+        this.past = past;
+        current = value;
+        currentTime = System.currentTimeMillis();
     }
     
-    public void setNew(T object) {
-        old = neu;
-        neu = System.currentTimeMillis();
-        Old = Neu;
-        Neu = object;
+    @Nullable
+    public History<T> getPast() {
+        if (past == this) throw new CircularReferenceException("Past == Current," + this);
+        return past;
     }
     
-    public long getOldTimestamp() {
-        return old;
+    @Nullable
+    public History<T> getFuture() {
+        if (future == this) throw new CircularReferenceException("Future == Current," + this);
+        return future;
     }
     
-    public long getNewTimestamp() {
-        return neu;
+    public History<T> future(T object) {
+        if (object == null) return future = null;
+        return future = new History<>(object, this);
+    }
+    
+    public Time asTime() {
+        if (time != null) return time;
+        return time = new Time(TimeUnit.MILLISECONDS, currentTime);
+    }
+    
+    @Override
+    public String toString() {
+        final StringBuilder sb = FunctionalPoolObject.StringBuilder.obtain();
+        sb.append("Past:").append(getPast() == null ? "unknown" : getPast().current).append("\n");
+        sb.append("Current:").append(current).append("\n");
+        sb.append("Future:").append(getFuture() == null ? "unknown" : getFuture().current).append("\n");
+        return sb.toString();
     }
 }

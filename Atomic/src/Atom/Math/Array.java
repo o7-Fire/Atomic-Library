@@ -4,14 +4,22 @@ import Atom.Annotation.ParamClamp;
 import Atom.Utility.Random;
 
 import java.util.Arrays;
+import java.util.function.Supplier;
 
+@SuppressWarnings("unchecked")
 public class Array {
     public static String visualize(Object[] arr) {
         return visualize(arr, System.getProperty("line.separator"));
     }
     
     
-    //add anti dejaVu
+    public static void random(Object arr) {
+        if (arr.getClass().isArray()){
+            random((Object[]) arr);
+        }
+    }
+    
+    //TODO add anti dejaVu
     public static void random(Object[] arr) {
         for (Object element : arr) {
             Class<?> eClass = element.getClass();
@@ -307,4 +315,51 @@ public class Array {
         return booleans;
     }
     
+    public static <T> void random(Supplier<T> supplier, T[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = supplier.get();
+        }
+    }
+    
+    public static <T> T[] getArray(Supplier<T> supplier, Class<T> clazz, int size) {
+        T[] t = create1D(clazz, size);
+        random(supplier, t);
+        return t;
+    }
+    
+    public static <T> T[] create1D(Class<T> clazz, int size) {
+        return (T[]) java.lang.reflect.Array.newInstance(clazz, size);
+    }
+    
+    public static <T> T[][] create2D(Class<T> clazz, int a, int b) {
+        return (T[][]) java.lang.reflect.Array.newInstance(clazz, a, b);
+    }
+    
+    public static <T> T[][][] create3D(Class<T> clazz, int a, int b, int c) {
+        return (T[][][]) java.lang.reflect.Array.newInstance(clazz, a, b, c);
+    }
+    
+    public static <T> T[][][][] create4D(Class<T> clazz, int a, int b, int c, int d) {
+        return (T[][][][]) java.lang.reflect.Array.newInstance(clazz, a, b, c, d);
+    }
+    
+    public static <T> T[][][][][] create5D(Class<T> clazz, int a, int b, int c, int d, int e) {
+        return (T[][][][][]) java.lang.reflect.Array.newInstance(clazz, a, b, c, d, e);
+    }
+    
+    public static <T> T[] random(Supplier<T> supplier, Class<T> tClass) {
+        return getArray(supplier, tClass, Random.getInt(1, 100));
+    }
+    
+    public static int[] getRandomDimension() {
+        return getRandomDimension(Random.getInt(1, 10));
+    }
+    
+    public static int[] getRandomDimension(int rank) {
+        int[] dimension = new int[rank];
+        for (int i = 0; i < dimension.length; i++) {
+            dimension[i] = Random.getInt(1, 20);
+        }
+        return dimension;
+    }
 }

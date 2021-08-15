@@ -6,6 +6,7 @@ import java.util.concurrent.*;
 
 //wtf ?
 public class Pool {
+    
     public static ExecutorService service = Executors.newCachedThreadPool(r -> {
         Thread t = Executors.defaultThreadFactory().newThread(r);
         t.setName(t.getName() + "-Atomic-Pool");

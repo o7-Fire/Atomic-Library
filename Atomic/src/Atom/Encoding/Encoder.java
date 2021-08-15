@@ -1,5 +1,7 @@
 package Atom.Encoding;
 
+import Atom.Struct.FunctionalPoolObject;
+
 import java.io.*;
 import java.util.*;
 
@@ -35,11 +37,13 @@ public class Encoder {
     
     public static String readString(InputStream stream) throws IOException {
         BufferedReader r = new BufferedReader(new InputStreamReader(stream));
-        StringBuilder total = new StringBuilder();
+        StringBuilder total = FunctionalPoolObject.StringBuilder.obtain();
         for (String line; (line = r.readLine()) != null; ) {
             total.append(line).append('\n');
         }
-        return total.toString();
+        String s = total.toString();
+        FunctionalPoolObject.StringBuilder.free(total);
+        return s;
     }
     
     //copied from java
@@ -127,10 +131,12 @@ public class Encoder {
     }
     
     public static String property(Map<String, String> se) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = FunctionalPoolObject.StringBuilder.obtain();
         for (Map.Entry<String, String> s : se.entrySet())
             sb.append(s.getKey()).append("=").append(s.getValue()).append("\n");
-        return sb.toString();
+        String s = sb.toString();
+        FunctionalPoolObject.StringBuilder.obtain();
+        return s;
     }
     
     public static HashMap<String, String> parseProperty(String se) {

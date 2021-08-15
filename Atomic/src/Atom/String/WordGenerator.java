@@ -1,6 +1,6 @@
 package Atom.String;
 
-import Atom.Struct.PoolObject;
+import Atom.Struct.FunctionalPoolObject;
 import Atom.Utility.Random;
 
 import java.util.Arrays;
@@ -31,11 +31,18 @@ public class WordGenerator {
      * @throws IllegalArgumentException if the word length provided is less than 3
      */
     public static StringBuilder newWord(int wordLength) {
-        if (wordLength < 3) {
+        if (wordLength < 3){
             throw new IllegalArgumentException("Word lengths must be at least 3 characters long.");
         }
-        
+    
         return generateRandomWord(wordLength);
+    }
+    
+    public static String randomString() {
+        StringBuilder sb = randomWord();
+        String s = sb.toString();
+        FunctionalPoolObject.StringBuilder.free(sb);
+        return s;
     }
     
     public static StringBuilder randomWord() {
@@ -57,7 +64,7 @@ public class WordGenerator {
     
     
     private static StringBuilder generateRandomWord(int wordLength) {
-        StringBuilder randomWord = PoolObject.StringBuilder.obtain();
+        StringBuilder randomWord = FunctionalPoolObject.StringBuilder.obtain();
         randomWord.append(getNewWordStart());
         while (randomWord.length() != wordLength) {
             addCharacter(wordLength, randomWord);
@@ -137,7 +144,7 @@ public class WordGenerator {
         for (int i = 0; i < strings.length; i++) {
             StringBuilder sb = randomWord();
             strings[i] = sb.toString();
-            PoolObject.StringBuilder.free(sb);
+            FunctionalPoolObject.StringBuilder.free(sb);
         }
         return strings;
     }
@@ -145,4 +152,6 @@ public class WordGenerator {
     public static String[] randomWordArray() {
         return randomWordArray(Random.getInt(100));
     }
+    
+    
 }
