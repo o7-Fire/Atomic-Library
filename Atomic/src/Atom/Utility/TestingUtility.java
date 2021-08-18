@@ -22,17 +22,20 @@ public class TestingUtility {
     }
     
     public static boolean handle(Throwable e, Method m, boolean ignoreIncompatibleParam) {
-        if (e.getCause() instanceof IllegalArgumentException || e.getCause() instanceof NegativeArraySizeException || e.getCause() instanceof ClassCastException){
-            if (ignoreMessage.contains(e.getMessage())) return true;
-            if (ignoreIncompatibleParam){
-                System.err.println();
-                System.err.println(e.getCause().getMessage());
-                System.err.println(m.getDeclaringClass().getCanonicalName() + "." + m.getName());
-                return true;
+        while (e != null) {
+            if (e instanceof IllegalArgumentException || e instanceof NegativeArraySizeException || e instanceof ClassCastException){
+                if (ignoreMessage.contains(e.getMessage())) return true;
+                if (ignoreIncompatibleParam){
+                    System.err.println();
+                    System.err.println(e.getMessage());
+                    System.err.println(m.getDeclaringClass().getCanonicalName() + "." + m.getName());
+                    return true;
+                }
             }
+            e = e.getCause();
         }
         return false;
-        
+    
     }
     
     public static void methodFuzzer(Object object, Method[] methods, boolean ignoreIncompatibleParam) throws InvocationTargetException, IllegalAccessException {
@@ -46,10 +49,10 @@ public class TestingUtility {
                         objectParam = Reflect.createRandomParam(m);
                         m.invoke(object, objectParam);
                     }
-                }catch(InvocationTargetException | IllegalArgumentException e){
+                }catch(Exception e){
                     if (handle(e, m, ignoreIncompatibleParam)) continue;
                     throw e;
-                    
+        
                 }
                 
             }
