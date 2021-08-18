@@ -1,12 +1,12 @@
 package Atom.Utility;
 
 import Atom.Annotation.ParamClamp;
+import Atom.Class.Factory;
 import Atom.Math.Array;
 import Atom.String.WordGenerator;
 import Atom.Struct.FunctionalPoolObject;
 
 import java.util.*;
-import java.util.function.Supplier;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
@@ -14,7 +14,7 @@ import java.util.stream.LongStream;
 //Random get more random when used really often
 public class Random extends java.util.Random {
     public static ThreadLocal<java.util.Random> atomicRandom = ThreadLocal.withInitial(java.util.Random::new);
-    public static final Map<Class<?>, Supplier<?>> randomSupplier = new HashMap<>();
+    public static final Map<Class<?>, Factory<?>> randomSupplier = new HashMap<>();
     public static synchronized void seed(long seed) {
         atomicRandom.get().setSeed(seed);
     }
@@ -300,7 +300,7 @@ public class Random extends java.util.Random {
     }
     
     public static void main(String[] args) {
-        for (Map.Entry<Class<?>, Supplier<?>> s : randomSupplier.entrySet()) {
+        for (Map.Entry<Class<?>, Factory<?>> s : randomSupplier.entrySet()) {
             Object o = s.getValue().get();
             if (!(o.getClass().isPrimitive() == s.getKey().isPrimitive())) continue;
             assert s.getKey().isInstance(o) || s.getKey() == o.getClass() : "Not instance: " + s.getKey().getCanonicalName() + ", " + o.getClass().getCanonicalName();
@@ -312,7 +312,7 @@ public class Random extends java.util.Random {
     }
     
     public static <T> T getRandom(Class<T> type) {
-        if (randomSupplier.containsKey(type)) return type.cast(randomSupplier.get(type));
+        if (randomSupplier.containsKey(type)) return type.cast(randomSupplier.get(type).get());
         return null;
     }
 }
