@@ -312,7 +312,9 @@ public class Random extends java.util.Random {
     }
     
     public static <T> T getRandom(Class<T> type) {
-        if (randomSupplier.containsKey(type)) return type.cast(randomSupplier.get(type).get());
+        if (randomSupplier.containsKey(type)){
+            return (T) randomSupplier.get(type).get();
+        }
         return null;
     }
 }
