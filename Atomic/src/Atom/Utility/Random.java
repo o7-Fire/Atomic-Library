@@ -302,6 +302,7 @@ public class Random extends java.util.Random {
     public static void main(String[] args) {
         for (Map.Entry<Class<?>, Supplier<?>> s : randomSupplier.entrySet()) {
             Object o = s.getValue().get();
+            if (o.getClass().isPrimitive() && !s.getKey().isPrimitive()) continue;
             assert s.getKey().isInstance(o) || s.getKey() == o.getClass() : "Not instance: " + s.getKey().getCanonicalName() + ", " + o.getClass().getCanonicalName();
         }
     }
