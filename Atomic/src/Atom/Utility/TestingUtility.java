@@ -21,40 +21,35 @@ public class TestingUtility {
         ignoreMessage.add("Not a primitive array: class java.lang.Object");
     }
     
+    public static boolean handle(Throwable e, Method m, boolean ignoreIncompatibleParam) {
+        if (e.getCause() instanceof IllegalArgumentException || e.getCause() instanceof NegativeArraySizeException || e.getCause() instanceof ClassCastException){
+            if (ignoreMessage.contains(e.getMessage())) return true;
+            if (ignoreIncompatibleParam){
+                System.err.println();
+                System.err.println(e.getCause().getMessage());
+                System.err.println(m.getDeclaringClass().getCanonicalName() + "." + m.getName());
+                return true;
+            }
+        }
+        return false;
+        
+    }
+    
     public static void methodFuzzer(Object object, Method[] methods, boolean ignoreIncompatibleParam) throws InvocationTargetException, IllegalAccessException {
         for (Method m : methods) {
-    
+            
             if (Modifier.isPublic(m.getModifiers()) && Modifier.isStatic(m.getModifiers())){
-        
+                
                 Object[] objectParam;
                 try {
                     for (int i = 0; i < 5; i++) {
                         objectParam = Reflect.createRandomParam(m);
                         m.invoke(object, objectParam);
                     }
-                }catch(InvocationTargetException e){
-                    if (e.getCause() instanceof IllegalArgumentException){
-                        if (ignoreMessage.contains(e.getMessage())) continue;
-                        if (ignoreIncompatibleParam){
-                            System.err.println();
-                            System.err.println(e.getCause().getMessage());
-                            System.err.println(m.getDeclaringClass().getCanonicalName() + "." + m.getName());
-                            continue;
-                        }
-                    }
+                }catch(InvocationTargetException | IllegalArgumentException e){
+                    if (handle(e, m, ignoreIncompatibleParam)) continue;
                     throw e;
-                }catch(NegativeArraySizeException e){
-    
-                }catch(IllegalArgumentException e){
-    
-                    if (ignoreMessage.contains(e.getMessage())) continue;
-                    if (ignoreIncompatibleParam){
-                        System.err.println();
-                        System.err.println(e.getMessage());
-                        System.err.println(m.getDeclaringClass().getCanonicalName() + "." + m.getName());
-                        continue;
-                    }
-                    throw e;
+                    
                 }
                 
             }
