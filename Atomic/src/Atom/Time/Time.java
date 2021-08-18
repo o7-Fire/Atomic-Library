@@ -17,13 +17,14 @@
 package Atom.Time;
 
 import Atom.Math.Meth;
+import Atom.Struct.PoolObject;
 import Atom.Utility.Utility;
 
 import java.util.concurrent.TimeUnit;
 
-public class Time {
-    final TimeUnit tu;
-    final long src;
+public class Time implements PoolObject.Object {
+    public TimeUnit tu;
+    public long src;
     
     public Time() {
         this(TimeUnit.NANOSECONDS, System.nanoTime());
@@ -81,5 +82,10 @@ public class Time {
     @Override
     public String toString() {
         return src + " " + Utility.capitalizeEnforce(tu.toString());
+    }
+    
+    @Override
+    public void reset() {
+    
     }
 }

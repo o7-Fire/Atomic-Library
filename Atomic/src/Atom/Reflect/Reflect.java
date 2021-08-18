@@ -164,7 +164,8 @@ public class Reflect {
         if (type == short.class || type == Short.class) return Random.getShort();
         if (type == byte.class || type == Byte.class)
             return paramed ? Random.getByte(param.minByte(), param.maxByte()) : Random.getByte();
-        
+        Object o = Random.getRandom(type);
+        if (o != null) return o;
         throw new IllegalArgumentException("Not a primitive: " + type);
     }
     

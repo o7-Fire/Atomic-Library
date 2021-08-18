@@ -43,7 +43,10 @@ public class TestingUtility {
                         }
                     }
                     throw e;
+                }catch(NegativeArraySizeException e){
+    
                 }catch(IllegalArgumentException e){
+    
                     if (ignoreMessage.contains(e.getMessage())) continue;
                     if (ignoreIncompatibleParam){
                         System.err.println();

@@ -42,6 +42,11 @@ public class History<T> implements Serializable {
         return future;
     }
     
+    
+    public T get() {
+        return current;
+    }
+    
     public History<T> future(T object) {
         if (object == null) return future = null;
         return future = new History<>(object, this);

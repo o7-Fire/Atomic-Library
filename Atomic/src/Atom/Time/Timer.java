@@ -16,10 +16,12 @@
 
 package Atom.Time;
 
+import Atom.Class.StopCondition;
+
 import java.util.concurrent.TimeUnit;
 
 //aawtf
-public class Timer {
+public class Timer implements StopCondition {
     final long duration;
     final TimeUnit durationUnit;
     long last = System.currentTimeMillis();
@@ -40,4 +42,8 @@ public class Timer {
         last = System.currentTimeMillis();
     }
     
+    @Override
+    public boolean stop() {
+        return get();
+    }
 }

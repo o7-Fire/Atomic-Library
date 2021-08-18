@@ -326,23 +326,27 @@ public class Array {
         random(supplier, t);
         return t;
     }
-    
+    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static <T> T[] create1D(Class<T> clazz, int size) {
         return (T[]) java.lang.reflect.Array.newInstance(clazz, size);
     }
     
+    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static <T> T[][] create2D(Class<T> clazz, int a, int b) {
         return (T[][]) java.lang.reflect.Array.newInstance(clazz, a, b);
     }
     
+    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static <T> T[][][] create3D(Class<T> clazz, int a, int b, int c) {
         return (T[][][]) java.lang.reflect.Array.newInstance(clazz, a, b, c);
     }
     
+    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static <T> T[][][][] create4D(Class<T> clazz, int a, int b, int c, int d) {
         return (T[][][][]) java.lang.reflect.Array.newInstance(clazz, a, b, c, d);
     }
     
+    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static <T> T[][][][][] create5D(Class<T> clazz, int a, int b, int c, int d, int e) {
         return (T[][][][][]) java.lang.reflect.Array.newInstance(clazz, a, b, c, d, e);
     }
@@ -355,6 +359,7 @@ public class Array {
         return getRandomDimension(Random.getInt(1, 10));
     }
     
+    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static int[] getRandomDimension(int rank) {
         int[] dimension = new int[rank];
         for (int i = 0; i < dimension.length; i++) {

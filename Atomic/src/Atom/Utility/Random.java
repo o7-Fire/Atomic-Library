@@ -13,99 +13,99 @@ import java.util.stream.LongStream;
 
 //Random get more random when used really often
 public class Random extends java.util.Random {
-    private static final java.util.Random atomicRandom = new java.util.Random();
+    public static ThreadLocal<java.util.Random> atomicRandom = ThreadLocal.withInitial(java.util.Random::new);
     public static final Map<Class<?>, Supplier<?>> randomSupplier = new HashMap<>();
     public static synchronized void seed(long seed) {
-        atomicRandom.setSeed(seed);
+        atomicRandom.get().setSeed(seed);
     }
     
     public static void getNextBytes(byte[] bytes) {
-        atomicRandom.nextBytes(bytes);
+        atomicRandom.get().nextBytes(bytes);
     }
     
     public static int getNextInt() {
-        return atomicRandom.nextInt();
+        return atomicRandom.get().nextInt();
     }
     
     public static int getNextInt(int bound) {
-        return atomicRandom.nextInt(bound);
+        return atomicRandom.get().nextInt(bound);
     }
     
     public static long getNextLong() {
-        return atomicRandom.nextLong();
+        return atomicRandom.get().nextLong();
     }
     
     public static boolean getNextBoolean() {
-        return atomicRandom.nextBoolean();
+        return atomicRandom.get().nextBoolean();
     }
     
     public static float getNextFloat() {
-        return atomicRandom.nextFloat();
+        return atomicRandom.get().nextFloat();
     }
     
     public static double getNextDouble() {
-        return atomicRandom.nextDouble();
+        return atomicRandom.get().nextDouble();
     }
     
     public static synchronized double getNextGaussian() {
-        return atomicRandom.nextGaussian();
+        return atomicRandom.get().nextGaussian();
     }
     
     @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static IntStream getInts(long streamSize) {
-        return atomicRandom.ints(streamSize);
+        return atomicRandom.get().ints(streamSize);
     }
     
     public static IntStream getInts() {
-        return atomicRandom.ints();
+        return atomicRandom.get().ints();
     }
     
     @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static IntStream getInts(long streamSize, int randomNumberOrigin, int randomNumberBound) {
-        return atomicRandom.ints(streamSize, randomNumberOrigin, randomNumberBound);
+        return atomicRandom.get().ints(streamSize, randomNumberOrigin, randomNumberBound);
     }
     
     @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static IntStream getInts(int randomNumberOrigin, int randomNumberBound) {
-        return atomicRandom.ints(randomNumberOrigin, randomNumberBound);
+        return atomicRandom.get().ints(randomNumberOrigin, randomNumberBound);
     }
     
     @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static LongStream getLongs(long streamSize) {
-        return atomicRandom.longs(streamSize);
+        return atomicRandom.get().longs(streamSize);
     }
     
     public static LongStream getLongs() {
-        return atomicRandom.longs();
+        return atomicRandom.get().longs();
     }
     
     @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static LongStream getLongs(long streamSize, long randomNumberOrigin, long randomNumberBound) {
-        return atomicRandom.longs(streamSize, randomNumberOrigin, randomNumberBound);
+        return atomicRandom.get().longs(streamSize, randomNumberOrigin, randomNumberBound);
     }
     
     @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static LongStream getLongs(long randomNumberOrigin, long randomNumberBound) {
-        return atomicRandom.longs(randomNumberOrigin, randomNumberBound);
+        return atomicRandom.get().longs(randomNumberOrigin, randomNumberBound);
     }
     
     @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static DoubleStream getDoubles(long streamSize) {
-        return atomicRandom.doubles(streamSize);
+        return atomicRandom.get().doubles(streamSize);
     }
     
     public static DoubleStream getDoubles() {
-        return atomicRandom.doubles();
+        return atomicRandom.get().doubles();
     }
     
     @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static DoubleStream getDoubles(long streamSize, double randomNumberOrigin, double randomNumberBound) {
-        return atomicRandom.doubles(streamSize, randomNumberOrigin, randomNumberBound);
+        return atomicRandom.get().doubles(streamSize, randomNumberOrigin, randomNumberBound);
     }
     
     @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static DoubleStream getDoubles(double randomNumberOrigin, double randomNumberBound) {
-        return atomicRandom.doubles(randomNumberOrigin, randomNumberBound);
+        return atomicRandom.get().doubles(randomNumberOrigin, randomNumberBound);
     }
     
     public static String getString() {
@@ -171,7 +171,7 @@ public class Random extends java.util.Random {
     }
     
     public static int getRandomColor() {
-        return atomicRandom.nextInt(0xffffff + 1);
+        return atomicRandom.get().nextInt(0xffffff + 1);
     }
     
     public static String getRandomHexColor() {
@@ -188,23 +188,23 @@ public class Random extends java.util.Random {
     }
     
     public static float getFloat() {
-        return atomicRandom.nextFloat();
+        return atomicRandom.get().nextFloat();
     }
     
     public static double getDouble() {
-        return atomicRandom.nextDouble();
+        return atomicRandom.get().nextDouble();
     }
     
     public static long getLong() {
-        return atomicRandom.nextLong();
+        return atomicRandom.get().nextLong();
     }
     
     public static boolean getBool() {
-        return atomicRandom.nextBoolean();
+        return atomicRandom.get().nextBoolean();
     }
     
     public static int getInt() {
-        return atomicRandom.nextInt();
+        return atomicRandom.get().nextInt();
     }
     
     public static int getInt(int max) {
@@ -212,7 +212,7 @@ public class Random extends java.util.Random {
     }
     
     public static int getInt(int min, int max) {
-        return atomicRandom.nextInt((max - min) + 1) + min;
+        return atomicRandom.get().nextInt((max - min) + 1) + min;
     }
     
     public static <T> T getRandom(Iterator<T> arr) {
@@ -241,7 +241,7 @@ public class Random extends java.util.Random {
     }
     
     public static long getLong(long min, long max) {
-        return min + ((long) (atomicRandom.nextDouble() * (max - min)));
+        return min + ((long) (atomicRandom.get().nextDouble() * (max - min)));
     }
     
     public static long getLong(long max) {
@@ -249,7 +249,7 @@ public class Random extends java.util.Random {
     }
     
     public static double getDouble(double min, double max) {
-        return min + (atomicRandom.nextDouble() * (max - min));
+        return min + (atomicRandom.get().nextDouble() * (max - min));
     }
     
     public static double getDouble(double max) {
@@ -257,7 +257,7 @@ public class Random extends java.util.Random {
     }
     
     public static float getFloat(float min, float max) {
-        return min + (atomicRandom.nextFloat() * (max - min));
+        return min + (atomicRandom.get().nextFloat() * (max - min));
     }
     
     public static float getFloat(float max) {
@@ -302,11 +302,16 @@ public class Random extends java.util.Random {
     public static void main(String[] args) {
         for (Map.Entry<Class<?>, Supplier<?>> s : randomSupplier.entrySet()) {
             Object o = s.getValue().get();
-            assert s.getKey().isInstance(o) || s.getKey() == o.getClass();
+            assert s.getKey().isInstance(o) || s.getKey() == o.getClass() : "Not instance: " + s.getKey().getCanonicalName() + ", " + o.getClass().getCanonicalName();
         }
     }
     
     public static Class<?> getRandomPrimitiveClass() {
         return getRandom(primitiveClazz);
+    }
+    
+    public static <T> T getRandom(Class<T> type) {
+        if (randomSupplier.containsKey(type)) return (T) randomSupplier.get(type);
+        return null;
     }
 }
