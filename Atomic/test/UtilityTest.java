@@ -34,7 +34,7 @@ public class UtilityTest {
         assert Random.getInt() != Random.getInt();
         assert Random.getInt(-100, 100) != Random.getInt(0, 100);
         assert Random.getInt(100) != Random.getInt();
-        assert Random.getDouble(100) > 1;
+        assert Random.getDouble(100) > 0;
         assert Random.getDouble(-100, 100) != Random.getDouble(100);
         assert Random.getLong() != Random.getLong();
         assert Random.getLong(100) != Random.getLong();
