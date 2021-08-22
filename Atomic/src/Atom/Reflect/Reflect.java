@@ -174,6 +174,9 @@ public class Reflect {
         if (objectParam.length == 0) return objectParam;
         Class<?>[] parameterTypes = m.getParameterTypes();
         ParamClamp param = m.getAnnotation(ParamClamp.class);
+        if (param != null){
+            if (param.skip()) throw new IllegalArgumentException("Skip method: " + m.getName() + ", annotation skip");
+        }
         for (int i = 0; i < parameterTypes.length; i++) {
             Class<?> e = parameterTypes[i];
             objectParam[i] = getRandomPrimitive(e, param);
