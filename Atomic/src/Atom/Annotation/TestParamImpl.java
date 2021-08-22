@@ -2,7 +2,7 @@ package Atom.Annotation;
 
 import java.lang.annotation.Annotation;
 
-public class TestParamImpl implements ParamClamp {
+public class TestParamImpl implements FuzzerSettings {
     @Override
     public byte maxByte() {
         return Byte.MAX_VALUE;

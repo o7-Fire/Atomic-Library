@@ -1,6 +1,6 @@
 package Atom.Utility;
 
-import Atom.Annotation.ParamClamp;
+import Atom.Annotation.FuzzerSettings;
 import Atom.Class.Factory;
 import Atom.Math.Array;
 import Atom.String.WordGenerator;
@@ -51,7 +51,7 @@ public class Random extends java.util.Random {
         return atomicRandom.get().nextGaussian();
     }
     
-    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    @FuzzerSettings(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static IntStream getInts(long streamSize) {
         return atomicRandom.get().ints(streamSize);
     }
@@ -60,17 +60,17 @@ public class Random extends java.util.Random {
         return atomicRandom.get().ints();
     }
     
-    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    @FuzzerSettings(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static IntStream getInts(long streamSize, int randomNumberOrigin, int randomNumberBound) {
         return atomicRandom.get().ints(streamSize, randomNumberOrigin, randomNumberBound);
     }
     
-    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    @FuzzerSettings(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static IntStream getInts(int randomNumberOrigin, int randomNumberBound) {
         return atomicRandom.get().ints(randomNumberOrigin, randomNumberBound);
     }
     
-    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    @FuzzerSettings(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static LongStream getLongs(long streamSize) {
         return atomicRandom.get().longs(streamSize);
     }
@@ -79,17 +79,17 @@ public class Random extends java.util.Random {
         return atomicRandom.get().longs();
     }
     
-    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    @FuzzerSettings(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static LongStream getLongs(long streamSize, long randomNumberOrigin, long randomNumberBound) {
         return atomicRandom.get().longs(streamSize, randomNumberOrigin, randomNumberBound);
     }
     
-    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    @FuzzerSettings(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static LongStream getLongs(long randomNumberOrigin, long randomNumberBound) {
         return atomicRandom.get().longs(randomNumberOrigin, randomNumberBound);
     }
     
-    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    @FuzzerSettings(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static DoubleStream getDoubles(long streamSize) {
         return atomicRandom.get().doubles(streamSize);
     }
@@ -98,12 +98,12 @@ public class Random extends java.util.Random {
         return atomicRandom.get().doubles();
     }
     
-    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    @FuzzerSettings(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static DoubleStream getDoubles(long streamSize, double randomNumberOrigin, double randomNumberBound) {
         return atomicRandom.get().doubles(streamSize, randomNumberOrigin, randomNumberBound);
     }
     
-    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    @FuzzerSettings(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static DoubleStream getDoubles(double randomNumberOrigin, double randomNumberBound) {
         return atomicRandom.get().doubles(randomNumberOrigin, randomNumberBound);
     }
@@ -112,12 +112,12 @@ public class Random extends java.util.Random {
         return getString(8);
     }
     
-    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    @FuzzerSettings(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static String getString(int length) {
         return getString(length, 125);
     }
     
-    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    @FuzzerSettings(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static String getString(int length, int max) {
         return getString(length, 33, max);
     }
@@ -274,7 +274,7 @@ public class Random extends java.util.Random {
         return bytes[0];
     }
     
-    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    @FuzzerSettings(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static String getString(int length, int min, int max) {
         if (length < 0) return "";
         StringBuilder sb = FunctionalPoolObject.StringBuilder.obtain();

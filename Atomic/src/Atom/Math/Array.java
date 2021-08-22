@@ -1,6 +1,6 @@
 package Atom.Math;
 
-import Atom.Annotation.ParamClamp;
+import Atom.Annotation.FuzzerSettings;
 import Atom.Utility.Random;
 
 import java.util.Arrays;
@@ -45,77 +45,77 @@ public class Array {
         return deep;
     }
     
-    @ParamClamp(maxInteger = 10, minInteger = 1)
+    @FuzzerSettings(maxInteger = 10, minInteger = 1)
     public static void random(boolean[] arr) {
         for (int i = 0; i < arr.length; i++) {
             arr[i] = Random.getBool();
         }
     }
     
-    @ParamClamp(maxInteger = 10, minInteger = 1)
+    @FuzzerSettings(maxInteger = 10, minInteger = 1)
     public static void random(char[] arr) {
         for (int i = 0; i < arr.length; i++) {
             arr[i] = (char) Random.getInt(Character.MIN_VALUE, Character.MAX_VALUE);
         }
     }
     
-    @ParamClamp(maxInteger = 10, minInteger = 1)
+    @FuzzerSettings(maxInteger = 10, minInteger = 1)
     public static void random(short[] arr) {
         for (int i = 0; i < arr.length; i++) {
             arr[i] = (short) Random.getShort();
         }
     }
     
-    @ParamClamp(maxInteger = 10, minInteger = 1)
+    @FuzzerSettings(maxInteger = 10, minInteger = 1)
     public static void random(byte[] arr) {
         for (int i = 0; i < arr.length; i++) {
             arr[i] = (byte) Random.getInt(Byte.MIN_VALUE, Byte.MAX_VALUE);
         }
     }
     
-    @ParamClamp(maxInteger = 10, minInteger = 1)
+    @FuzzerSettings(maxInteger = 10, minInteger = 1)
     public static void random(int[] arr) {
         for (int i = 0; i < arr.length; i++) {
             arr[i] = Random.getInt();
         }
     }
     
-    @ParamClamp(maxInteger = 10, minInteger = 1)
+    @FuzzerSettings(maxInteger = 10, minInteger = 1)
     public static void random(double[] arr) {
         for (int i = 0; i < arr.length; i++) {
             arr[i] = Random.getDouble();
         }
     }
     
-    @ParamClamp(maxInteger = 10, minInteger = 1)
+    @FuzzerSettings(maxInteger = 10, minInteger = 1)
     public static void random(long[] arr) {
         for (int i = 0; i < arr.length; i++) {
             arr[i] = Random.getLong();
         }
     }
     
-    @ParamClamp(maxInteger = 10, minInteger = 1)
+    @FuzzerSettings(maxInteger = 10, minInteger = 1)
     public static void random(float[] arr) {
         for (int i = 0; i < arr.length; i++) {
             arr[i] = Random.getFloat();
         }
     }
     
-    @ParamClamp(maxInteger = 10, minInteger = 1)
+    @FuzzerSettings(maxInteger = 10, minInteger = 1)
     public static float[] randomFloat(int size) {
         float[] arr = new float[size];
         random(arr);
         return arr;
     }
     
-    @ParamClamp(maxInteger = 10, minInteger = 1)
+    @FuzzerSettings(maxInteger = 10, minInteger = 1)
     public static double[] randomDouble(int size) {
         double[] arr = new double[size];
         random(arr);
         return arr;
     }
     
-    @ParamClamp(maxInteger = 10, minInteger = 1)
+    @FuzzerSettings(maxInteger = 10, minInteger = 1)
     public static long[] randomLong(int size) {
         long[] arr = new long[size];
         random(arr);
@@ -138,14 +138,14 @@ public class Array {
         return randomInteger(Random.getInt(1, 10));
     }
     
-    @ParamClamp(maxInteger = 10, minInteger = 1)
+    @FuzzerSettings(maxInteger = 10, minInteger = 1)
     public static int[] randomInteger(int size) {
         int[] arr = new int[size];
         random(arr);
         return arr;
     }
     
-    @ParamClamp(maxInteger = 10, minInteger = 1)
+    @FuzzerSettings(maxInteger = 10, minInteger = 1)
     public static boolean[] randomBoolean(int size) {
         return new boolean[size];
     }
@@ -154,7 +154,7 @@ public class Array {
         return randomBoolean(Random.getInt(100));
     }
     
-    @ParamClamp(maxInteger = 10, minInteger = 1)
+    @FuzzerSettings(maxInteger = 10, minInteger = 1)
     public static short[] randomShort(int size) {
         short[] shorts = new short[size];
         random(shorts);
@@ -165,7 +165,7 @@ public class Array {
         return randomShort(Random.getInt(100));
     }
     
-    @ParamClamp(maxInteger = 10, minInteger = 1)
+    @FuzzerSettings(maxInteger = 10, minInteger = 1)
     public static byte[] randomByte(int size) {
         byte[] bytes = new byte[size];
         random(bytes);
@@ -180,7 +180,7 @@ public class Array {
         return randomChar(Random.getInt(100));
     }
     
-    @ParamClamp(maxInteger = 10, minInteger = 1)
+    @FuzzerSettings(maxInteger = 10, minInteger = 1)
     private static char[] randomChar(int size) {
         char[] chars = new char[size];
         random(chars);
@@ -326,27 +326,28 @@ public class Array {
         random(supplier, t);
         return t;
     }
-    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    
+    @FuzzerSettings(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static <T> T[] create1D(Class<T> clazz, int size) {
         return (T[]) java.lang.reflect.Array.newInstance(clazz, size);
     }
     
-    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    @FuzzerSettings(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static <T> T[][] create2D(Class<T> clazz, int a, int b) {
         return (T[][]) java.lang.reflect.Array.newInstance(clazz, a, b);
     }
     
-    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    @FuzzerSettings(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static <T> T[][][] create3D(Class<T> clazz, int a, int b, int c) {
         return (T[][][]) java.lang.reflect.Array.newInstance(clazz, a, b, c);
     }
     
-    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    @FuzzerSettings(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static <T> T[][][][] create4D(Class<T> clazz, int a, int b, int c, int d) {
         return (T[][][][]) java.lang.reflect.Array.newInstance(clazz, a, b, c, d);
     }
     
-    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    @FuzzerSettings(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static <T> T[][][][][] create5D(Class<T> clazz, int a, int b, int c, int d, int e) {
         return (T[][][][][]) java.lang.reflect.Array.newInstance(clazz, a, b, c, d, e);
     }
@@ -359,7 +360,7 @@ public class Array {
         return getRandomDimension(Random.getInt(1, 10));
     }
     
-    @ParamClamp(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    @FuzzerSettings(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static int[] getRandomDimension(int rank) {
         int[] dimension = new int[rank];
         for (int i = 0; i < dimension.length; i++) {

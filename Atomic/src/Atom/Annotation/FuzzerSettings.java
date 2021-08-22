@@ -4,7 +4,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ParamClamp {
+public @interface FuzzerSettings {
     byte maxByte() default Byte.MAX_VALUE;
     
     byte minByte() default Byte.MIN_VALUE;
