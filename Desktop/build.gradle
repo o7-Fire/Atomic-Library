@@ -6,13 +6,13 @@ repositories {
 
 dependencies {
     compileOnly aproj(":Atomic")
-    compileOnly ('com.github.javaparser:javaparser-core:3.16.2'){
+    compileOnly ('com.github.javaparser:javaparser-core:3.22.1'){
         because("runtime")
     }
-    compileOnly (group: 'org.mongodb', name: 'mongodb-driver-sync', version: '4.1.0'){
+    compileOnly (group: 'org.mongodb', name: 'mongodb-driver-sync', version: '4.3.0'){
         because("runtime")
     }
-    compileOnly( group: 'org.jetbrains', name: 'annotations', version: '20.1.0'){
+    compileOnly( group: 'org.jetbrains', name: 'annotations', version: '22.0.0'){
         because("compile")
     }
     compileOnly(group: 'org.jfree', name: 'jfreechart', version: '1.5.3'){
