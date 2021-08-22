@@ -1,10 +1,13 @@
 package Atom.Annotation;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-public @interface FuzzerSettings {
+@Target(ElementType.METHOD)
+public @interface MethodFuzzer {
     byte maxByte() default Byte.MAX_VALUE;
     
     byte minByte() default Byte.MIN_VALUE;

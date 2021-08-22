@@ -1,6 +1,6 @@
 package Atom.Reflect;
 
-import Atom.Annotation.FuzzerSettings;
+import Atom.Annotation.MethodFuzzer;
 import Atom.Annotation.TestParamImpl;
 import Atom.Manifest;
 import Atom.Math.Array;
@@ -140,13 +140,13 @@ public class Reflect {
         throw new IllegalArgumentException("Not a primitive array: " + type);
     }
     
-    static FuzzerSettings testParam = new TestParamImpl();
+    static MethodFuzzer testParam = new TestParamImpl();
     
     public static Object getRandomPrimitive(Class<?> type) {
         return getRandomPrimitive(type, null);
     }
     
-    public static Object getRandomPrimitive(Class<?> type, FuzzerSettings param) {
+    public static Object getRandomPrimitive(Class<?> type, MethodFuzzer param) {
         boolean paramed = param != null;
         if (type.isArray()){
             return getRandomPrimitiveArray(type);
@@ -173,7 +173,7 @@ public class Reflect {
         Object[] objectParam = new Object[m.getParameterTypes().length];
         if (objectParam.length == 0) return objectParam;
         Class<?>[] parameterTypes = m.getParameterTypes();
-        FuzzerSettings param = m.getAnnotation(FuzzerSettings.class);
+        MethodFuzzer param = m.getAnnotation(MethodFuzzer.class);
         if (param != null){
             if (param.skip()) throw new IllegalArgumentException("Skip method: " + m.getName() + ", annotation skip");
         }

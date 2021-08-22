@@ -1,6 +1,6 @@
 package Atom.Math;
 
-import Atom.Annotation.FuzzerSettings;
+import Atom.Annotation.MethodFuzzer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -123,7 +123,7 @@ public class Matrix {
     }
     
     //TODO automate this reptitive shit or just copy paste idk
-    @FuzzerSettings(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static Object[] makeTensor(Class<?> type, int x, int y, int z) {
         if (type == char.class || type == Character.class) if (type.isPrimitive()) return new char[x][y][z];
         else return new Character[x][y][z];
@@ -144,7 +144,7 @@ public class Matrix {
         throw new IllegalArgumentException("Not a primitive: " + type.getClass());
     }
     
-    @FuzzerSettings(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static Object[] makeMatrix(Class<?> type, int x, int y) {
         if (type == char.class || type == Character.class) if (type.isPrimitive()) return new char[x][y];
         else return new Character[x][y];
