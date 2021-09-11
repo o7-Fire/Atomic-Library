@@ -1,12 +1,115 @@
 package Atom.Math;
 
 import Atom.Annotation.MethodFuzzer;
+import Atom.Utility.Random;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Matrix {
+    public static boolean[][] randomBoolean() {
+        return randomBoolean(Random.getInt(1, 12));
+    }
     
+    public static byte[][] randomByte() {
+        return randomByte(Random.getInt(1, 12));
+    }
+    
+    public static short[][] randomShort() {
+        return randomShort(Random.getInt(1, 12));
+    }
+    
+    public static char[][] randomChar() {
+        return randomChar(Random.getInt(1, 12));
+    }
+    
+    public static int[][] randomInteger() {
+        return randomInteger(Random.getInt(1, 12));
+    }
+    
+    public static long[][] randomLong() {
+        return randomLong(Random.getInt(1, 12));
+    }
+    
+    public static float[][] randomFloat() {
+        return randomFloat(Random.getInt(1, 12));
+    }
+    
+    public static double[][] randomDouble() {
+        return randomDouble(Random.getInt(1, 12));
+    }
+    
+    @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    public static float[][] randomFloat(int size) {
+        float[][] matrix = new float[size][];
+        for (int i = 0; i < matrix.length; i++) {
+            matrix[i] = Array.randomFloat();
+        }
+        return matrix;
+    }
+    
+    @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    public static double[][] randomDouble(int size) {
+        double[][] matrix = new double[size][];
+        for (int i = 0; i < matrix.length; i++) {
+            matrix[i] = Array.randomDouble();
+        }
+        return matrix;
+    }
+    
+    @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    public static boolean[][] randomBoolean(int size) {
+        boolean[][] matrix = new boolean[size][];
+        for (int i = 0; i < matrix.length; i++) {
+            matrix[i] = Array.randomBoolean();
+        }
+        return matrix;
+    }
+    
+    @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    public static byte[][] randomByte(int size) {
+        byte[][] matrix = new byte[size][];
+        for (int i = 0; i < matrix.length; i++) {
+            matrix[i] = Array.randomByte();
+        }
+        return matrix;
+    }
+    
+    @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    public static short[][] randomShort(int size) {
+        short[][] matrix = new short[size][];
+        for (int i = 0; i < matrix.length; i++) {
+            matrix[i] = Array.randomShort();
+        }
+        return matrix;
+    }
+    
+    @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    public static char[][] randomChar(int size) {
+        char[][] matrix = new char[size][];
+        for (int i = 0; i < matrix.length; i++) {
+            matrix[i] = Array.randomChar();
+        }
+        return matrix;
+    }
+    
+    @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    public static int[][] randomInteger(int size) {
+        int[][] matrix = new int[size][];
+        for (int i = 0; i < matrix.length; i++) {
+            matrix[i] = Array.randomInteger();
+        }
+        return matrix;
+    }
+    
+    @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    public static long[][] randomLong(int size) {
+        long[][] matrix = new long[size][];
+        for (int i = 0; i < matrix.length; i++) {
+            matrix[i] = Array.randomLong();
+        }
+        return matrix;
+    }
     
     public static long[] flattenMatrix(long[][] arr) {
         int count = 0;
