@@ -13,7 +13,15 @@ import java.util.Map;
 public class UrbanDictionary implements API {
     
     public static void main(String[] args) throws IOException {
+        //test UrbanDictionary
         scrap("kys");
+        scrap("smh");
+        scrap("bruh");
+        scrap("lol");
+        scrap("wtf");
+        scrap("omg");
+        scrap("brb");
+        scrap("lmao");
     }
     
     @Nullable

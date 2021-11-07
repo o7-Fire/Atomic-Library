@@ -266,4 +266,27 @@ public class Meth {
         if (i > 0) return -i;
         return i;
     }
+    
+    //TODO add clamp methods
+    public static float clamp(float i, float min, float max) {
+        if (i < min) return min;
+        return Math.min(i, max);
+    }
+    
+    public static int clamp(int i, int min, int max) {
+        if (i < min) return min;
+        return Math.min(i, max);
+    }
+    
+    public static long clamp(long i, long min, long max) {
+        if (i < min) return min;
+        return Math.min(i, max);
+    }
+    
+    public static double clamp(double i, double min, double max) {
+        if (i < min) return min;
+        return Math.min(i, max);
+    }
+    
+    
 }

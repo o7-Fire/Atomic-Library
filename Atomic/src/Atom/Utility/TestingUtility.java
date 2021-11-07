@@ -8,6 +8,7 @@ import java.lang.reflect.Modifier;
 import java.util.HashSet;
 //TODO add field fuzzer, package fuzzer, new Instance fuzzer
 public class TestingUtility {
+    
     public static void methodFuzzer(Method[] methods, boolean ignoreIncompatibleParam) throws InvocationTargetException, IllegalAccessException {
         methodFuzzer(null, methods, ignoreIncompatibleParam);
     }

@@ -33,6 +33,7 @@ public class Array {
             else if (eClass == boolean[].class) random((boolean[]) element);
             else random((Object[]) element);
         }
+    
     }
     
     

@@ -8,7 +8,7 @@ public class OS {
     public static boolean isAndroid = false;
     public static boolean isARM = getProperty("os.arch").startsWith("arm") || getProperty("os.arch").startsWith("aarch64");
     public static boolean is64Bit = getProperty("os.arch").contains("64") || getProperty("os.arch").startsWith("armv8");
-    
+    public static boolean is32Bit = !is64Bit;
     static {
         if (getProperty("java.runtime.name").contains("Android Runtime") || getProperty("java.vm.vendor").contains("The Android Project") || getProperty("java.vendor").contains("The Android Project")) {
             isAndroid = true;
@@ -58,6 +58,18 @@ public class OS {
             osArch = "armhf";
         }else if (osArch.startsWith("arm")){
             osArch = "arm";
+        }else if (osArch.startsWith("ppc64")){//bro what
+            osArch = "ppc64";
+        }else if (osArch.startsWith("ppc")){
+            osArch = "ppc";
+        }else if (osArch.startsWith("mips")){
+            osArch = "mips";
+        }else if (osArch.startsWith("sparc")){
+            osArch = "sparc";
+        }else if (osArch.startsWith("sparcv9")){
+            osArch = "sparcv9";
+        }else if (osArch.startsWith("sparc64")){
+            osArch = "sparc64";
         }
         return osName + "-" + osArch;
     }
