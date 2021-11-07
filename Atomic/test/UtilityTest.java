@@ -16,16 +16,16 @@ public class UtilityTest {
         assert Utility.repeatThisString("\n", 10).equals("\n\n\n\n\n\n\n\n\n\n");
         assert Utility.capitalizeEnforce("saDdAm").equals("Saddam");
         assert Utility.capitalizeEnforce("Saddam").equals("Saddam");
-        assert Utility.containIntOnly("1234") == true;
-        assert Utility.containIntOnly("58726758265827652867528765823659173912379127319741094129481294141241") == true;
-        assert Utility.containIntOnly("fafahf08r3208h293b19-b1") == false;
+        assert Utility.containIntOnly("1234");
+        assert Utility.containIntOnly("58726758265827652867528765823659173912379127319741094129481294141241");
+        assert !Utility.containIntOnly("fafahf08r3208h293b19-b1");
         assert Utility.capitalizeFirstLetter("saddaM").equals("SaddaM");
         assert Utility.capitalizeFirstLetter("SaddaM").equals("SaddaM");
         assert Utility.lowerFirstLetter("SaddaN").equals("saddaN");
         assert Utility.lowerFirstLetter("saddaNN").equals("saddaNN");
         assert Utility.shrinkChar("aaaaabbbbbcccccccccc").equals("abc");
         assert Arrays.equals(Utility.sliceInt("111111,2222222,333333,4444444", ","), new int[]{111111, 2222222, 333333, 4444444});
-        assert Utility.shuffle("aaabbbccc").equals("aaabbbccc") == false;
+        assert !Utility.shuffle("aaabbbccc").equals("aaabbbccc");
     
     }
     

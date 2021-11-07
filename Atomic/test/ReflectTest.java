@@ -7,5 +7,7 @@ public class ReflectTest {
         int[][][] e = new int[2][2][3];
         int[][][] res2 = (int[][][]) Reflect.getRandomPrimitiveArray(e.getClass());
         int[][][] res1 = (int[][][]) Reflect.getRandomPrimitive(e.getClass());
+        //Discover all classes within a package
+        Reflect.getClasses("Atom");
     }
 }
