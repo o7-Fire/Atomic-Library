@@ -5,6 +5,7 @@ import Atom.Class.Factory;
 import Atom.Math.Array;
 import Atom.String.WordGenerator;
 import Atom.Struct.FunctionalPoolObject;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.DoubleStream;
@@ -174,6 +175,156 @@ public class Random extends java.util.Random {
         return atomicRandom.get().nextInt(0xffffff + 1);
     }
     
+    public static int[] getIntegerArrayWithSum() {
+        return getIntegerArrayWithSum(Random.getInt(200));
+    }
+    
+    @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    public static int[] getIntegerArrayWithSum(int sum) {
+        return getIntegerArrayWithSum(sum, Random.getInt(20));
+    }
+    
+    @MethodFuzzer(maxLong = 20, minLong = 1, minInteger = 1, maxInteger = 20)
+    public static int[] getIntegerArrayWithSum(int sum, int count) {
+        
+        int[] vals = new int[count];
+        sum -= count;
+        
+        for (int i = 0; i < count - 1; ++i) {
+            vals[i] = getInt(sum);
+        }
+        vals[count - 1] = sum;
+        
+        java.util.Arrays.sort(vals);
+        for (int i = count - 1; i > 0; --i) {
+            vals[i] -= vals[i - 1];
+        }
+        for (int i = 0; i < count; ++i) {++vals[i];}
+        return vals;
+        
+    }
+    
+    //generate for another type
+    @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    public static float[] getFloatArrayWithSum(float sum, int count) {
+        
+        float[] vals = new float[count];
+        sum -= count;
+        
+        for (int i = 0; i < count - 1; ++i) {
+            vals[i] = getFloat(sum);
+        }
+        vals[count - 1] = sum;
+        
+        java.util.Arrays.sort(vals);
+        for (int i = count - 1; i > 0; --i) {
+            vals[i] -= vals[i - 1];
+        }
+        for (int i = 0; i < count; ++i) {++vals[i];}
+        return vals;
+        
+    }
+    
+    public static float[] getFloatArrayWithSum() {
+        return getFloatArrayWithSum(1);
+    }
+    
+    public static float[] getFloatArrayWithSum(float sum) {
+        return getFloatArrayWithSum(sum, getInt(20));
+    }
+    
+    @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    public static double[] getDoubleArrayWithSum(double sum, int count) {
+        
+        double[] vals = new double[count];
+        sum -= count;
+        
+        for (int i = 0; i < count - 1; ++i) {
+            vals[i] = getDouble(sum);
+        }
+        vals[count - 1] = sum;
+        
+        java.util.Arrays.sort(vals);
+        for (int i = count - 1; i > 0; --i) {
+            vals[i] -= vals[i - 1];
+        }
+        for (int i = 0; i < count; ++i) {++vals[i];}
+        return vals;
+        
+    }
+    
+    @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    public static byte[] getByteArrayWithSum(byte sum, int count) {
+        
+        byte[] vals = new byte[count];
+        sum -= count;
+        
+        for (int i = 0; i < count - 1; ++i) {
+            vals[i] = getByte(sum);
+        }
+        vals[count - 1] = sum;
+        
+        java.util.Arrays.sort(vals);
+        for (int i = count - 1; i > 0; --i) {
+            vals[i] -= vals[i - 1];
+        }
+        for (int i = 0; i < count; ++i) {++vals[i];}
+        return vals;
+        
+    }
+    
+    @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    public static short[] getShortArrayWithSum(short sum, int count) {
+        
+        short[] vals = new short[count];
+        sum -= count;
+        
+        for (int i = 0; i < count - 1; ++i) {
+            vals[i] = getShort(sum);
+        }
+        vals[count - 1] = sum;
+        
+        java.util.Arrays.sort(vals);
+        for (int i = count - 1; i > 0; --i) {
+            vals[i] -= vals[i - 1];
+        }
+        for (int i = 0; i < count; ++i) {++vals[i];}
+        return vals;
+        
+    }
+    
+    public static short getShort(short min, short max) {
+        return (short) (min + (getShort() * (max - min)));
+    }
+    
+    public static short getShort(short max) {
+        return getShort((short) 0, max);
+    }
+    
+    
+    private static byte getByte(byte max) {
+        return getByte((byte) 0, max);
+    }
+    
+    public static long[] getLongArrayWithSum(long sum, int count) {
+        
+        long[] vals = new long[count];
+        sum -= count;
+        
+        for (int i = 0; i < count - 1; ++i) {
+            vals[i] = getLong(sum);
+        }
+        vals[count - 1] = sum;
+        
+        java.util.Arrays.sort(vals);
+        for (int i = count - 1; i > 0; --i) {
+            vals[i] -= vals[i - 1];
+        }
+        for (int i = 0; i < count; ++i) {++vals[i];}
+        return vals;
+        
+    }
+    
     public static String getRandomHexColor() {
         int getNextInt = Random.getInt(5000000, 16777215);
         return String.format("#%06x", getNextInt);
@@ -234,6 +385,7 @@ public class Random extends java.util.Random {
         return arrays.get(rnd);
     }
     
+    @NotNull
     public static <T> T getRandom(T[] arrays) {
         if (arrays.length == 0) return null;
         int rnd = getInt( arrays.length - 1);
