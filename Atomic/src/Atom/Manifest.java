@@ -12,6 +12,7 @@ import static Atom.Reflect.Reflect.getCurrentJar;
 
 
 public class Manifest {
+    //
     public static String platform = "Atomic";
     public static RepoInternal internalRepo = new RepoInternal();
     public static File currentJar = null, currentFolder = null;
