@@ -2,6 +2,7 @@
 ---
 A frankenstein library that nobody ask for
 
+note replace -SNAPSHOT with commit hash
 
 gradle:
 ```groovy
