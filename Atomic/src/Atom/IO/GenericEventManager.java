@@ -10,6 +10,7 @@ public class GenericEventManager {
     
     public <T> void addEventListener(Class<T> eventType, Consumer<T> listener) {
         List<Consumer<?>> list = eventMap.getOrDefault(eventType, new ArrayList<>());
+        list.add(listener);
         if (!eventMap.containsKey(eventType)){
             eventMap.put(eventType, list);
         }

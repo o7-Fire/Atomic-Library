@@ -54,6 +54,24 @@ public class WordGenerator {
         return newWord(Atom.Utility.Random.getInt(3, max));
     }
     
+    //make random sentence from randomWord
+    public static StringBuilder randomSentence() {
+        return randomSentence(Atom.Utility.Random.getInt(32));
+    }
+    
+    public static StringBuilder randomSentence(int max) {
+        return newSentence(Atom.Utility.Random.getInt(3, max + 3), 7);
+    }
+    
+    public static StringBuilder newSentence(int sentenceLength, int wordLength) {
+        StringBuilder sb = randomWord(wordLength);
+        for (int i = 0; i < sentenceLength; i++) {
+            sb.append(" ");
+            sb.append(randomWord(wordLength));
+        }
+        return sb;
+    }
+    
     public static void main(String[] args) {
         for (int i = 3; i < 40; i++) {
             for (int j = 0; j < 3; j++) {
