@@ -46,6 +46,9 @@ public class TestingUtility {
                 
                 Object[] objectParam;
                 try {
+                    //1 is a fluke
+                    //2 is a coincidence
+                    //3 is a pattern
                     for (int i = 0; i < 5; i++) {
                         objectParam = Reflect.createRandomParam(m);
                         m.invoke(object, objectParam);

@@ -230,7 +230,7 @@ public class Random extends java.util.Random {
     }
     
     public static float[] getFloatArrayWithSum(float sum) {
-        return getFloatArrayWithSum(sum, getInt(20));
+        return getFloatArrayWithSum(sum, getInt(1, 20));
     }
     
     @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
@@ -358,6 +358,8 @@ public class Random extends java.util.Random {
         return atomicRandom.get().nextInt();
     }
     
+    //note add by 1 if used for get random array size
+    //don't subtract by 1 if used for array index
     public static int getInt(int max) {
         return getInt(0, max);
     }

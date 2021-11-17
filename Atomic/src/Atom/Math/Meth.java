@@ -288,5 +288,18 @@ public class Meth {
         return Math.min(i, max);
     }
     
+    public static float error = 0.00001f;
     
+    //floating point equality
+    public static boolean equals(float a, float b, float err) {
+        return Math.abs(a - b) < err;
+    }
+    
+    public static boolean equals(double a, double b, double err) {
+        return Math.abs(a - b) < err;
+    }
+    
+    public static boolean equals(long a, long b, long err) {
+        return Math.abs(a - b) < err;
+    }
 }

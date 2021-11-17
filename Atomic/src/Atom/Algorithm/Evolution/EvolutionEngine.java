@@ -53,7 +53,7 @@ public class EvolutionEngine<G> extends Thread {
     public static void main(String[] args) throws InterruptedException {
         Time[] histories = new Time[]{new Time(), new Time(), new Time(TimeUnit.MILLISECONDS, 1000)};
         System.out.println(Arrays.deepToString(histories));
-        Arrays.sort(histories, Comparator.comparing(Time::getSrc));
+        Arrays.sort(histories, Comparator.comparing(t -> t.src));
         System.out.println(Arrays.deepToString(histories));
         histories.clone()[1].src = 1;
         System.out.println(Arrays.deepToString(histories));

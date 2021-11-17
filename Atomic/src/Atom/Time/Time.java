@@ -16,13 +16,12 @@
 
 package Atom.Time;
 
-import Atom.Math.Meth;
 import Atom.Struct.PoolObject;
 import Atom.Utility.Utility;
 
 import java.util.concurrent.TimeUnit;
 
-public class Time implements PoolObject.Object {
+public class Time implements PoolObject.Object, Cloneable {
     public TimeUnit tu;
     public long src;
     
@@ -39,31 +38,35 @@ public class Time implements PoolObject.Object {
         this.src = src;
     }
     
-    public TimeUnit getTimeUnit() {
-        return tu;
-    }
-    
-    public long getSrc() {
-        return src;
-    }
-    
+    //convert to another time unit with its source, note affect current object
     public Time convert(TimeUnit to) {
-        if (tu.equals(to)) return this;//bruh
-        return new Time(to, to.convert(src, tu));
+        if (tu == to) return this;//bruh
+        src = to.convert(src, tu);
+        tu = to;
+        return this;
+    }
+    
+    public long convert0(TimeUnit to) {
+        return to.convert(src, tu);
     }
     
     
-    //wtf is this
+    //get elapsed time based on current time
     public Time elapsed() {
         return elapsed(tu.equals(TimeUnit.NANOSECONDS) ? new Time() : new Time(TimeUnit.MILLISECONDS));
     }
     
     public Time elapsed(Time time) {
-        long tg = time.convert(tu).src;
-        long calc = tg - src;
-        return new Time(tu, calc);
+        return new Time(tu, elapsed0(time));
     }
     
+    public long elapsed0(Time time) {
+        return elapsed0(tu.convert(time.src, time.tu));
+    }
+    
+    public long elapsed0(long tg) {
+        return tg - src;
+    }
     
     public String elapsedS(Time time) {
         return elapsed(time).toString();
@@ -73,11 +76,6 @@ public class Time implements PoolObject.Object {
         return elapsed().toString();
     }
     
-    public Time elapsedF(Time time) {
-        long tg = time.convert(tu).src;
-        long calc = src - tg;
-        return new Time(tu, Meth.negative(calc));
-    }
     
     @Override
     public String toString() {
@@ -86,6 +84,16 @@ public class Time implements PoolObject.Object {
     
     @Override
     public void reset() {
+        src = 0;
+        tu = TimeUnit.NANOSECONDS;
+    }
     
+    @Override
+    public Time clone() {
+        try {
+            return (Time) super.clone();
+        }catch(CloneNotSupportedException e){
+            throw new AssertionError();
+        }
     }
 }
