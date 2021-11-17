@@ -10,7 +10,6 @@ public class MathTest {
     @Test
     void Meth() throws InvocationTargetException, IllegalAccessException {
         TestingUtility.methodFuzzer(Meth.class.getDeclaredMethods(), true);
-        Meth
     }
     
     @Test
