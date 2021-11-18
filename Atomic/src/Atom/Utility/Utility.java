@@ -5,6 +5,7 @@ import Atom.Struct.FunctionalPoolObject;
 import com.google.gson.Gson;
 
 import java.io.*;
+import java.lang.management.ManagementFactory;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -118,6 +119,18 @@ public class Utility {
         Formatter formatter = new Formatter();
         Calendar c = Calendar.getInstance();
         return formatter.format(Locale.UK, "%tl:%tM:%tS %tp %tB %te, %tY", c, c, c, c, c, c, c).toString();
+    }
+    
+    //get cpu usage of current process from java api
+    //android support ?
+    public double getAverageCpuUsage() {
+        try {
+            return ManagementFactory.getOperatingSystemMXBean()
+                                    .getSystemLoadAverage() / ManagementFactory.getOperatingSystemMXBean()
+                                                                               .getAvailableProcessors();
+        }catch(Throwable t){
+            return 0;//class don't exists
+        }
     }
     
     public static String getDate(long milis) {
