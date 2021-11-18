@@ -11,9 +11,9 @@ public class TimeTest {
         Timer timer = new Timer(TimeUnit.SECONDS, 4);
         Time time = new Time(TimeUnit.SECONDS, 5);
         Time millisTime = time.convert(TimeUnit.MILLISECONDS);
-        assert millisTime.getSrc() == 5000;
-        UnThread.sleep(millisTime.getSrc() + 20);
+        assert millisTime.src == 5000;
+        UnThread.sleep(millisTime.src + 20);
         assert timer.get();
-        
+    
     }
 }
