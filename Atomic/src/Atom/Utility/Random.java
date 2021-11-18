@@ -305,7 +305,7 @@ public class Random extends java.util.Random {
     private static byte getByte(byte max) {
         return getByte((byte) 0, max);
     }
-    
+    @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static long[] getLongArrayWithSum(long sum, int count) {
         
         long[] vals = new long[count];
