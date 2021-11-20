@@ -2,13 +2,17 @@ package Atom.Utility;
 
 public abstract class Log {
     protected String[] sLevel = new String[]{"[Debug]", "[Info]", "[Warn]", "[Error]"};
-    
+    public int level = 3;
     
     protected void output(Object raw, int level) {
+        if (this.level > level) return;
+    
         output(sLevel[level] + " " + raw);
     }
     
     protected void output(String tag, Object raw, int level) {
+        if (this.level > level) return;
+    
         output(sLevel[level] + " " + tag + ": " + raw);
     }
     

@@ -19,6 +19,7 @@ package Atom.Utility;
 import Atom.Encoding.Encoder;
 import Atom.File.FileUtility;
 import Atom.Net.Request;
+import Atom.Static;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -63,10 +64,7 @@ public class Cache {
         return new File(cache, url.getHost() + "/" + url.getFile().replaceAll("/", delimiter));
     }
     
-    public static boolean updateCache(URL url) throws IOException {
-        url = Request.getRedirect(url);
-        return updateCache(url, Encoder.readAllBytes(url.openStream()));
-    }
+    public static boolean verbose = false;
     
     public static boolean updateCache(URL url, byte[] bytes) {
         File target = urlToFile(url);
@@ -77,12 +75,20 @@ public class Cache {
         return http(url, false);
     }
     
+    public static boolean updateCache(URL url) throws IOException {
+        Static.log.debug("Updating cache for " + url);
+        url = Request.getRedirect(url);
+        Static.log.debug("Redirected to " + url);
+        return updateCache(url, Encoder.readAllBytes(url.openStream()));
+    }
+    
     public static URL http(URL url, boolean update) throws IOException {
         if (url == null) return null;
         if (url.getProtocol().startsWith("file")) return url;
         if (!url.getProtocol().startsWith("http")) throw new MalformedURLException("URL is not http");
         File target = urlToFile(url);
-        if (target.exists() && timeUnitExpire.convert(System.currentTimeMillis() - Cache.urlToFile(url).lastModified(), TimeUnit.MILLISECONDS) < maxAge && !update)
+        if (target.exists() && timeUnitExpire.convert(System.currentTimeMillis() - Cache.urlToFile(url)
+                                                                                        .lastModified(), TimeUnit.MILLISECONDS) < maxAge && !update)
             return target.toURI().toURL();
         else target.delete();
         Exception download = null;
