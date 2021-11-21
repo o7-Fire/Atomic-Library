@@ -38,6 +38,10 @@ public class Timer implements StopCondition {
         return b;
     }
     
+    public long deltaL() {
+        return durationUnit.convert(System.currentTimeMillis() - last, TimeUnit.MILLISECONDS);
+    }
+    
     public void reset() {
         last = System.currentTimeMillis();
     }
