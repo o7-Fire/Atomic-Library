@@ -32,15 +32,24 @@ public class Timer implements StopCondition {
     }
     
     public boolean get() {
-        long elapsed = durationUnit.convert(System.currentTimeMillis() - last, TimeUnit.MILLISECONDS);
+        long elapsed = elapsed();
         boolean b = elapsed > duration;
         if (b) last = System.currentTimeMillis();
         return b;
     }
     
-    public long deltaL() {
-        return durationUnit.convert(System.currentTimeMillis() - last, TimeUnit.MILLISECONDS);
+    public float delta() {
+        return (float) elapsedMillis() / TimeUnit.MILLISECONDS.convert(duration, durationUnit);
     }
+    
+    public long elapsedMillis() {
+        return System.currentTimeMillis() - last;
+    }
+    
+    public long elapsed() {
+        return durationUnit.convert(elapsedMillis(), TimeUnit.MILLISECONDS);
+    }
+    
     
     public void reset() {
         last = System.currentTimeMillis();
