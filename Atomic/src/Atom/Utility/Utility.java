@@ -16,6 +16,28 @@ public class Utility {
         return isRepeatingPattern(s, 5);
     }
     
+    @SafeVarargs
+    public static <T> T[] merge(T[]... arrays) {
+        int finalLength = 0;
+        for (T[] array : arrays) {
+            finalLength += array.length;
+        }
+        
+        T[] dest = null;
+        int destPos = 0;
+        
+        for (T[] array : arrays) {
+            if (dest == null){
+                dest = Arrays.copyOf(array, finalLength);
+                destPos = array.length;
+            }else{
+                System.arraycopy(array, 0, dest, destPos, array.length);
+                destPos += array.length;
+            }
+        }
+        return dest;
+    }
+    
     public static int[] flattenMatrix(int[][] arr) {
         int count = 0;
         for (int[] i : arr) {
