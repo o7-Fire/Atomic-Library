@@ -13,7 +13,7 @@ public class Pool {
         t.setDaemon(true);
         return t;
     });
-    public static ExecutorService parallelAsync = Executors.newFixedThreadPool(Math.min(Runtime.getRuntime()
+    public static ExecutorService parallelAsync = Executors.newFixedThreadPool(Math.max(Runtime.getRuntime()
             .availableProcessors() - 1, 1), r -> {
         Thread t = Executors.defaultThreadFactory().newThread(r);
         t.setName(t.getName() + "-Atomic-Executor");
