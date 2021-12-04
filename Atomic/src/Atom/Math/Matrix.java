@@ -267,4 +267,17 @@ public class Matrix {
         else return new Byte[x][y];
         throw new IllegalArgumentException("Not a primitive: " + type.getClass());
     }
+    
+    @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
+    public static float[][] randomFloat(int w, int h) {
+        
+        
+        float[][] matrix = new float[w][h];
+        for (int i = 0; i < matrix.length; i++) {
+            matrix[i] = Array.randomFloat(h);
+        }
+        return matrix;
+        
+        
+    }
 }

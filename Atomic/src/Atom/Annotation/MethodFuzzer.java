@@ -24,6 +24,14 @@ public @interface MethodFuzzer {
     
     int maxString() default 20;
     
+    float maxFloat() default 1f;
+    
+    float minFloat() default 0f;
+    
+    double maxDouble() default 1d;
+    
+    double minDouble() default 0d;
+    
     boolean skip() default false;
     
     

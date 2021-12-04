@@ -5,7 +5,10 @@ repositories {
 }
 
 dependencies {
+    testImplementation aproj(":Atomic")
+
     compileOnly aproj(":Atomic")
+
     compileOnly ('com.github.javaparser:javaparser-core:3.22.1'){
         because("runtime")
     }

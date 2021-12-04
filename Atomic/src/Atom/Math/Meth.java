@@ -12,15 +12,25 @@ public class Meth {
         double normalized_x = (double) (x - average) / range;
         return normalized_x;
     }
-    public static float normalize(long x, long min, long max){
-        float average      = (float) (min + max) / 2;
-        float range        = (float) (max - min) / 2;
+    
+    public static float normalize(long x, long min, long max) {
+        float average = (float) (min + max) / 2;
+        float range = (float) (max - min) / 2;
         float normalized_x = (float) (x - average) / range;
         return normalized_x;
     }
+    
     public static long max(Long[] arr) {
         List<Long> b = Arrays.asList(arr);
         return Collections.max(b);
+    }
+    
+    public static float interpolate(float x0, float x1, float alpha) {
+        return x0 * (1 - alpha) + alpha * x1;
+    }
+    
+    public static double interpolate(double x0, double x1, double alpha) {
+        return x0 * (1 - alpha) + alpha * x1;
     }
     
     public static long min(Long[] arr) {

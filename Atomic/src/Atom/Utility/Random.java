@@ -3,6 +3,7 @@ package Atom.Utility;
 import Atom.Annotation.MethodFuzzer;
 import Atom.Class.Factory;
 import Atom.Math.Array;
+import Atom.Math.Meth;
 import Atom.String.WordGenerator;
 import Atom.Struct.FunctionalPoolObject;
 import org.jetbrains.annotations.NotNull;
@@ -404,6 +405,137 @@ public class Random extends java.util.Random {
     
     public static double getDouble(double min, double max) {
         return min + (atomicRandom.get().nextDouble() * (max - min));
+    }
+    
+    @MethodFuzzer(maxLong = 1000, minLong = 1, minInteger = 1, maxInteger = 1000)
+    public static float[][] generateWhiteNoise(int width, int height) {
+        return generateWhiteNoise(new float[width][height]);
+    }
+    
+    @MethodFuzzer(maxLong = 1000, minLong = 1, minInteger = 1, maxInteger = 1000)
+    public static float[][] generateSmoothNoise(float[][] baseNoise, int octave) {
+        int width = baseNoise.length;
+        int height = baseNoise[0].length;
+        
+        float[][] smoothNoise = new float[width][height];
+        
+        int samplePeriod = 1 << octave; // calculates 2 ^ k
+        float sampleFrequency = 1.0f / samplePeriod;
+        
+        for (int i = 0; i < width; i++) {
+            // calculate the horizontal sampling indices
+            int sample_i0 = (i / samplePeriod) * samplePeriod;
+            int sample_i1 = (sample_i0 + samplePeriod) % width; // wrap around
+            float horizontal_blend = (i - sample_i0) * sampleFrequency;
+            
+            for (int j = 0; j < height; j++) {
+                // calculate the vertical sampling indices
+                int sample_j0 = (j / samplePeriod) * samplePeriod;
+                int sample_j1 = (sample_j0 + samplePeriod) % height; // wrap
+                // around
+                float vertical_blend = (j - sample_j0) * sampleFrequency;
+                
+                // blend the top two corners
+                float top = Meth.interpolate(baseNoise[sample_i0][sample_j0],
+                        baseNoise[sample_i1][sample_j0],
+                        horizontal_blend);
+                
+                // blend the bottom two corners
+                float bottom = Meth.interpolate(baseNoise[sample_i0][sample_j1],
+                        baseNoise[sample_i1][sample_j1],
+                        horizontal_blend);
+                
+                // final blend
+                smoothNoise[i][j] = Meth.interpolate(top, bottom, vertical_blend);
+            }
+        }
+        
+        return smoothNoise;
+    }
+    
+    
+    @MethodFuzzer(maxLong = 1000, minLong = 1, minInteger = 1, maxInteger = 1000)
+    public static float[][] generatePerlinNoise(int width, int height, float persistance, float amplitude) {
+        return generatePerlinNoise(width, height, 5, persistance, amplitude);
+    }
+    
+    /**
+     * Generates Perlin Noise
+     *
+     * @param width       width of the noise array
+     * @param height      height of the noise array
+     * @param octaveCount number of octaves to generate
+     * @param persistance how much each octave contributes to the final noise
+     * @param amplitude   the maximum value of the noise
+     * @return
+     */
+    @MethodFuzzer(maxLong = 1000, minLong = 1, minInteger = 1, maxInteger = 1000)
+    public static float[][] generatePerlinNoise(int width, int height, int octaveCount, float persistance, float amplitude) {
+        return generatePerlinNoise(generateWhiteNoise(width, height), octaveCount, persistance, amplitude);
+    }
+    
+    
+    /**
+     * Generates Perlin Noise based on the white noise array
+     * Parameters.
+     *
+     * @param baseNoise   - 2D array of floats
+     * @param octaveCount - number of octaves to generate
+     * @param persistance - how much each octave contributes to the final noise
+     * @param amplitude   - the maximum possible height of the noise
+     * @return - 2D array of floats
+     */
+    @MethodFuzzer(maxLong = 1000, minLong = 1, minInteger = 1, maxInteger = 1000)
+    public static float[][] generatePerlinNoise(float[][] baseNoise, int octaveCount, float persistance, float amplitude) {
+        int width = baseNoise.length;
+        int height = baseNoise[0].length;
+        
+        float[][][] smoothNoise = new float[octaveCount][][]; // an array of 2D
+        // arrays
+        // containing
+        
+        
+        // generate smooth noise
+        for (int i = 0; i < octaveCount; i++) {
+            smoothNoise[i] = generateSmoothNoise(baseNoise, i);
+        }
+        
+        float[][] perlinNoise = new float[width][height];
+        
+        float totalAmplitude = 0.0f;
+        
+        // blend noise together
+        for (int octave = octaveCount - 1; octave >= 0; octave--) {
+            amplitude *= persistance;
+            totalAmplitude += amplitude;
+            
+            for (int i = 0; i < width; i++) {
+                for (int j = 0; j < height; j++) {
+                    perlinNoise[i][j] += smoothNoise[octave][i][j] * amplitude;
+                }
+            }
+        }
+        
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                perlinNoise[i][j] /= totalAmplitude;
+                perlinNoise[i][j] = (float) (Math.floor(perlinNoise[i][j] * 25));
+            }
+        }
+        
+        return perlinNoise;
+    }
+    
+    public static float[][] generateWhiteNoise(float[][] noise) {
+        if (noise == null) return null;
+        if (noise.length == 0) throw new IllegalArgumentException("Array cannot be empty");
+        for (int i = 0; i < noise.length; i++) {
+            for (int j = 0; j < noise[0].length; j++) {
+                noise[i][j] = (float) (getDouble() % 1);
+            }
+        }
+        
+        return noise;
     }
     
     public static double getDouble(double max) {
