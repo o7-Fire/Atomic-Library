@@ -26,7 +26,7 @@ import java.util.List;
 public class Reflect {
     
     public static DebugType DEBUG_TYPE;
-    public static boolean debug;
+    public static final ArrayList<String> devFiles = new ArrayList<>();
     public static final HashSet<String> legalMainSignature = new HashSet<>();
     static {
         DEBUG_TYPE = getDebugType();
@@ -67,11 +67,34 @@ public class Reflect {
         return osName + "-" + osArch;
     }
     
+    //if you want to use as reference
+    public static boolean debug;
+    
+    static {
+        devFiles.add("build.gradle");
+        devFiles.add(".gradle");
+        devFiles.add(".idea");
+    }
+    
+    public static boolean isDevEnvironment() {
+        File[] child = new File(".").getAbsoluteFile().listFiles();
+        if (child == null) return false;
+        for (File f : child) {
+            if (devFiles.contains(f.getName())){
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public static DebugType getDebugType() {
         debug = true;
         if (System.getProperty("intellij.debug.agent") != null) return DebugType.IntellijAgent;
         try {
-            if (java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments().toString().indexOf("-agentlib:jdwp") > 0){
+            if (java.lang.management.ManagementFactory.getRuntimeMXBean()
+                    .getInputArguments()
+                    .toString()
+                    .indexOf("-agentlib:jdwp") > 0){
                 return DebugType.AgentLib;
             }
         }catch(Throwable ignored){}
