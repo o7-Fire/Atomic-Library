@@ -108,12 +108,7 @@ public class Repo {
             if (concurrent){
                 futures.add(Pool.submit(() -> getResource(u, s)));
             }else {
-                futures.add(new InstantFuture<URL>() {
-                    @Override
-                    public URL get() {
-                        return getResource(u,s);
-                    }
-                });
+                futures.add((InstantFuture<URL>) () -> getResource(u, s));
             }
         }
         return futures;

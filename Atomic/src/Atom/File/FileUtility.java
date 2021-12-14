@@ -15,6 +15,7 @@ import static Atom.Reflect.OS.*;
 
 //agh
 public class FileUtility {
+    //can be used for zip url
     public static URL convertToURLJar(URL u) throws MalformedURLException {
         return new URL("jar:" + u.toExternalForm() + "!/");
     }
