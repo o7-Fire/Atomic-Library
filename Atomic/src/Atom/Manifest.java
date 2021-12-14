@@ -10,19 +10,22 @@ import java.nio.charset.Charset;
 
 import static Atom.Reflect.Reflect.getCurrentJar;
 
-
+@Deprecated
 public class Manifest {
-    //
+    //remove this
+    @Deprecated
     public static String platform = "Atomic";
     public static RepoInternal internalRepo = new RepoInternal();
     public static File currentJar = null, currentFolder = null;
     private static String sha256Hash;
     public static Charset charset = Charset.forName("UTF-8");
+
     static {
         try {
             currentJar = getCurrentJar();
             currentFolder = currentJar.getParentFile();
-        }catch(Throwable ignored){ }
+        } catch (Throwable ignored) {
+        }
         try {
             internalRepo.loadClasspath();
             internalRepo.addRepo(getCurrentJar().toURI().toURL());
