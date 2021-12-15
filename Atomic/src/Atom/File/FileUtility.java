@@ -19,6 +19,11 @@ public class FileUtility {
     public static URL convertToURLJar(URL u) throws MalformedURLException {
         return new URL("jar:" + u.toExternalForm() + "!/");
     }
+
+    public static URL convertToURLJar(URL u, String path) throws MalformedURLException {
+        return new URL("jar:" + u.toExternalForm() + "!/" + (path.startsWith("/") ? path.substring(1) : path));
+    }
+
     public static ArrayList<File> findAll(File parent, Filter<File> filter) {
         ArrayList<File> files = new ArrayList<>();
         HashSet<File> needToRecurse = new HashSet<>();
