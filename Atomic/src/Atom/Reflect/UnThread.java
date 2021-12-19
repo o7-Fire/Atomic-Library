@@ -53,13 +53,8 @@ public class UnThread extends Thread {
     public boolean isInterrupted() {
         return Thread.currentThread().isInterrupted();
     }
-    
-    
-    public int countStackFrames() {
-        return Thread.currentThread().countStackFrames();
-    }
-    
-    
+
+
     public String toString() {
         return Thread.currentThread().toString();
     }

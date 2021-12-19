@@ -117,8 +117,6 @@ subprojects {
     }
     ext {
         smh = {
-            delete "src-gen/"
-            delete "build/"
         }
     }
     ext.aproj = { String module ->
@@ -158,11 +156,8 @@ subprojects {
     tasks.withType(JavaCompile) {
         new File(projectDir, "resources/").mkdirs()
         new File(projectDir, "src/").mkdirs()
-        new File(projectDir, "src-gen/").mkdirs()
         sourceSets.main.resources.srcDirs = ["resources/"]
-        sourceSets.main.java.srcDirs = ["src/", "src-gen/"]
-        options.annotationProcessorGeneratedSourcesDirectory = file("src-gen/")
-
+        sourceSets.main.java.srcDirs = ["src/"]
 
         options.encoding = "UTF-8"
 
