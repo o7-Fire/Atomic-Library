@@ -152,7 +152,7 @@ public class Meth {
             sum += l;
             length++;
         }
-        return (double) sum / length;
+        return sum / length;
     }
     
     public static double avg(float... arr) {
