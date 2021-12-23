@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.WeakHashMap;
-
+//require org.reflection, not included
 public class ExternalReflection {
     public static WeakHashMap<Integer, WeakHashMap<Class, ArrayList<Class>>> cachedExtendedJson = new WeakHashMap<>();
     
@@ -70,7 +70,8 @@ public class ExternalReflection {
     }
     
     public static <E> Set<Class<? extends E>> getExtendedClass(String packageName, Class<E> e) {
-        return getExtendedClass(packageName, e, Reflect.class.getClassLoader());
+        Reflections reflections = new Reflections(packageName, SubTypesScanner.class);
+        return reflections.getSubTypesOf(e);
     }
     
     public static <E> Set<Class<? extends E>> getExtendedClass(String packageName, Class<E> e, ClassLoader cl) {
