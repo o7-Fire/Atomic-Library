@@ -6,6 +6,10 @@
 package Atom.Struct;
 
 
+import Atom.Class.Disposable;
+
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.*;
 
 public abstract class PoolObject<T> implements ObjectPoolPattern<T> {
@@ -103,6 +107,22 @@ public abstract class PoolObject<T> implements ObjectPoolPattern<T> {
     
     
     public void clear() {
+        if (freeObjects.size() == 0) return;
+        boolean isDisposable = freeObjects.get(0) instanceof Disposable || freeObjects.get(0) instanceof Closeable;
+        if (isDisposable){
+            for (T obj : this.freeObjects) {
+                if (obj instanceof Closeable){
+                    try {
+                        ((Closeable) obj).close();
+                    }catch(IOException ignored){
+                    
+                    }
+                }
+                if (obj instanceof Disposable){
+                    ((Disposable) obj).dispose();
+                }
+            }
+        }
         this.freeObjects.clear();
     }
     

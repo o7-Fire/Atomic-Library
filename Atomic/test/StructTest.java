@@ -4,7 +4,7 @@ import Atom.Struct.FunctionalPoolObject;
 import Atom.Struct.History;
 import Atom.Struct.ListCapped;
 import Atom.Struct.Queue;
-import Atom.Utility.TestingUtility;
+import Atom.Utility.Meta.TestingUtility;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.Test;

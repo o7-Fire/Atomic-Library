@@ -15,99 +15,105 @@ import java.util.stream.LongStream;
 
 //Random get more random when used really often
 public class Random extends java.util.Random {
+    //slow ?
     public static ThreadLocal<java.util.Random> atomicRandom = ThreadLocal.withInitial(java.util.Random::new);
     public static final Map<Class<?>, Factory<?>> randomSupplier = new HashMap<>();
+    
     public static synchronized void seed(long seed) {
-        atomicRandom.get().setSeed(seed);
+        get().setSeed(seed);
+    }
+    
+    public static java.util.Random get() {
+        return atomicRandom.get();
     }
     
     public static void getNextBytes(byte[] bytes) {
-        atomicRandom.get().nextBytes(bytes);
+        get().nextBytes(bytes);
     }
     
     public static int getNextInt() {
-        return atomicRandom.get().nextInt();
+        return get().nextInt();
     }
     
     public static int getNextInt(int bound) {
-        return atomicRandom.get().nextInt(bound);
+        return get().nextInt(bound);
     }
     
     public static long getNextLong() {
-        return atomicRandom.get().nextLong();
+        return get().nextLong();
     }
     
     public static boolean getNextBoolean() {
-        return atomicRandom.get().nextBoolean();
+        return get().nextBoolean();
     }
     
     public static float getNextFloat() {
-        return atomicRandom.get().nextFloat();
+        return get().nextFloat();
     }
     
     public static double getNextDouble() {
-        return atomicRandom.get().nextDouble();
+        return get().nextDouble();
     }
     
     public static synchronized double getNextGaussian() {
-        return atomicRandom.get().nextGaussian();
+        return get().nextGaussian();
     }
     
     @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static IntStream getInts(long streamSize) {
-        return atomicRandom.get().ints(streamSize);
+        return get().ints(streamSize);
     }
     
     public static IntStream getInts() {
-        return atomicRandom.get().ints();
+        return get().ints();
     }
     
     @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static IntStream getInts(long streamSize, int randomNumberOrigin, int randomNumberBound) {
-        return atomicRandom.get().ints(streamSize, randomNumberOrigin, randomNumberBound);
+        return get().ints(streamSize, randomNumberOrigin, randomNumberBound);
     }
     
     @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static IntStream getInts(int randomNumberOrigin, int randomNumberBound) {
-        return atomicRandom.get().ints(randomNumberOrigin, randomNumberBound);
+        return get().ints(randomNumberOrigin, randomNumberBound);
     }
     
     @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static LongStream getLongs(long streamSize) {
-        return atomicRandom.get().longs(streamSize);
+        return get().longs(streamSize);
     }
     
     public static LongStream getLongs() {
-        return atomicRandom.get().longs();
+        return get().longs();
     }
     
     @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static LongStream getLongs(long streamSize, long randomNumberOrigin, long randomNumberBound) {
-        return atomicRandom.get().longs(streamSize, randomNumberOrigin, randomNumberBound);
+        return get().longs(streamSize, randomNumberOrigin, randomNumberBound);
     }
     
     @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static LongStream getLongs(long randomNumberOrigin, long randomNumberBound) {
-        return atomicRandom.get().longs(randomNumberOrigin, randomNumberBound);
+        return get().longs(randomNumberOrigin, randomNumberBound);
     }
     
     @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static DoubleStream getDoubles(long streamSize) {
-        return atomicRandom.get().doubles(streamSize);
+        return get().doubles(streamSize);
     }
     
     public static DoubleStream getDoubles() {
-        return atomicRandom.get().doubles();
+        return get().doubles();
     }
     
     @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static DoubleStream getDoubles(long streamSize, double randomNumberOrigin, double randomNumberBound) {
-        return atomicRandom.get().doubles(streamSize, randomNumberOrigin, randomNumberBound);
+        return get().doubles(streamSize, randomNumberOrigin, randomNumberBound);
     }
     
     @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static DoubleStream getDoubles(double randomNumberOrigin, double randomNumberBound) {
-        return atomicRandom.get().doubles(randomNumberOrigin, randomNumberBound);
+        return get().doubles(randomNumberOrigin, randomNumberBound);
     }
     
     public static String getString() {
@@ -173,7 +179,7 @@ public class Random extends java.util.Random {
     }
     
     public static int getRandomColor() {
-        return atomicRandom.get().nextInt(0xffffff + 1);
+        return get().nextInt(0xffffff + 1);
     }
     
     public static int[] getIntegerArrayWithSum() {
@@ -340,23 +346,23 @@ public class Random extends java.util.Random {
     }
     
     public static float getFloat() {
-        return atomicRandom.get().nextFloat();
+        return get().nextFloat();
     }
     
     public static double getDouble() {
-        return atomicRandom.get().nextDouble();
+        return get().nextDouble();
     }
     
     public static long getLong() {
-        return atomicRandom.get().nextLong();
+        return get().nextLong();
     }
     
     public static boolean getBool() {
-        return atomicRandom.get().nextBoolean();
+        return get().nextBoolean();
     }
     
     public static int getInt() {
-        return atomicRandom.get().nextInt();
+        return get().nextInt();
     }
     
     //note add by 1 if used for get random array size
@@ -366,7 +372,7 @@ public class Random extends java.util.Random {
     }
     
     public static int getInt(int min, int max) {
-        return atomicRandom.get().nextInt((max - min) + 1) + min;
+        return get().nextInt((max - min) + 1) + min;
     }
     
     public static <T> T getRandom(Iterator<T> arr) {
@@ -396,7 +402,7 @@ public class Random extends java.util.Random {
     }
     
     public static long getLong(long min, long max) {
-        return min + ((long) (atomicRandom.get().nextDouble() * (max - min)));
+        return min + ((long) (get().nextDouble() * (max - min)));
     }
     
     public static long getLong(long max) {
@@ -404,7 +410,7 @@ public class Random extends java.util.Random {
     }
     
     public static double getDouble(double min, double max) {
-        return min + (atomicRandom.get().nextDouble() * (max - min));
+        return min + (get().nextDouble() * (max - min));
     }
     
     @MethodFuzzer(maxLong = 1000, minLong = 1, minInteger = 1, maxInteger = 1000)
@@ -543,7 +549,7 @@ public class Random extends java.util.Random {
     }
     
     public static float getFloat(float min, float max) {
-        return min + (atomicRandom.get().nextFloat() * (max - min));
+        return min + (get().nextFloat() * (max - min));
     }
     
     public static float getFloat(float max) {

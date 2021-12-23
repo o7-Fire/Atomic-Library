@@ -1,7 +1,7 @@
 import Atom.File.FileUtility;
 import Atom.Math.Array;
+import Atom.Utility.Meta.TestingUtility;
 import Atom.Utility.Random;
-import Atom.Utility.TestingUtility;
 import Atom.Utility.Utility;
 import org.junit.jupiter.api.Test;
 

@@ -103,6 +103,25 @@ public class Utility {
         }
     }
     
+    public static String capitalizeTitle(String s) {
+        String[] words = s.split(" ");
+        StringBuilder sb = FunctionalPoolObject.StringBuilder.obtain();
+        for (String word : words) {
+            sb.append(capitalizeEnforce(word)).append(" ");
+        }
+        String result = sb.toString();
+        FunctionalPoolObject.StringBuilder.free(sb);
+        return result.substring(0, result.length() - 1);
+    }
+    
+    /**
+     * Input: "Hello World"
+     * <p>
+     * Output: "Hello world"
+     *
+     * @param "string"
+     * @return "String"
+     */
     public static String capitalizeEnforce(String s) {
         return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
     }

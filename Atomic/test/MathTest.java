@@ -1,7 +1,7 @@
 import Atom.Math.Array;
 import Atom.Math.Matrix;
 import Atom.Math.Meth;
-import Atom.Utility.TestingUtility;
+import Atom.Utility.Meta.TestingUtility;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;

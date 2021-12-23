@@ -1,4 +1,4 @@
-package Atom.Utility;
+package Atom.Utility.Meta;
 
 import Atom.Reflect.Reflect;
 
