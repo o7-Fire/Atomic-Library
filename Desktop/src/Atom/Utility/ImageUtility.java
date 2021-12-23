@@ -3,6 +3,8 @@ package Atom.Utility;
 import Atom.Exception.ShouldNotHappenedException;
 import Atom.Math.Array;
 import Atom.Math.Matrix;
+import Atom.Noise.Noise;
+import Atom.Noise.PerlinNoiseRiven;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -19,11 +21,11 @@ public class ImageUtility {
     public static void main(String[] args) {
         float[][] data2d = Matrix.randomFloat(256, 256);
         float[] data1d = Array.randomFloat(256);
-        OpenSimplexNoise noise = new OpenSimplexNoise();
         float[][] simplex = new float[256][256];
+        Noise noise = new PerlinNoiseRiven();
         for (int i = 0; i < simplex.length; i++) {
             for (int j = 0; j < simplex[i].length; j++) {
-                simplex[i][j] = (float) noise.eval(i, j);
+                simplex[i][j] = (float) noise.noise(i, j);
             }
         }
         visualize2DArray(simplex);

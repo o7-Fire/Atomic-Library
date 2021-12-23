@@ -1,5 +1,7 @@
 package Atom.Noise;
 
+import Atom.Utility.Random;
+
 /**
  * <p>A Perlin noise generation utility. Construct the PerlinNoise object with
  * the specified parameters and make a call to the {@link #getHeight(double, double)}
@@ -28,7 +30,7 @@ public class PerlinNoisePrime implements Noise {
 	}
 	
 	public PerlinNoisePrime() {
-		set(0, 0, 0, 0, 0);
+		set(Random.getNextInt(), Random.getDouble(), Random.getDouble(), Random.getDouble(), Random.getInt(1, 10));
 	}
 	
 	/**
