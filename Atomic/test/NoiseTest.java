@@ -14,8 +14,8 @@ public class NoiseTest {
             for (int i = 0; i < Random.getInt(200); i++) {
                 double d2 = n.noise(Random.getNextDouble(), Random.getNextDouble(), Random.getNextDouble());
                 double d3 = n.noise(Random.getNextDouble(), Random.getNextDouble());
-                assert d2 >= -1 && d2 <= 1;
-                assert d3 >= -1 && d3 <= 1;
+                assert d2 >= -1 && d2 <= 1 : "d2 beyond normal range: " + d2;
+                assert d3 >= -1 && d3 <= 1 : "d3 beyond normal range: " + d3;
             }
         }
     }
