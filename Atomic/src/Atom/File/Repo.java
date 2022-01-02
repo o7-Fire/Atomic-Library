@@ -34,21 +34,25 @@ import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+/**
+ * Replaced by {@link Atom.File.ResourcesPool}
+ */
+@Deprecated()
 public class Repo {
     protected ArrayList<URL> repos = new ArrayList<>();
-    
+
     public Repo() {
-    
+
     }
-    
+
     public Repo(URL... urls) {
         repos.addAll(Arrays.asList(urls));
     }
-    
+
     public static URL appendURL(URL u, String s) throws MalformedURLException {
         return new URL(u.toString() + (u.toString().endsWith("/") ? "" : "/") + s);
     }
-    
+
     public static URL getResource(URL u, String s) {
         try {
             URL url = appendURL(u, s);
@@ -57,31 +61,30 @@ public class Repo {
         }catch (Throwable ignored) {}
         return null;
     }
-    
- 
-    
+
+
     public ArrayList<String> readArrayString(String path, String delimiter) throws IOException {
         return new ArrayList<>(Arrays.asList(readString(path).split(delimiter)));
     }
-    
+
     public Properties readProperty(String path) throws IOException {
         Properties p = new Properties();
         p.load(getResourceAsStream(path));
         return p;
     }
-    
+
     public HashMap<String, String> readMap(String path) throws IOException {
         return Encoder.parseProperty(getResourceAsStream(path));
     }
-    
+
     public ArrayList<String> readArrayString(String path) throws IOException {
         return readArrayString(path, System.getProperty("line.separator"));
     }
-    
+
     public String readString(String path) throws IOException {
         return Encoder.readString(getResourceAsStream(path));
     }
-    
+
     public void loadClasspath() {
         for (String s : System.getProperty("java.class.path").split(File.pathSeparator)) {
             try {
@@ -91,7 +94,7 @@ public class Repo {
             }
         }
     }
-    
+
     public URL getResource(String s) {
         for (Future<URL> f : parallelSearch(s)) {
             try {
@@ -100,7 +103,7 @@ public class Repo {
         }
         return null;
     }
-    
+
     protected ArrayList<Future<URL>> parallelSearch(String s) {
         ArrayList<Future<URL>> futures = new ArrayList<>();
         boolean concurrent = repos.size() > 5;
@@ -113,7 +116,7 @@ public class Repo {
         }
         return futures;
     }
-    
+
     public boolean resourceExists(String s) {
         for (Future<URL> f : parallelSearch(s)) {
             try {
@@ -122,23 +125,23 @@ public class Repo {
         }
         return false;
     }
-    
+
     public InputStream getResourceAsStream(String s) throws IOException {
         URL u = getResource(s);
         if (u == null) throw new FileNotFoundException(s);
         return u.openStream();
     }
-    
+
     public ArrayList<URL> getRepos() {
         return repos;
     }
-    
+
     public void addRepo(File f) throws MalformedURLException {
         addRepo(f.toURI().toURL());
     }
-    
+
     public void addRepo(URL u) {
         repos.add(u);
     }
-    
+
 }

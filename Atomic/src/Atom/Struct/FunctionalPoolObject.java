@@ -4,6 +4,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class FunctionalPoolObject<T> extends PoolObject<T> {
+    //tf is this
     public static final FunctionalPoolObject<StringBuilder> StringBuilder = new FunctionalPoolObject<>(s -> s.setLength(0), StringBuilder::new);//should you ?
     
     static {

@@ -30,7 +30,12 @@ public class Reflect {
     public static final HashSet<String> legalMainSignature = new HashSet<>();
     static {
         DEBUG_TYPE = getDebugType();
-        String s = "public static void main(String a[])\n" + "static public void main(String a[])\n" + "public static void main(String[] a)\n" + "static public void main(String[] a)\n" + "public static void main(String... a)\n" + "static public void main(String... a)";
+        if (DEBUG_TYPE == DebugType.JavaAgent) {
+            debug = false;
+        }
+        String s = "public static void main(String a[])\n" + "static public void main(String a[])\n" +
+                "public static void main(String[] a)\n" + "static public void main(String[] a)\n" +
+                "public static void main(String... a)\n" + "static public void main(String... a)";
         legalMainSignature.addAll(Arrays.asList(s.split("\\n")));
     }
     
@@ -94,10 +99,17 @@ public class Reflect {
             if (java.lang.management.ManagementFactory.getRuntimeMXBean()
                     .getInputArguments()
                     .toString()
-                    .indexOf("-agentlib:jdwp") > 0){
+                    .indexOf("-agentlib:jdwp") > 0) {
                 return DebugType.AgentLib;
             }
-        }catch(Throwable ignored){}
+        } catch (Throwable ignored) {
+        }
+        try {
+            if (ManagementFactory.getRuntimeMXBean().getInputArguments().toString().indexOf("-javaagent") > 0) {
+                return DebugType.JavaAgent;
+            }
+        } catch (Throwable ignored) {
+        }
         debug = false;
         return DebugType.None;
     }
@@ -206,8 +218,8 @@ public class Reflect {
         }
         return objectParam;
     }
-    
-    public enum DebugType {AgentLib, IntellijAgent, DevEnvironment, UserPreference, None}
+
+    public enum DebugType {JavaAgent, AgentLib, IntellijAgent, DevEnvironment, UserPreference, None}
     
     
     public static int callerOffset() {

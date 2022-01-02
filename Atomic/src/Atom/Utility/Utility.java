@@ -1,21 +1,44 @@
 package Atom.Utility;
 
 
+import Atom.Reflect.OS;
 import Atom.Struct.FunctionalPoolObject;
 import com.google.gson.Gson;
 
 import java.io.*;
 import java.lang.management.ManagementFactory;
+import java.net.URL;
 import java.util.*;
 import java.util.function.Consumer;
 
 public class Utility {
-    
+
+    public static boolean openURL(URL url) {
+        return openURL(url.toString());
+    }
+
+    public static boolean openURL(String url) {
+        try {
+            if (OS.isWindows) {
+                Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + url);
+            } else if (OS.isMac) {
+                Runtime.getRuntime().exec("open " + url);
+            } else if (OS.isLinux) {
+                Runtime.getRuntime().exec("xdg-open " + url);
+            } else {
+                Runtime.getRuntime().exec(url);//work everywhere ?
+            }
+        } catch (IOException e) {
+            return false;
+        }
+        return true;
+    }
+
     @Deprecated
     public static boolean isRepeatingPattern(String s) {
         return isRepeatingPattern(s, 5);
     }
-    
+
     @SafeVarargs
     public static <T> T[] merge(T[]... arrays) {
         int finalLength = 0;
@@ -96,18 +119,22 @@ public class Utility {
                 out.println(s.getKey() + ": ");
                 s.getValue().accept(br.readLine());
                 success = true;
-            }catch(IOException | RuntimeException e){
+            } catch (IOException | RuntimeException e) {
                 out.println(e);
                 out.println("Try again");
             }
         }
     }
-    
+
     public static String capitalizeTitle(String s) {
+        return capitalizeTitle(s, false);
+    }
+
+    public static String capitalizeTitle(String s, boolean enforce) {
         String[] words = s.split(" ");
         StringBuilder sb = FunctionalPoolObject.StringBuilder.obtain();
         for (String word : words) {
-            sb.append(capitalizeEnforce(word)).append(" ");
+            sb.append(enforce ? capitalizeEnforce(word) : capitalizeFirstLetter(word)).append(" ");
         }
         String result = sb.toString();
         FunctionalPoolObject.StringBuilder.free(sb);

@@ -24,9 +24,11 @@ public class UtilityTest {
         assert Utility.lowerFirstLetter("SaddaN").equals("saddaN");
         assert Utility.lowerFirstLetter("saddaNN").equals("saddaNN");
         assert Utility.shrinkChar("aaaaabbbbbcccccccccc").equals("abc");
+        assert Utility.capitalizeTitle("saddam hussein").equals("Saddam Hussein");
+        assert Utility.capitalizeTitle("saDdAm husseIN").equals("SaDdAm HusseIN");
+        assert Utility.capitalizeTitle("saDdAm husseIN", true).equals("Saddam Hussein");
         assert Arrays.equals(Utility.sliceInt("111111,2222222,333333,4444444", ","), new int[]{111111, 2222222, 333333, 4444444});
         assert !Utility.shuffle("aaabbbccc").equals("aaabbbccc");
-    
     }
     
     @Test

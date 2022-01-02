@@ -32,6 +32,7 @@ public abstract class PoolObject<T> implements ObjectPoolPattern<T> {
     }
     
     public PoolObject(int initialCapacity, int max) {
+        //no multithreading
         this.freeObjects = new ArrayList<>(initialCapacity);
         this.max = max;
     }

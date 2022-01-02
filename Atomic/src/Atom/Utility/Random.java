@@ -177,7 +177,8 @@ public class Random extends java.util.Random {
         randomSupplier.put(Object.class, randomSupplier.get(String.class));
         randomSupplier.put(Object[].class, randomSupplier.get(Long[].class));
     }
-    
+
+
     public static int getRandomColor() {
         return get().nextInt(0xffffff + 1);
     }
@@ -364,23 +365,31 @@ public class Random extends java.util.Random {
     public static int getInt() {
         return get().nextInt();
     }
-    
+
     //note add by 1 if used for get random array size
     //don't subtract by 1 if used for array index
     public static int getInt(int max) {
         return getInt(0, max);
     }
-    
+
     public static int getInt(int min, int max) {
         return get().nextInt((max - min) + 1) + min;
     }
-    
+
+    public static <T> T get(Class<T> clazz) {
+        Factory<T> t = (Factory<T>) randomSupplier.get(clazz);
+        if (t == null) {
+            return null;
+        }
+        return t.get();
+    }
+
     public static <T> T getRandom(Iterator<T> arr) {
         ArrayList<T> rand = new ArrayList<>();
         while (arr.hasNext()) rand.add(arr.next());
         return getRandom(rand);
     }
-    
+
     public static <T> T getRandom(Iterable<T> arr) {
         ArrayList<T> rand = new ArrayList<>();
         for (T e : arr)

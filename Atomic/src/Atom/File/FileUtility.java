@@ -15,10 +15,13 @@ import static Atom.Reflect.OS.*;
 
 //agh
 public class FileUtility {
+
+
     //can be used for zip url
     public static URL convertToURLJar(URL u) throws MalformedURLException {
         return new URL("jar:" + u.toExternalForm() + "!/");
     }
+
 
     public static URL convertToURLJar(URL u, String path) throws MalformedURLException {
         return new URL("jar:" + u.toExternalForm() + "!/" + (path.startsWith("/") ? path.substring(1) : path));
@@ -53,26 +56,34 @@ public class FileUtility {
         FunctionalPoolObject.StringBuilder.free(sb);
         return f.substring(0, f.length() - 1);
     }
-    
+
     public static String getExtension(File f) {
         String extension = "";
         int i = f.getName().lastIndexOf('.');
-        if (i > 0){
+        if (i > 0) {
             extension = f.getName().substring(i + 1);
         }
         return extension;
     }
-    
+
+    public static File cwd() {
+        File f = new File("./");
+        if (!f.exists()) f = new File("");
+        f = f.getAbsoluteFile();
+        return f;
+    }
+
+    //TODO fix this and get actual current working dir instead user data dir
     public static File getCurrentWorkingDir() {
         File f;
         try {
             f = new File(System.getProperty("user.dir"));
             if (!f.exists()) throw new RuntimeException("no u");
-        }catch (Throwable ignored) {
+        } catch (Throwable ignored) {
             try {
                 f = new File(getAppdata(), "Atomic/");
                 if (!f.exists()) throw new RuntimeException("no u");
-            }catch (Throwable ignoreds) {
+            } catch (Throwable ignoreds) {
                 try {
                     f = new File(getTempDir(), "Atomic/");
                     if (!f.exists()) throw new RuntimeException("no u");
@@ -176,25 +187,30 @@ public class FileUtility {
     }
     
     public static File temp() {
-        File temp = new File(getTempDir(), System.currentTimeMillis() * System.nanoTime() + ".temp");//when shit too fast, that you got same file
+        File temp = new File(getTempDir(),
+                System.currentTimeMillis() * System.nanoTime() + ".temp");//when shit too fast, that you got same file
         temp.deleteOnExit();
         return temp;
     }
-    
+
     public static byte[] readAllBytes(File src) throws IOException {
-        try(InputStream is = new FileInputStream(src)) {
+        try (InputStream is = new FileInputStream(src)) {
             return Encoder.readAllBytes(is);
         }
     }
-    
+
+    public static byte[] readAllBytes(InputStream is) throws IOException {
+        return Encoder.readAllBytes(is);
+    }
+
     public static boolean replace(File src, File dst) {
         return copy(src, dst, true);
     }
-    
+
     public static boolean copy(File src, File dst) {
         return copy(src, dst, false);
     }
-    
+
     public static boolean copy(File src, File dst, boolean replace) {
         if (!replace){
             if (dst.exists()) return false;
