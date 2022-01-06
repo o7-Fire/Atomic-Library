@@ -48,8 +48,8 @@ public class Notify {
 
     //test
     public static void main(String[] args) {
-        AtomicInteger passCount = new AtomicInteger();
-        AtomicInteger failCount = new AtomicInteger();
+        final AtomicInteger passCount = new AtomicInteger();
+        final AtomicInteger failCount = new AtomicInteger();
         Notify.onT(Notify.class, notify -> {
             System.out.println("Notify: " + notify.hashCode());
             passCount.getAndIncrement();
@@ -73,6 +73,7 @@ public class Notify {
         Notify.fireC(new Object());//should not invoke
         Notify.fireC("LoL");//should invoke
         Notify.removeType(Notify.class);
+        System.out.println("Pass: " + passCount.get() + ", Fail: " + failCount.get());
         assert passCount.get() == 3 : "passCount: " + passCount.get();
         assert failCount.get() == 0 : "failCount: " + failCount.get();
     }

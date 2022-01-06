@@ -37,9 +37,8 @@ public class NotifyService {
      * @param <T>
      */
     public <T> void onT(T obj, Consumer<T> listener) {
-        Object o = obj;
-        if (o.getClass() == Class.class) o = new ClassWrapper((Class<?>) obj);
-        listeners.computeIfAbsent(obj, k -> Collections.synchronizedSet(new java.util.HashSet<>())).add(listener);
+        Object id = sanitize(obj);
+        listeners.computeIfAbsent(id, k -> Collections.synchronizedSet(new java.util.HashSet<>())).add(listener);
     }
 
     public void removeClass(Class<?> clazz) {
@@ -98,9 +97,8 @@ public class NotifyService {
     }
 
     public void fireT(Object obj) {
-        obj = sanitize(obj);
-
-
+        Object id = sanitize(obj);
+        fire0(id, obj);
     }
 
     private static class ClassWrapper {
