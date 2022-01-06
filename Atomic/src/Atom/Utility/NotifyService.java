@@ -82,6 +82,15 @@ public class NotifyService {
         fire0(clazz, obj);
     }
 
+    public boolean hasListenerClass(Class<?> clazz) {
+        return listeners.containsKey(clazz);
+    }
+
+    public boolean hasListenerType(Object obj) {
+        Object id = sanitize(obj);
+        return listeners.containsKey(id);
+    }
+
     public <T> void fire0(Object o, T obj) {
         listeners.computeIfPresent(o, (k, v) -> {
             for (Consumer<?> c : v) {
