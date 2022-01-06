@@ -14,6 +14,10 @@ public class Notify {
         service.onT(obj, listener);
     }
 
+    public static <T> void removeClass(Class<T> clazz) {
+        service.removeClass(clazz);
+    }
+
     public static <T> void removeClass(Class<T> clazz, Consumer<T> listener) {
         service.removeClass(clazz, listener);
     }
@@ -56,8 +60,7 @@ public class Notify {
             passCount.getAndIncrement();
         });
         Notify.onC(Object.class, o -> {
-            System.out.println("Shouldn't be invoked");
-            failCount.getAndIncrement();
+            throw new AssertionError("Should not be called");
         });
         Notify.onC(String.class, s -> {
             assert s.equals("LoL") : "Expected: LoL, Actual: " + s;
@@ -66,7 +69,7 @@ public class Notify {
         Notify.fireT(Notify.class);//should not invoke
         Notify.fireT("LoL");//should invoke
         Notify.fireC(new Notify());//should invoke
-        Notify.removeType(Object.class);
+        Notify.removeClass(Object.class);
         Notify.fireC(new Object());//should not invoke
         Notify.fireC("LoL");//should invoke
         Notify.removeType(Notify.class);

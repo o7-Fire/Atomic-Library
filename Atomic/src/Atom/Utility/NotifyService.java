@@ -42,6 +42,10 @@ public class NotifyService {
         listeners.computeIfAbsent(obj, k -> Collections.synchronizedSet(new java.util.HashSet<>())).add(listener);
     }
 
+    public void removeClass(Class<?> clazz) {
+        listeners.remove(clazz);
+    }
+
     public <T> void removeClass(Class<T> clazz, Consumer<T> listener) {
         listeners.computeIfPresent(clazz, (k, v) -> {
             v.remove(listener);
