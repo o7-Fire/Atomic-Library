@@ -1,104 +1,77 @@
 package Atom.Utility;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class Notify {
-    public static final Map<Object, Set<Consumer<?>>> listeners = Collections.synchronizedMap(new java.util.HashMap<>());
+    public static final NotifyService service = new NotifyService();
 
-    public static <T> void on(Class<T> clazz, Consumer<T> listener) {
-        listeners.computeIfAbsent(clazz, k -> Collections.synchronizedSet(new java.util.HashSet<>())).add(listener);
+    public static <T> void onC(Class<T> clazz, Consumer<T> listener) {
+        service.onC(clazz, listener);
     }
 
-    public static void on(Object obj, Consumer<?> listener) {
-        listeners.computeIfAbsent(obj, k -> Collections.synchronizedSet(new java.util.HashSet<>())).add(listener);
+    public static <T> void onT(T obj, Consumer<T> listener) {
+        service.onT(obj, listener);
     }
 
-    public static <T> void off(Class<T> clazz, Consumer<T> listener) {
-        listeners.computeIfPresent(clazz, (k, v) -> {
-            v.remove(listener);
-            return v;
-        });
+    public static <T> void removeClass(Class<T> clazz, Consumer<T> listener) {
+        service.removeClass(clazz, listener);
     }
 
-    public static void off(Object obj, Consumer<?> listener) {
-        listeners.computeIfPresent(obj, (k, v) -> {
-            v.remove(listener);
-            return v;
-        });
+    public static void removeType(Object obj, Consumer<?> listener) {
+        service.removeType(obj, listener);
     }
 
-    public static void off(Object obj) {
-        listeners.remove(obj);
+    public static void removeType(Object obj) {
+        service.removeType(obj);
     }
 
-    @SafeVarargs
-    public static <T> void fire(T... objs) {
-        for (T obj : objs) {
-            fire(obj);
-        }
+    public static void fireC(Object... objs) {
+        service.fireC(objs);
     }
 
-    public static <T> void fire(T obj) {
-        Class<?> clazz = obj.getClass();
-        fire(clazz, obj);
+    public static <T> void fireC(T obj) {
+        service.fireC(obj);
     }
 
-    public static <T> void fire(Class<?> clazz, T obj) {
-        listeners.computeIfPresent(clazz, (k, v) -> {
-            for (Consumer<?> c : v) {
-                try {
-                    Consumer<T> cc = (Consumer<T>) c;
-                    cc.accept(obj);
-                } catch (ClassCastException ignored) {
-
-                }
-            }
-            return v;
-        });
+    public static <T> void fire0(Object t, T obj) {
+        service.fireC(t, obj);
     }
 
-    public static void run(Object obj) {
-        listeners.computeIfPresent(obj, (k, v) -> {
-            v.forEach(c -> c.accept(null));
-            return v;
-        });
+    public static void fireT(Object obj) {
+        service.fireT(obj);
     }
 
     //test
     public static void main(String[] args) {
-        boolean[] testCase = {false, false, true};
-        Notify.on(Notify.class, notify -> {
+        AtomicInteger passCount = new AtomicInteger();
+        AtomicInteger failCount = new AtomicInteger();
+        Notify.onT(Notify.class, notify -> {
             System.out.println("Notify: " + notify.hashCode());
-            testCase[0] = true;
+            passCount.getAndIncrement();
         });
-        Notify.on("LoL", c -> {
+        Notify.onT("LoL", c -> {
             System.out.println(c);
-            testCase[1] = true;
+            assert c.equals("LoL") : "Expected: LoL, Actual: " + c;
+            passCount.getAndIncrement();
         });
-        Notify.on(Object.class, o -> {
+        Notify.onC(Object.class, o -> {
             System.out.println("Shouldn't be invoked");
-            testCase[2] = false;
+            failCount.getAndIncrement();
         });
-        Notify.run(Notify.class);
-        Notify.run("LoL");
-        Notify.fire(Notify.class, new Notify());
-        Notify.off(Object.class);
-        Notify.fire(Object.class, new Object());
-        boolean failed = false;
-        for (int i = 0; i < testCase.length; i++) {
-            if (!testCase[i]) {
-                failed = true;
-                System.out.println("TestCase " + i + " failed");
-            }
-        }
-        if (!failed) {
-            System.out.println("All TestCase passed");
-        } else {
-            throw new AssertionError("TestCase failed");
-        }
+        Notify.onC(String.class, s -> {
+            assert s.equals("LoL") : "Expected: LoL, Actual: " + s;
+            passCount.getAndIncrement();
+        });
+        Notify.fireT(Notify.class);//should not invoke
+        Notify.fireT("LoL");//should invoke
+        Notify.fireC(new Notify());//should invoke
+        Notify.removeType(Object.class);
+        Notify.fireC(new Object());//should not invoke
+        Notify.fireC("LoL");//should invoke
+        Notify.removeType(Notify.class);
+        assert passCount.get() == 3 : "passCount: " + passCount.get();
+        assert failCount.get() == 0 : "failCount: " + failCount.get();
     }
 
 }
