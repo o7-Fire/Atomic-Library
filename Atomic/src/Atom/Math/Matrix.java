@@ -277,16 +277,18 @@ public class Matrix {
             matrix[i] = Array.randomFloat(h);
         }
         return matrix;
-    
-    
+
+
     }
-    
+
+    @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static float[][] to2D(float[] f) {
         int x = (int) Math.sqrt(f.length);
         if (x * x != f.length) throw new IllegalArgumentException(f.length + " is not a square, specify size manually");
         return to2D(f, x, x);
     }
-    
+
+    @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static float[][] to2D(float[] f, int i, int i1) {
         float[][] matrix = new float[i][i1];
         for (int x = 0; x < i; x++) {

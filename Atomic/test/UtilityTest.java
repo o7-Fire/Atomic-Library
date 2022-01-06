@@ -1,6 +1,7 @@
 import Atom.File.FileUtility;
 import Atom.Math.Array;
 import Atom.Utility.Meta.TestingUtility;
+import Atom.Utility.Notify;
 import Atom.Utility.Random;
 import Atom.Utility.Utility;
 import org.junit.jupiter.api.Test;
@@ -46,7 +47,12 @@ public class UtilityTest {
         Random.main(new String[]{});
         TestingUtility.methodFuzzer(Random.class.getDeclaredMethods(), true);
     }
-    
+
+    @Test
+    public void AnyUtility() {
+        Notify.main(new String[]{});
+    }
+
     @Test
     public void FileUtility() throws IOException {
         File test = FileUtility.temp(), test2 = FileUtility.temp(), test3 = FileUtility.temp();

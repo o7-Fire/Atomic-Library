@@ -190,7 +190,7 @@ public class PerlinNoisePrime implements Noise {
 	
 	@Override
 	public double noise(double x, double y) {
-		return getHeight(x, y);
+		return getHeight(x, y) % 1.000001d;//produce value 1.5
 	}
 	
 	

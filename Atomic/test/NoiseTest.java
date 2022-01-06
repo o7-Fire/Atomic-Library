@@ -11,13 +11,16 @@ public class NoiseTest {
     @Test
     public void inRange() {
         for (Noise n : noise) {
-            for (int i = 0; i < Random.getInt(2000); i++) {
-                double d2 = n.noise(Random.getNextDouble(), Random.getNextDouble(), Random.getNextDouble());
-                double d3 = n.noise(Random.getNextDouble(), Random.getNextDouble());
+            for (int i = 0; i < 1e6; i++) {
+                double[] param = new double[]{Random.getDouble(), Random.getDouble(), Random.getDouble()};
+                double d2 = n.noise(param[0], param[1]);
+                double d3 = n.noise(param[0], param[1], param[2]);
                 assert d2 >= -1 && d2 <= 1 :
-                        "d2 beyond normal range: " + d2 + " noise: " + n.getClass().getCanonicalName();
+                        "d2 beyond normal range: " + d2 + " noise: " + n.getClass().getCanonicalName() + " param: " +
+                                param[0] + " " + param[1];
                 assert d3 >= -1 && d3 <= 1 :
-                        "d3 beyond normal range: " + d3 + " noise: " + n.getClass().getCanonicalName();
+                        "d3 beyond normal range: " + d3 + " noise: " + n.getClass().getCanonicalName() + " param: " +
+                                param[0] + " " + param[1] + " " + param[2];
             }
         }
     }
