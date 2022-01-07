@@ -14,6 +14,7 @@ public class NotifyService {
         onC(clazz, c -> listener.run());
     }
 
+
     /**
      * Triggered when an object has the same class
      *
