@@ -131,8 +131,10 @@ public class Utility {
     }
 
     public static String capitalizeTitle(String s, boolean enforce) {
+        if (s.length() == 0) return s;
         String[] words = s.split(" ");
         StringBuilder sb = FunctionalPoolObject.StringBuilder.obtain();
+
         for (String word : words) {
             sb.append(enforce ? capitalizeEnforce(word) : capitalizeFirstLetter(word)).append(" ");
         }

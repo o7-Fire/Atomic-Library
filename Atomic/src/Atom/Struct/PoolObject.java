@@ -80,7 +80,11 @@ public abstract class PoolObject<T> implements ObjectPoolPattern<T> {
     protected abstract T newObject();
     
     public T obtain() {
-        return this.freeObjects.size() == 0 ? this.newObject() : this.freeObjects.remove(0);
+        T that = this.freeObjects.size() == 0 ? this.newObject() : this.freeObjects.remove(0);
+        if (that == null) {
+            that = this.newObject();
+        }
+        return that;
     }
     
     /**
@@ -89,13 +93,14 @@ public abstract class PoolObject<T> implements ObjectPoolPattern<T> {
     public void free(T object) {
         if (object == null){
             throw new IllegalArgumentException("object cannot be null.");
-        }else{
-            if (this.freeObjects.size() < this.max){
+        }else {
+            if (this.freeObjects.size() < this.max) {
                 this.freeObjects.add(object);
                 this.peak = Math.max(this.peak, this.freeObjects.size());
+                this.reset(object);
             }
-            
-            this.reset(object);
+
+
         }
     }
     

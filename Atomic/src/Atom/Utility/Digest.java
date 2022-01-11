@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 public class Digest {
     
@@ -72,7 +73,7 @@ public class Digest {
     }
     
     public static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
-    
+
     public static String toHex(byte[] bytes) {
         char[] hexChars = new char[bytes.length * 2];
         for (int j = 0; j < bytes.length; j++) {
@@ -81,5 +82,13 @@ public class Digest {
             hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
         }
         return new String(hexChars);
+    }
+
+    public static byte[] base64(String text) {
+        return Base64.getDecoder().decode(text);
+    }
+
+    public static String base64(byte[] bytes) {
+        return Base64.getEncoder().encodeToString(bytes);
     }
 }

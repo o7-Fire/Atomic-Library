@@ -1,15 +1,22 @@
 package Atom.Utility;
 
+import java.io.PrintStream;
+import java.io.PrintWriter;
+
 public abstract class Log {
     protected String[] sLevel = new String[]{"[Debug]", "[Info]", "[Warn]", "[Error]"};
     public int level = 3;
-    
+
+    public static Log def() {
+        return new PrintWriterLog();
+    }
+
     protected void output(Object raw, int level) {
         if (this.level > level) return;
-    
+
         output(sLevel[level] + " " + raw);
     }
-    
+
     protected void output(String tag, Object raw, int level) {
         if (this.level > level) return;
     
@@ -17,7 +24,7 @@ public abstract class Log {
     }
     
     protected void output(Object raw) {
-        System.out.println(raw);
+
     }
     
     public void debug(Object s) {
@@ -43,12 +50,33 @@ public abstract class Log {
     public void info(String tag, Object s) {
         output(tag, s, 1);
     }
-    
+
     public void warn(String tag, Object s) {
         output(tag, s, 2);
     }
-    
+
     public void err(String tag, Object s) {
         output(tag, s, 3);
+    }
+
+
+    public static class PrintWriterLog extends Log {
+        PrintWriter writer;
+
+        public PrintWriterLog(PrintWriter writer) {
+            this.writer = writer;
+        }
+
+        public PrintWriterLog(PrintStream stream) {
+            this(new PrintWriter(stream));
+        }
+
+        public PrintWriterLog() {
+            this(System.out);
+        }
+
+        public void output(Object raw) {
+            writer.println(raw);
+        }
     }
 }
