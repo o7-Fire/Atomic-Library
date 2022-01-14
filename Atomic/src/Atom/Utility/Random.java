@@ -6,7 +6,6 @@ import Atom.Math.Array;
 import Atom.Math.Meth;
 import Atom.String.WordGenerator;
 import Atom.Struct.FunctionalPoolObject;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.DoubleStream;
@@ -384,6 +383,12 @@ public class Random extends java.util.Random {
         return t.get();
     }
 
+    @SafeVarargs
+    public static <T> T getRandom(T... values) {
+        if (values == null || values.length == 0) return null;
+        return values[getInt(values.length - 1)];
+    }
+
     public static <T> T getRandom(Iterator<T> arr) {
         ArrayList<T> rand = new ArrayList<>();
         while (arr.hasNext()) rand.add(arr.next());
@@ -402,14 +407,8 @@ public class Random extends java.util.Random {
         int rnd = getInt(arrays.size() - 1);
         return arrays.get(rnd);
     }
-    
-    @NotNull
-    public static <T> T getRandom(T[] arrays) {
-        if (arrays.length == 0) return null;
-        int rnd = getInt( arrays.length - 1);
-        return arrays[rnd];
-    }
-    
+
+
     public static long getLong(long min, long max) {
         return min + ((long) (get().nextDouble() * (max - min)));
     }
