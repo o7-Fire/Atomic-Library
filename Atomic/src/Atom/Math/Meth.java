@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Meth {
+
+
     public static double normalizePrecision(long x, long min, long max){
         double average      = (double) (min + max) / 2;
         double range        = (double) (max - min) / 2;
