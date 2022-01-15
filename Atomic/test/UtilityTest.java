@@ -35,7 +35,7 @@ public class UtilityTest {
     @Test
     void randomUtility() throws InvocationTargetException, IllegalAccessException {
         assert Random.getInt() != Random.getInt();
-        assert Random.getInt(-100, 100) != Random.getInt(0, 100);
+        assert Random.getInt(-100, 0) != Random.getInt(0, 100);
         assert Random.getInt(100) != Random.getInt();
         assert Random.getDouble(100) > 0;
         assert Random.getDouble(-100, 100) != Random.getDouble(100);
