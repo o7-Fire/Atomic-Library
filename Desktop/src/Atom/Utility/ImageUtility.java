@@ -1,10 +1,9 @@
 package Atom.Utility;
 
 import Atom.Exception.ShouldNotHappenedException;
-import Atom.Math.Array;
 import Atom.Math.Matrix;
-import Atom.Noise.Noise;
-import Atom.Noise.PerlinNoiseRiven;
+import Atom.Math.Meth;
+import Atom.Noise.SimplexNoise;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -19,19 +18,18 @@ public class ImageUtility {
     //Class Atom.Utility.ImageUtility
     //JVM: 9+
     public static void main(String[] args) {
-        float[][] data2d = Matrix.randomFloat(256, 256);
-        float[] data1d = Array.randomFloat(256);
-        float[][] simplex = new float[256][256];
-        Noise noise = new PerlinNoiseRiven();
-        for (int i = 0; i < simplex.length; i++) {
-            for (int j = 0; j < simplex[i].length; j++) {
-                simplex[i][j] = (float) noise.noise(i, j);
+        int count = 2048;
+        float[][] data = new float[count][count];
+        SimplexNoise noise = new SimplexNoise();
+        for (int i = 0; i < count; i++) {
+            for (int j = 0; j < count; j++) {
+                data[i][j] = noise.noiseNormalized((float) i / 256, (float) j / 256);
             }
         }
-        visualize2DArray(simplex);
-        visualize2DArray(data2d);
-        visualize1DArray(data1d);
-        
+        float[] flat = Matrix.flattenMatrix(data);
+        float min = Meth.min(flat), max = Meth.max(flat);
+        System.out.println("min: " + min + " max: " + max);
+        visualize2DArray(data);
     }
     
     public static byte[] encodeImage(BufferedImage image) {
@@ -97,7 +95,7 @@ public class ImageUtility {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 float c = data[i][j];
-                
+    
                 try {
                     g.setColor(new Color(c, c, c));
                 }catch(IllegalArgumentException e){
@@ -107,7 +105,12 @@ public class ImageUtility {
                 g.fillRect(i, j, 1, 1);
             }
         }
-        
+        //save to file
+        try {
+            ImageIO.write(img, "png", new java.io.File("test.png"));
+        }catch(IOException e){
+            e.printStackTrace();
+        }
         JFrame frame = new JFrame("Image Test: " + width + "x" + height);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         JPanel panel = new JPanel() {
