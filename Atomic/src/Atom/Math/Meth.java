@@ -9,17 +9,31 @@ public class Meth {
 
 
     public static double normalizePrecision(long x, long min, long max){
-        double average      = (double) (min + max) / 2;
-        double range        = (double) (max - min) / 2;
-        double normalized_x = (double) (x - average) / range;
-        return normalized_x;
+        double average = (double) (min + max) / 2;
+        double range = (double) (max - min) / 2;
+        return (double) (x - average) / range;
     }
     
     public static float normalize(long x, long min, long max) {
         float average = (float) (min + max) / 2;
         float range = (float) (max - min) / 2;
-        float normalized_x = (float) (x - average) / range;
-        return normalized_x;
+        return (float) (x - average) / range;
+    }
+    
+    /**
+     * example:
+     * x = 0.45
+     * min = 0.45
+     * max = 0.55
+     * return 0
+     *
+     * @param x   0.45
+     * @param min 0.45
+     * @param max 0.55
+     * @return 0
+     */
+    public static double normalize(float x, float min, float max) {
+        return (x - min) / (max - min);
     }
     
     public static long max(Long[] arr) {
