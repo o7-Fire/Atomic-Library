@@ -1,7 +1,9 @@
 package Atom.Noise;
 
+import java.io.Serializable;
+
 //stolen from https://github.com/KdotJPG/OpenSimplex2/blob/master/java/OpenSimplex2S.java
-public class SimplexNoise implements Noise {
+public class SimplexNoise implements Noise, Serializable {
     
     /**
      * K.jpg's OpenSimplex 2, smooth variant ("SuperSimplex")

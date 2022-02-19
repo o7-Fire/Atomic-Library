@@ -1,6 +1,8 @@
 package Atom.Noise;
 
-public interface Noise {
+import java.io.Serializable;
+
+public interface Noise extends Serializable {
     double noise(double x, double y);
     
     default float noiseNormalized(double x, double y) {

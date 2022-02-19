@@ -8,8 +8,11 @@ import Atom.Noise.SimplexNoise;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 
 public class ImageUtility {
@@ -19,17 +22,30 @@ public class ImageUtility {
     //JVM: 9+
     public static void main(String[] args) {
         int count = 2048;
-        float[][] data = new float[count][count];
+    
         SimplexNoise noise = new SimplexNoise();
-        for (int i = 0; i < count; i++) {
-            for (int j = 0; j < count; j++) {
-                data[i][j] = noise.noiseNormalized((float) i / 256, (float) j / 256);
+        float sample = noise.noiseNormalized(1.2f, 1.3f);//x y
+        for (int x = 0; x < 1; x++) {
+            for (int y = -5; y < 5; y++) {
+                float[][] data = new float[count][count];
+            
+            
+                for (int i = 0; i < count; i++) {
+                    for (int j = 0; j < count; j++) {
+                        data[i][j] = noise.noiseNormalized(((float) i / count) * 10 + x, ((float) j / count) * 10 + y);
+                    }
+                }
+            
+            
+                float[] flat = Matrix.flattenMatrix(data);
+                float min = Meth.min(flat), max = Meth.max(flat);
+                System.out.println("min: " + min + " max: " + max);
+                save2DArrayToImage(new File("test" + x + "_" + y + ".png"), data);
+                System.out.println("test" + x + "_" + y + ".png");
             }
         }
-        float[] flat = Matrix.flattenMatrix(data);
-        float min = Meth.min(flat), max = Meth.max(flat);
-        System.out.println("min: " + min + " max: " + max);
-        visualize2DArray(data);
+    
+    
     }
     
     public static byte[] encodeImage(BufferedImage image) {
@@ -85,9 +101,50 @@ public class ImageUtility {
         return frame;
     }
     
-    public static JFrame visualize2DArray(float[][] data) {
-        if (data == null) return null;
-        if (data.length == 0) return null;
+    
+    public static void mirror(BufferedImage image) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        for (int x = 0; x < width / 2; x++) {
+            for (int y = 0; y < height; y++) {
+                int rgb = image.getRGB(x, y);
+                image.setRGB(width - x - 1, y, rgb);
+            }
+        }
+    }
+    
+    public static void rotate(BufferedImage image, int steps) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        BufferedImage newImage = new BufferedImage(height, width, BufferedImage.TYPE_INT_RGB);
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                int rgb = image.getRGB(x, y);
+                newImage.setRGB(y, x, rgb);
+            }
+        }
+        image.setData(newImage.getData());
+    }
+    
+    public static void flipHorizontally(BufferedImage image) {
+        AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
+        tx.translate(-image.getWidth(null), 0);
+        AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+        image = op.filter(image, null);
+    }
+    
+    //data2D[i % width][i / width] = data[i];
+    public static BufferedImage save1DArrayToImage(File file, float[] data, int width, int height) {
+        float[][] data2D = new float[width][height];
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                data2D[i][j] = data[i * height + j];//swap j to i
+            }
+        }
+        return save2DArrayToImage(file, data2D);
+    }
+    
+    public static BufferedImage save2DArrayToImage(File file, float[][] data) {
         int width = data.length;
         int height = data[0].length;
         final BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -95,7 +152,7 @@ public class ImageUtility {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 float c = data[i][j];
-    
+                
                 try {
                     g.setColor(new Color(c, c, c));
                 }catch(IllegalArgumentException e){
@@ -105,12 +162,23 @@ public class ImageUtility {
                 g.fillRect(i, j, 1, 1);
             }
         }
+        //flipHorizontally(img);
+        //rotate(img, 1);
         //save to file
         try {
-            ImageIO.write(img, "png", new java.io.File("test.png"));
+            ImageIO.write(img, "png", file);
         }catch(IOException e){
             e.printStackTrace();
         }
+        return img;
+    }
+    
+    public static JFrame visualize2DArray(float[][] data) {
+        if (data == null) return null;
+        if (data.length == 0) return null;
+        int width = data.length;
+        int height = data[0].length;
+        BufferedImage img = save2DArrayToImage(new File(data.length + ".png"), data);
         JFrame frame = new JFrame("Image Test: " + width + "x" + height);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         JPanel panel = new JPanel() {
@@ -132,6 +200,6 @@ public class ImageUtility {
     }
     
     public enum ImageType {
-        JPG, PNG, GIF, TIFF, BMP, WEBM;
+        JPG, PNG, GIF, TIFF, BMP, WEBM
     }
 }
