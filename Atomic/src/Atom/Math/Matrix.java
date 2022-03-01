@@ -287,7 +287,7 @@ public class Matrix {
         if (x * x != f.length) throw new IllegalArgumentException(f.length + " is not a square, specify size manually");
         return to2D(f, x, x);
     }
-
+    
     @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static float[][] to2D(float[] f, int i, int i1) {
         float[][] matrix = new float[i][i1];
@@ -297,5 +297,13 @@ public class Matrix {
             }
         }
         return matrix;
+    }
+    
+    public static void flattenMatrix(float[][] src, float[] target) {
+        for (int i = 0; i < src.length; i++) {
+            for (int j = 0; j < src[i].length; j++) {
+                target[i + j * src.length] = src[i][j];
+            }
+        }
     }
 }
