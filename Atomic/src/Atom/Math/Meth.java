@@ -353,4 +353,24 @@ public class Meth {
     public static byte lerp(byte a, byte b, float t) {
         return (byte) (a + (b - a) * t);
     }
+    
+    public static float max(float[][] data) {
+        float max = Float.NEGATIVE_INFINITY;
+        for (float[] arr : data) {
+            for (float f : arr) {
+                max = Math.max(max, f);
+            }
+        }
+        return max;
+    }
+    
+    public static float min(float[][] data) {
+        float min = Float.POSITIVE_INFINITY;
+        for (float[] arr : data) {
+            for (float f : arr) {
+                min = Math.min(min, f);
+            }
+        }
+        return min;
+    }
 }

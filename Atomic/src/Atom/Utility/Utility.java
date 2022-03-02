@@ -185,8 +185,6 @@ public class Utility {
     }
     
     
-    public static Formatter formatter = new Formatter();
-    
     //get cpu usage of current process from java api
     //android support ?
     public double getAverageCpuUsage() {
@@ -201,14 +199,15 @@ public class Utility {
     public static String getDate() {
         
         Calendar c = Calendar.getInstance();
-        return formatter.format(Locale.UK, "%tl:%tM:%tS %tp %tB %te, %tY", c, c, c, c, c, c, c).toString();
+        return String.format(Locale.UK, "%tl:%tM:%tS %tp %tB %te, %tY", c, c, c, c, c, c, c).toString();
         
     }
     
     public static String getDate(long milis) {
+    
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(milis);
-        return formatter.format(Locale.UK, "%tl:%tM:%tS %tp %tB %te, %tY", c, c, c, c, c, c, c).toString();
+        return String.format(Locale.UK, "%tl:%tM:%tS %tp %tB %te, %tY", c, c, c, c, c, c, c).toString();
         
     }
     
