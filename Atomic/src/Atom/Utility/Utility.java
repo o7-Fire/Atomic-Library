@@ -185,30 +185,33 @@ public class Utility {
     }
     
     
-    public static String getDate() {
-        Formatter formatter = new Formatter();
-        Calendar c = Calendar.getInstance();
-        return formatter.format(Locale.UK, "%tl:%tM:%tS %tp %tB %te, %tY", c, c, c, c, c, c, c).toString();
-    }
+    public static Formatter formatter = new Formatter();
     
     //get cpu usage of current process from java api
     //android support ?
     public double getAverageCpuUsage() {
         try {
             return ManagementFactory.getOperatingSystemMXBean()
-                                    .getSystemLoadAverage() / ManagementFactory.getOperatingSystemMXBean()
-                                                                               .getAvailableProcessors();
+                    .getSystemLoadAverage() / ManagementFactory.getOperatingSystemMXBean().getAvailableProcessors();
         }catch(Throwable t){
             return 0;//class don't exists
         }
     }
     
-    public static String getDate(long milis) {
-        Date d = new Date(milis);
-        Formatter formatter = new Formatter();
-        Calendar c = toCalendar(d);
+    public static String getDate() {
+        
+        Calendar c = Calendar.getInstance();
         return formatter.format(Locale.UK, "%tl:%tM:%tS %tp %tB %te, %tY", c, c, c, c, c, c, c).toString();
+        
     }
+    
+    public static String getDate(long milis) {
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(milis);
+        return formatter.format(Locale.UK, "%tl:%tM:%tS %tp %tB %te, %tY", c, c, c, c, c, c, c).toString();
+        
+    }
+    
     
     public static Calendar toCalendar(Date date) {
         Calendar cal = Calendar.getInstance();

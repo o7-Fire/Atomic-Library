@@ -328,4 +328,29 @@ public class Meth {
     public static boolean equals(long a, long b, long err) {
         return Math.abs(a - b) < err;
     }
+    
+    
+    public static double lerp(double a, double b, double t) {
+        return a + (b - a) * t;
+    }
+    
+    public static float lerp(float a, float b, float t) {
+        return a + (b - a) * t;
+    }
+    
+    public static int lerp(int a, int b, float t) {
+        return (int) (a + (b - a) * t);
+    }
+    
+    public static long lerp(long a, long b, float t) {
+        return (long) (a + (b - a) * t);
+    }
+    
+    public static short lerp(short a, short b, float t) {
+        return (short) (a + (b - a) * t);
+    }
+    
+    public static byte lerp(byte a, byte b, float t) {
+        return (byte) (a + (b - a) * t);
+    }
 }

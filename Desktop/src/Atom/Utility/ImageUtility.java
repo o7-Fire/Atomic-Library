@@ -145,21 +145,40 @@ public class ImageUtility {
     }
     
     public static BufferedImage save2DArrayToImage(File file, float[][] data) {
+        return save2DArrayToImage(file, data, Color.BLACK, Color.WHITE);
+    }
+    
+    public static BufferedImage save2DArrayToImage(File file, float[][] data, Color low, Color high) {
+        float[] ffs = Matrix.flattenMatrix(data);
+        float min = Float.MAX_VALUE, max = Float.MIN_VALUE;
+        min = Meth.min(ffs);
+        max = Meth.max(ffs);
+        return save2DArrayToImage(file, data, min, max, low, high);
+    }
+    
+    public static BufferedImage save2DArrayToImage(File file, float[][] data, float min, float max, Color low, Color high) {
         int width = data.length;
         int height = data[0].length;
         final BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g = (Graphics2D) img.getGraphics();
+        Graphics2D g2d = (Graphics2D) img.getGraphics();
+        float r, g, b;
+        float maxR = high.getRed() / 255f, maxG = high.getGreen() / 255f, maxB = high.getBlue() / 255f;
+        float minR = low.getRed() / 255f, minG = low.getGreen() / 255f, minB = low.getBlue() / 255f;
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 float c = data[i][j];
                 
                 try {
-                    g.setColor(new Color(c, c, c));
+                    r = Meth.lerp(minR, maxR, (c - min) / (max - min));
+                    g = Meth.lerp(minG, maxG, (c - min) / (max - min));
+                    b = Meth.lerp(minB, maxB, (c - min) / (max - min));
+                    Color color = new Color(r, g, b);
+                    g2d.setColor(color);
                 }catch(IllegalArgumentException e){
                     System.err.println("Invalid Range: " + c + " at " + i + "," + j);
-                    g.setColor(c < 0 ? Color.BLACK : Color.WHITE);
+                    g2d.setColor(c < 0 ? low : high);
                 }
-                g.fillRect(i, j, 1, 1);
+                g2d.fillRect(i, j, 1, 1);
             }
         }
         //flipHorizontally(img);
