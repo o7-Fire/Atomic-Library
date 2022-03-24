@@ -53,5 +53,8 @@ public class EncoderJson {
         return map;
     }
     
+    public static Map<String, ?> toMap(JsonElement jo) {
+        return gson.fromJson(jo, Map.class);
+    }
     
 }
