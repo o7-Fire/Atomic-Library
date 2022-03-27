@@ -100,14 +100,36 @@ public class Pool {
         
         long mTotalFreeMemory = freeMemory + (maxMemory - mTotalMemory);
         mRtnValue = (int) (mTotalFreeMemory / 4200000000L);
-        
+    
         int mNoOfThreads = mAvailableProcessors - 1;
         if (mNoOfThreads < mRtnValue) mRtnValue = mNoOfThreads;
-        
+    
         return mRtnValue;
     }
     
     public static Thread daemon(Runnable r) {
         return daemonFactory.newThread(r);
+    }
+    
+    public static int getThreadCount(ThreadPoolExecutor... executors) {
+        int count = 0;
+        for (ThreadPoolExecutor executor : executors) {
+            count += Math.max(Math.min(executor.getLargestPoolSize(), executor.getActiveCount()), 1);
+        }
+        return count;
+    }
+    
+    public static double ramUsagePerThread(ThreadPoolExecutor... executors) {
+        return (double) Runtime.getRuntime().totalMemory() / getThreadCount(executors);
+    }
+    
+    public static int getPossibleThreadCount(ThreadPoolExecutor executor) {
+        return getPossibleThreadCount(executor, 0.7f);
+    }
+    
+    public static int getPossibleThreadCount(ThreadPoolExecutor executor, float topUsage) {
+        double ramUsagePerThread = ramUsagePerThread(executor);
+        return Math.max((int) ((Runtime.getRuntime().maxMemory() * topUsage) / ramUsagePerThread),
+                Math.max(1, Runtime.getRuntime().availableProcessors() - 1));
     }
 }

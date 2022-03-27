@@ -1,8 +1,10 @@
 package Atom.Utility;
 
 
+import Atom.Exception.ShouldNotHappenedException;
 import Atom.Reflect.OS;
 import Atom.Struct.FunctionalPoolObject;
+import Atom.Struct.UnstableFunction;
 import com.google.gson.Gson;
 
 import java.io.*;
@@ -182,6 +184,121 @@ public class Utility {
             extension = f.getName().substring(i + 1);
         }
         return extension;
+    }
+    
+    public static BufferedReader bufferedReaderForStdIN;//DO NOT CLOSE, unless you want to replace it
+    
+    public static String input(String question) {
+        return input(question, null);
+    }
+    
+    public static String input(String question, String def) {
+        return input(question, def, (s) -> s);
+    }
+    
+    public static long inputLong(String question) {
+        return inputLong(question, 0L);
+    }
+    
+    public static long inputLong(String question, Long def) {
+        return input(question, def, Long::parseLong);
+    }
+    
+    public static int inputInt(String question) {
+        return inputInt(question, 0);
+    }
+    
+    public static int inputInt(String question, int def) {
+        return input(question, def, Integer::parseInt);
+    }
+    
+    public static double inputDouble(String question) {
+        return inputDouble(question, 0.0);
+    }
+    
+    public static double inputDouble(String question, double def) {
+        return input(question, def, Double::parseDouble);
+    }
+    
+    public static boolean inputBoolean(String question) {
+        return inputBoolean(question, false);
+    }
+    
+    public static boolean inputBoolean(String question, boolean def) {
+        return input(question, def, Boolean::parseBoolean);
+    }
+    
+    public static String[] inputS(String question) {
+        return inputS(question, new String[]{});
+    }
+    
+    public static String[] inputS(String question, String... def) {
+        return input(question, def, ",");
+    }
+    
+    public static String[] input(String question, String[] def, String split) {
+        System.out.println(split + " separated");
+        return input(question, def, (s) -> s.split(split));
+    }
+    
+    public static <T> T input(String question, T def, UnstableFunction<String, T> parser) {
+        try {
+            return input(question, def, parser, true);
+        }catch(Exception e){
+            throw new ShouldNotHappenedException(e);
+        }
+    }
+    
+    public static <T> String arrayToString(T def) {
+        String defText = null;
+        if (def instanceof String[]){
+            defText = Arrays.toString((String[]) def);
+        }else if (def instanceof int[]){
+            defText = Arrays.toString((int[]) def);
+        }else if (def instanceof long[]){
+            defText = Arrays.toString((long[]) def);
+        }else if (def instanceof double[]){
+            defText = Arrays.toString((double[]) def);
+        }else if (def instanceof float[]){
+            defText = Arrays.toString((float[]) def);
+        }else if (def instanceof boolean[]){
+            defText = Arrays.toString((boolean[]) def);
+        }else if (def instanceof char[]){
+            defText = Arrays.toString((char[]) def);
+        }else if (def instanceof byte[]){
+            defText = Arrays.toString((byte[]) def);
+        }else if (def instanceof short[]){
+            defText = Arrays.toString((short[]) def);
+        }else if (def instanceof Object[]){
+            defText = Arrays.toString((Object[]) def);
+        }
+        return defText;
+    }
+    
+    public static <T> T input(String question, T def, UnstableFunction<String, T> parser, boolean loop) throws Exception {
+        if (bufferedReaderForStdIN == null)
+            bufferedReaderForStdIN = new BufferedReader(new InputStreamReader(System.in));
+        String defText = "";
+        if (def != null){
+            if (def.getClass().isArray()){
+                defText = arrayToString(def);
+            }else{
+                defText = def.toString();
+                defText = " [" + defText + "]";
+            }
+            
+        }
+        System.out.print(question + " " + defText + ": ");
+        while (true) {
+            try {
+                String s = bufferedReaderForStdIN.readLine();
+                if (s.isEmpty() && def != null) return def;
+                return parser.apply(s);
+            }catch(Exception e){
+                if (!loop) throw e;
+                System.out.println("Error: " + e.getMessage());
+            }
+        }
     }
     
     
