@@ -14,7 +14,23 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class Utility {
-
+    
+    public static String toHumanReadableSize(double size) {
+        if (size < 1024){
+            return size + " B";
+        }
+        if (size < 1024 * 1024){
+            return (size / 1024f) + " KB";
+        }
+        if (size < 1024 * 1024 * 1024){
+            return (size / 1024 / 1024f) + " MB";
+        }
+        if (size < 1024L * 1024 * 1024 * 1024){
+            return (size / 1024 / 1024 / 1024f) + " GB";
+        }
+        return (size / 1024 / 1024 / 1024 / 1024f) + " TB";
+    }
+    
     public static boolean openURL(URL url) {
         return openURL(url.toString());
     }
