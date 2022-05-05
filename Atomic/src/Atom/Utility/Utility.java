@@ -1,6 +1,7 @@
 package Atom.Utility;
 
 
+import Atom.Exception.DevIsTooLazyException;
 import Atom.Exception.ShouldNotHappenedException;
 import Atom.Reflect.OS;
 import Atom.Struct.FunctionalPoolObject;
@@ -29,6 +30,55 @@ public class Utility {
             return (size / 1024 / 1024 / 1024f) + " GB";
         }
         return (size / 1024 / 1024 / 1024 / 1024f) + " TB";
+    }
+    
+    //40K to 40000
+    //10M to 10000000
+    public static double parseFormattedInteger(String formatted){
+        
+        char c = formatted.toUpperCase().charAt(formatted.length() - 1);
+        if(Character.isDigit(c)){
+            return Double.parseDouble(formatted);
+        }
+        double l = Double.parseDouble(formatted.substring(0, formatted.length() - 1));
+        if (c == 'K'){
+            return l * 1000;
+        }
+        if (c == 'M'){
+            return l * 1000 * 1000;
+        }
+        if (c == 'B'){
+            return l * 1000 * 1000 * 1000;
+        }
+        if(c == 'T'){
+            return l * 1000 * 1000 * 1000 * 1000;
+        }
+        throw new ShouldNotHappenedException("Unknown unit: " + c);
+    }
+    
+    public static double toMachineReadableSize(String formattedByteSize) {
+        boolean bit = formattedByteSize.endsWith("b");
+        char unit = formattedByteSize.toUpperCase().charAt(formattedByteSize.length() - 2);
+        double size = Double.parseDouble(formattedByteSize.substring(0, formattedByteSize.length() - 2));
+        if(Character.isDigit(unit)){
+            return Double.parseDouble(formattedByteSize.substring(0, formattedByteSize.length() - 1));
+        }
+        if (unit == 'K'){
+            return size * 1000;
+        }
+        if (unit == 'M'){
+            return size * 1000 * 1000;
+        }
+        if (unit == 'G'){
+            return size * 1000 * 1000 * 1000;
+        }
+        if (unit == 'T'){
+            return size * 1000 * 1000 * 1000 * 1000;
+        }
+        if (unit == 'P'){
+            return size * 1000 * 1000 * 1000 * 1000 * 1000;
+        }
+        throw new DevIsTooLazyException("Unsupported unit: " + unit);
     }
     
     public static boolean openURL(URL url) {

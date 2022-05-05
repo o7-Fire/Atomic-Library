@@ -30,6 +30,15 @@ public class UtilityTest {
         assert Utility.capitalizeTitle("saDdAm husseIN", true).equals("Saddam Hussein");
         assert Arrays.equals(Utility.sliceInt("111111,2222222,333333,4444444", ","), new int[]{111111, 2222222, 333333, 4444444});
         assert !Utility.shuffle("aaabbbccc").equals("aaabbbccc");
+        assert (long)Utility.parseFormattedInteger("100K") == 100000;
+        assert (long)Utility.parseFormattedInteger("100k") == 100000;
+        assert (long)Utility.parseFormattedInteger("1M") == 1_000_000;
+        assert (long)Utility.parseFormattedInteger("999M") == 999_000_000;
+        assert (long)Utility.parseFormattedInteger("123.5M") == 123_500_000;
+        assert (long)Utility.parseFormattedInteger("123T") == 123_000_000_000L;
+        assert (long)Utility.parseFormattedInteger("123.5T") == 123_500_000_000L;
+        assert (long)Utility.parseFormattedInteger("123B") == 123_000_000_000_000L;
+        assert (long)Utility.parseFormattedInteger("123.5B") == 123_500_000_000_000L;
     }
     
     @Test
