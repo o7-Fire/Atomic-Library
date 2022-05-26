@@ -93,10 +93,6 @@ public class Request {
     
     public static String getPublicIP() {
         String ip = "";
-        //Q: why http ?
-        //A: what you data you gonna send over http ? password ? no just plain ip that everyone can detect
-        //Q: spyware ?
-        //A: no, unless someone implement it
         try {
             URL amazon = new URL("http://checkip.amazonaws.com");
             BufferedReader in = new BufferedReader(new InputStreamReader(amazon.openStream()));

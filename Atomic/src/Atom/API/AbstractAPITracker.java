@@ -2,7 +2,7 @@ package Atom.API;
 
 import Atom.Struct.PoolObject;
 
-public class AbstractAPITracker extends CommonIPTrackerAbstract implements IPTracker, PoolObject.Object {
+public class AbstractAPITracker extends CommonIPTrackerAbstract implements IPLookup, PoolObject.Object {
 	String key = "";
 	
 	public AbstractAPITracker(String ip, String key) {

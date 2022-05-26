@@ -1,4 +1,3 @@
-import Atom.API.IPTracker;
 import Atom.Math.Array;
 import Atom.Translation.GoogleTranslate;
 import Atom.Translation.SaddamHusseinTranslator;
@@ -16,10 +15,6 @@ public class AnyTest {
         SaddamHusseinTranslator.main(new String[]{});
     }
     
-    @Test
-    public void ipTracker() throws ExecutionException, InterruptedException {
-        IPTracker.main(new String[]{});
-    }
     
     @Test
     public void matrixFlattening() {

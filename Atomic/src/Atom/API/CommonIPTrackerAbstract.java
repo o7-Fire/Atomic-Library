@@ -9,13 +9,13 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class CommonIPTrackerAbstract implements IPTracker {
+public abstract class CommonIPTrackerAbstract implements IPLookup {
     Map<String, String> cache = new HashMap<>();
     String api, ip = "";
     
     public CommonIPTrackerAbstract(String ip) {
         ip = ip.trim();
-        if (!IPTracker.isValidIPAddress(ip)) throw new IllegalArgumentException("Invalid IP");
+        if (!IPLookup.isValidIPAddress(ip)) throw new IllegalArgumentException("Invalid IP");
         setIP(ip);
     }
     

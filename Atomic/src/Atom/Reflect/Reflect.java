@@ -18,10 +18,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class Reflect {
     
@@ -218,7 +215,25 @@ public class Reflect {
         }
         return objectParam;
     }
-
+    
+    
+    public static <E> Set<Class<? extends E>> getExtendedClass(String packageName, Class<E> e) {
+        try {
+            return ExternalReflection.getExtendedClass(packageName, e);
+        }catch(LinkageError e1){
+            return new HashSet<>();
+        }
+    }
+    
+    public static <E> Set<Class<? extends E>> getExtendedClass(String packageName, Class<E> e, ClassLoader cl) {
+        try {
+            
+            return ExternalReflection.getExtendedClass(packageName, e, cl);
+        }catch(LinkageError e1){
+            return new HashSet<>();
+        }
+    }
+    
     public enum DebugType {JavaAgent, AgentLib, IntellijAgent, DevEnvironment, UserPreference, None}
     
     

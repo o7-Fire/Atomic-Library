@@ -26,7 +26,7 @@ public class Client {
     }
     
     public Client(int port) throws IOException {
-        this("127.0.0.1", port);
+        this(null, port);
     }
     
     public void stop() {
