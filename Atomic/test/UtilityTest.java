@@ -43,16 +43,18 @@ public class UtilityTest {
     
     @Test
     void randomUtility() throws InvocationTargetException, IllegalAccessException {
-        assert Random.getInt() != Random.getInt();
-        assert Random.getInt(-100, 0) != Random.getInt(0, 100);
-        assert Random.getInt(100) != Random.getInt();
-        assert Random.getDouble(100) > 0;
-        assert Random.getDouble(-100, 100) != Random.getDouble(100);
-        assert Random.getLong() != Random.getLong();
-        assert Random.getLong(100) != Random.getLong();
-        assert Random.getLong(-200, 100) != Random.getLong();
-        assert Random.getFloat(100) > 1;
-        assert Random.getFloat(-100, 100) != Random.getFloat();
+        for (int i = 0; i < 1000; i++) {
+            assert Random.getInt() != Random.getInt();
+            assert Random.getInt(-100, 0) != Random.getInt(0, 100);
+            assert Random.getInt(100) != Random.getInt();
+            assert Random.getDouble(100) > 0;
+            assert Random.getDouble(-100, 100) != Random.getDouble(100);
+            assert Random.getLong() != Random.getLong();
+            assert Random.getLong(100) != Random.getLong();
+            assert Random.getLong(-200, 100) != Random.getLong();
+            assert Random.getFloat(100) > 0;
+            assert Random.getFloat(-100, 100) != Random.getFloat();
+        }
         Random.main(new String[]{});
         TestingUtility.methodFuzzer(Random.class.getDeclaredMethods(), true);
     }
