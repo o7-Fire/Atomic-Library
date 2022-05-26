@@ -9,6 +9,7 @@ on:
 jobs:
   test:
     strategy:
+      fail-fast: false
       matrix:
         version: [9, 11, 14, 17]
     name: Build & Test ${{ matrix.version }}
