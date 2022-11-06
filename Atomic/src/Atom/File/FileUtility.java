@@ -9,6 +9,7 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 
 import static Atom.Reflect.OS.*;
@@ -67,8 +68,8 @@ public class FileUtility {
     }
 
     public static File cwd() {
-        File f = new File("./");
-        if (!f.exists()) f = new File("");
+        File f = new File("").getAbsoluteFile();
+        if (!f.exists()) f = new File("./");
         f = f.getAbsoluteFile();
         return f;
     }
@@ -231,6 +232,32 @@ public class FileUtility {
             }
             return true;
         }catch(IOException t){
+            return false;
+        }
+    }
+    
+    public static boolean delete(File path) {
+        ArrayList<File> files = new ArrayList<>();
+        boolean failed = false;
+        files.add(path);
+        while (!files.isEmpty()) {
+            File file = files.remove(0);
+            if (file.isDirectory()) {
+                File[] list = file.listFiles();
+                if (list != null) {
+                    files.addAll(Arrays.asList(list));
+                }
+            }
+            if(!file.delete()) failed = true;
+        }
+        return !failed;
+    }
+    
+    public static boolean exists(String servicePath) {
+        try{
+            return new File(servicePath).exists();
+        }catch(Throwable ignored){
+            //Java buillshitry here
             return false;
         }
     }
