@@ -1,4 +1,6 @@
 //include 'Android'
 include 'Atomic'
+if(JavaVersion.current() > JavaVersion.VERSION_1_9){
 include 'Desktop'
+}
 rootProject.name = 'Atom'
