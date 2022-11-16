@@ -18,13 +18,13 @@ public class Dotenv {
         if(!FileUtility.exists(file.getAbsolutePath()))return false;
         try {
             return load(file.toURI().toURL());
-            
         }catch(MalformedURLException e){
             return false;
         }
     }
     
     public static boolean load(URL url) {
+    
         try (InputStream is = url.openStream()){
            String s =  Encoder.readString(is);
            return load(s);
@@ -38,7 +38,7 @@ public class Dotenv {
             s = s.trim();
             if(s.startsWith("#"))continue;
             if(!s.contains("="))continue;
-            String[] ss = s.split("=", 1);
+            String[] ss = s.split("=", 2);
             if(ss.length != 2)continue;
             String key = ss[0];
             String value = ss[1];

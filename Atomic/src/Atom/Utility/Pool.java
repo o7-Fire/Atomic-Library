@@ -1,5 +1,6 @@
 package Atom.Utility;
 
+import Atom.Reflect.JavaVersion;
 import Atom.Reflect.Reflect;
 import Atom.Reflect.UnThread;
 import Atom.Time.Time;
@@ -130,6 +131,7 @@ public class Pool {
             }
             count += Math.max(threadCount, 1);
         }
+    
         return count;
     }
     
@@ -139,8 +141,8 @@ public class Pool {
     
     public static int getPossibleThreadCount(ExecutorService executor) {
         double ramUsagePerThread = ramUsagePerThread(executor);
-        return Math.max((int) (Runtime.getRuntime().totalMemory() / ramUsagePerThread),
-                Math.max(1, Runtime.getRuntime().availableProcessors() - 1));
+        return Math.max((int) (JavaVersion.isJava9OrLater() ? Runtime.getRuntime().maxMemory() : Runtime.getRuntime()
+                .totalMemory() / ramUsagePerThread), Math.max(1, Runtime.getRuntime().availableProcessors() - 1));
     }
     
     public static void main(String[] args) {
