@@ -324,7 +324,7 @@ public class Queue<T> implements Iterable<T> {
      * Retrieves the value in queue without removing it. Indexing is from the front to back, zero based. Therefore get(0) is the
      * same as {@link #first()}.
      *
-     * @throws IndexOutOfBoundsException when the index is negative or >= size
+     * @throws IndexOutOfBoundsException when the index is negative or equalOrMoreThan size
      */
     public T get(int index) {
         if (index < 0) throw new IndexOutOfBoundsException("index can't be < 0: " + index);

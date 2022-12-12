@@ -166,7 +166,7 @@ subprojects {
     }
 
 }
-configure([":Atomic", ":Desktop"].collect{project(it)}){
+configure(((JavaVersion.current() > JavaVersion.VERSION_1_9) ? [":Atomic", ":Desktop"] : [":Atomic"]).collect{project(it)}){
     java{
         withJavadocJar()
         withSourcesJar()
