@@ -5,4 +5,5 @@ before_install:
   - source install-jdk.sh --feature 17
   - jshell --version
 install:
+  - chmod +x ./gradlew
   - ./gradlew publishToMavenLocal
