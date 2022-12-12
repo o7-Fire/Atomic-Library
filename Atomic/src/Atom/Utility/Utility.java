@@ -216,7 +216,7 @@ public class Utility {
      * <p>
      * Output: "Hello world"
      *
-     * @param "string"
+     * @param s the string to capitalize
      * @return "String"
      */
     public static String capitalizeEnforce(String s) {
