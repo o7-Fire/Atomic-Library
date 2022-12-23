@@ -67,35 +67,37 @@ public class UtilityTest {
     @Test
     public void WaitingForFuture() {
         List<Integer> list = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {//1 second
+        for (int i = 5; i < 10; i++) {
             list.add(i);
         }
         long startMillis = System.currentTimeMillis();
-        AtomicInteger expected = new AtomicInteger();
+        AtomicInteger expected = new AtomicInteger(5);
         Utility.waitingForFuture(list, integer -> (startMillis + integer * 100) < System.currentTimeMillis(), integer -> {
             System.out.println("Done: " + integer);
-            if (integer != expected.get()) throw new ShouldNotHappenedException();
+            assert  (integer == expected.get()) : integer + " " + expected.get();
             expected.getAndIncrement();
-
+            assert list.size() + expected.get() == 10 : list.size() + " + " + expected.get() + " != 10";
         });
     }
     @Test
     public void WaitingForFutureSafe() {
         List<Integer> list = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 5; i < 10; i++) {//start with value more than 2 to avoid collision
             list.add(i);
         }
         long startMillis = System.currentTimeMillis();
-        AtomicInteger expected = new AtomicInteger();
+        AtomicInteger expected = new AtomicInteger(5);
         Utility.waitingForFutureSafe(list, integer -> (startMillis + integer * 100) < System.currentTimeMillis(), integer -> {
             System.out.println("Done: " + integer);
-
-            if (integer != expected.get()) throw new ShouldNotHappenedException();
+            assert integer == expected.get() : integer + " != " + expected.get();
             expected.getAndIncrement();
-            if(Random.getBool()){//troll
-                list.add(integer);
+            if(Random.getBool()){//troll, may cause Heisenbug due to timing
+                int sizeBefore = list.size();
+                list.add(0, integer);
                 expected.decrementAndGet();
+                assert list.size() != sizeBefore : "Java just observed quantum entanglement";
             }
+
         });
     }
     @Test
