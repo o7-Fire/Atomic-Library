@@ -4,6 +4,8 @@ package Atom.Utility;
 import Atom.Exception.DevIsTooLazyException;
 import Atom.Exception.ShouldNotHappenedException;
 import Atom.Reflect.OS;
+import Atom.Reflect.UnThread;
+import Atom.Struct.Filter;
 import Atom.Struct.FunctionalPoolObject;
 import Atom.Struct.UnstableFunction;
 import com.google.gson.Gson;
@@ -12,10 +14,40 @@ import java.io.*;
 import java.lang.management.ManagementFactory;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class Utility {
-    
+
+    //Me when
+    public static <T> void waitingForFuture(Collection<T> collection, Filter<T> done, Consumer<T> onDone) {
+        while(!collection.isEmpty()){
+            Iterator<T> iterator = collection.iterator();
+            while (iterator.hasNext()){
+                T next = iterator.next();
+                if(done.accept(next)){
+                    onDone.accept(next);
+                    iterator.remove();
+                }
+            }
+            UnThread.sleep(16);//avoid 100% cpu usage
+        }
+    }
+
+    //ThreadSafe edition
+    public static <T> void waitingForFutureSafe(Collection<T> collection, Filter<T> done, Consumer<T> onDone) {
+        while(!collection.isEmpty()){
+            List<T> list = new ArrayList<>(collection);
+            for (T t : list) {
+                if(done.accept(t)){
+                    onDone.accept(t);
+                    collection.remove(t);
+                }
+            }
+            UnThread.sleep(16);
+        }
+    }
+
     public static String toHumanReadableSize(double size) {
         if (size < 1024){
             return size + " B";

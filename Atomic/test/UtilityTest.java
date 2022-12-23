@@ -1,3 +1,4 @@
+import Atom.Exception.ShouldNotHappenedException;
 import Atom.File.FileUtility;
 import Atom.Math.Array;
 import Atom.Utility.Meta.TestingUtility;
@@ -9,7 +10,11 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.ConcurrentModificationException;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class UtilityTest {
     @Test
@@ -57,8 +62,42 @@ public class UtilityTest {
     @Test
     public void AnyUtility() {
         Notify.main(new String[]{});
-    }
 
+    }
+    @Test
+    public void WaitingForFuture() {
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {//1 second
+            list.add(i);
+        }
+        long startMillis = System.currentTimeMillis();
+        AtomicInteger expected = new AtomicInteger();
+        Utility.waitingForFuture(list, integer -> (startMillis + integer * 100) < System.currentTimeMillis(), integer -> {
+            System.out.println("Done: " + integer);
+            if (integer != expected.get()) throw new ShouldNotHappenedException();
+            expected.getAndIncrement();
+
+        });
+    }
+    @Test
+    public void WaitingForFutureSafe() {
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            list.add(i);
+        }
+        long startMillis = System.currentTimeMillis();
+        AtomicInteger expected = new AtomicInteger();
+        Utility.waitingForFutureSafe(list, integer -> (startMillis + integer * 100) < System.currentTimeMillis(), integer -> {
+            System.out.println("Done: " + integer);
+
+            if (integer != expected.get()) throw new ShouldNotHappenedException();
+            expected.getAndIncrement();
+            if(Random.getBool()){//troll
+                list.add(integer);
+                expected.decrementAndGet();
+            }
+        });
+    }
     @Test
     public void FileUtility() throws IOException {
         File test = FileUtility.temp(), test2 = FileUtility.temp(), test3 = FileUtility.temp();
