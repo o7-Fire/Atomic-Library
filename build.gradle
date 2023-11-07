@@ -13,20 +13,22 @@ buildscript {
         maven {
             url "https://plugins.gradle.org/m2/"
         }
+        /*
         dependencies {
 
             classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.3"
         }
+        */
     }
 }
-
+/*
 apply plugin: "org.sonarqube"
 sonarqube {
     properties {
         property "sonar.projectKey", "o7-Fire_Atomic-Library"
         property "sonar.organization", "o7-ire"
     }
-}
+}*/
 allprojects {
 
 
@@ -52,18 +54,19 @@ allprojects {
 subprojects {
     apply plugin: 'java'
     apply plugin: 'java-library'
-    apply plugin: "org.sonarqube"
+   // apply plugin: "org.sonarqube"
     apply plugin: 'jacoco'
     apply plugin: 'maven-publish'
 
     group 'org.o7.Fire'
     version '5.0'
+    /*
     sonarqube {
         properties {
             property "sonar.projectKey", "o7-Fire_Atomic-Library"
             property "sonar.organization", "o7-ire"
         }
-    }
+    }*/
 
     jacocoTestReport {
         reports {
