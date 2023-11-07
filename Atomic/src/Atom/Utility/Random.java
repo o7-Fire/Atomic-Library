@@ -17,35 +17,35 @@ public class Random extends java.util.Random {
     //slow ?
     public static ThreadLocal<java.util.Random> atomicRandom = ThreadLocal.withInitial(java.util.Random::new);
     public static final Map<Class<?>, Factory<?>> randomSupplier = new HashMap<>();
-    
+
     public static synchronized void seed(long seed) {
         get().setSeed(seed);
     }
-    
+
     public static java.util.Random get() {
         return atomicRandom.get();
     }
-    
+
     public static void getNextBytes(byte[] bytes) {
         get().nextBytes(bytes);
     }
-    
+
     public static int getNextInt() {
         return get().nextInt();
     }
-    
+
     public static int getNextInt(int bound) {
         return get().nextInt(bound);
     }
-    
+
     public static long getNextLong() {
         return get().nextLong();
     }
-    
+
     public static boolean getNextBoolean() {
         return get().nextBoolean();
     }
-    
+
     public static float getNextFloat() {
         return get().nextFloat();
     }
@@ -62,13 +62,16 @@ public class Random extends java.util.Random {
     public static IntStream getInts(long streamSize) {
         return get().ints(streamSize);
     }
-    
+
     public static IntStream getInts() {
         return get().ints();
     }
     
     @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static IntStream getInts(long streamSize, int randomNumberOrigin, int randomNumberBound) {
+        if (randomNumberBound <= randomNumberOrigin) {
+            throw new IllegalArgumentException("Bound must be greater than origin");
+        }
         return get().ints(streamSize, randomNumberOrigin, randomNumberBound);
     }
     
@@ -503,40 +506,40 @@ public class Random extends java.util.Random {
     public static float[][] generatePerlinNoise(float[][] baseNoise, int octaveCount, float persistance, float amplitude) {
         int width = baseNoise.length;
         int height = baseNoise[0].length;
-        
+
         float[][][] smoothNoise = new float[octaveCount][][]; // an array of 2D
         // arrays
         // containing
-        
-        
+
+
         // generate smooth noise
         for (int i = 0; i < octaveCount; i++) {
             smoothNoise[i] = generateSmoothNoise(baseNoise, i);
         }
-        
+
         float[][] perlinNoise = new float[width][height];
-        
+
         float totalAmplitude = 0.0f;
-        
+
         // blend noise together
         for (int octave = octaveCount - 1; octave >= 0; octave--) {
             amplitude *= persistance;
             totalAmplitude += amplitude;
-            
+
             for (int i = 0; i < width; i++) {
                 for (int j = 0; j < height; j++) {
                     perlinNoise[i][j] += smoothNoise[octave][i][j] * amplitude;
                 }
             }
         }
-        
+
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 perlinNoise[i][j] /= totalAmplitude;
                 perlinNoise[i][j] = (float) (Math.floor(perlinNoise[i][j] * 25));
             }
         }
-        
+
         return perlinNoise;
     }
     
@@ -598,19 +601,19 @@ public class Random extends java.util.Random {
     public static Locale getLocale() {
         return Random.getRandom(Locale.getAvailableLocales());
     }
-    
+
     public static void main(String[] args) {
         for (Map.Entry<Class<?>, Factory<?>> s : randomSupplier.entrySet()) {
             Object o = s.getValue().get();
             if (!(o.getClass().isPrimitive() == s.getKey().isPrimitive())) continue;
-            assert s.getKey().isInstance(o) || s.getKey() == o.getClass() : "Not instance: " + s.getKey().getCanonicalName() + ", " + o.getClass().getCanonicalName();
+            assert s.getKey().isInstance(o) || s.getKey() == o.getClass() : "Not an instance: " + s.getKey().getCanonicalName() + ", " + o.getClass().getCanonicalName();
         }
     }
-    
+
     public static Class<?> getRandomPrimitiveClass() {
         return getRandom(primitiveClazz);
     }
-    
+
     public static <T> T getRandom(Class<T> type) {
         if (randomSupplier.containsKey(type)){
             return (T) randomSupplier.get(type).get();
