@@ -70,15 +70,19 @@ public class UtilityTest {
         for (int i = 5; i < 10; i++) {
             list.add(i);
         }
-
-        AtomicInteger sum = new AtomicInteger(0);
-
-        Utility.waitingForFuture(list, integer -> sum.addAndGet(integer) == 10, integer -> {
+        long startMillis = System.currentTimeMillis();
+        AtomicInteger expected = new AtomicInteger(5);
+        Utility.waitingForFuture(list, integer -> (startMillis + integer * 100) < System.currentTimeMillis(), integer -> {
             System.out.println("Done: " + integer);
+            System.out.println("Expected: " + expected.get());
+            assert  (integer == expected.get()) : integer + " " + expected.get();
+            // 5+5 = 10
+            expected.getAndIncrement();
+            // 5+6 != 10 (Assertion Error)
+            System.out.println("List Size: " + list.size());
+            System.out.println("Expected2: " + expected.get());
+            assert list.size() + expected.get() == 10 : list.size() + " + " + expected.get() + " != 10";
         });
-
-        // Assert that the sum of processed elements equals 10
-        assert sum.get() == 10;
     }
 
     @Test
