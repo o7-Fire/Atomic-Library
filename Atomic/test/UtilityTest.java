@@ -70,18 +70,17 @@ public class UtilityTest {
         for (int i = 5; i < 10; i++) {
             list.add(i);
         }
+
         AtomicInteger sum = new AtomicInteger(0);
 
-        Utility.waitingForFuture(list, integer -> {
-            sum.addAndGet(integer);
-            return sum.get() >= 10; // process element until the sum reaches 10
-        }, integer -> {
+        Utility.waitingForFuture(list, integer -> sum.addAndGet(integer) == 10, integer -> {
             System.out.println("Done: " + integer);
         });
 
-        // assert that the sum of processed element equals 10
+        // Assert that the sum of processed elements equals 10
         assert sum.get() == 10;
     }
+
     @Test
     public void WaitingForFutureSafe() {
         List<Integer> list = new ArrayList<>();
