@@ -1,8 +1,10 @@
 import Atom.Exception.ShouldNotHappenedException;
 import Atom.File.FileUtility;
 import Atom.Math.Array;
+import Atom.Struct.Filter;
 import Atom.Utility.Meta.TestingUtility;
 import Atom.Utility.Notify;
+import Atom.Utility.Pool;
 import Atom.Utility.Random;
 import Atom.Utility.Utility;
 import org.junit.jupiter.api.Test;
@@ -15,6 +17,7 @@ import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 public class UtilityTest {
     @Test
@@ -45,7 +48,7 @@ public class UtilityTest {
         assert (long)Utility.parseFormattedInteger("123B") == 123_000_000_000L;
         assert (long)Utility.parseFormattedInteger("123.5B") == 123_500_000_000L;
     }
-    
+
     @Test
     void randomUtility() throws InvocationTargetException, IllegalAccessException {
         for (int i = 0; i < 1000; i++) {
@@ -65,24 +68,30 @@ public class UtilityTest {
 
     }
     @Test
-    public void WaitingForFuture() {
-        List<Integer> list = new ArrayList<>();
-        for (int i = 5; i < 10; i++) {
-            list.add(i);
+    public void WaitForCollection() {
+        List<Long> conditionSatisfiedAt = new ArrayList<>(); // List of milliseconds in the future
+        for (int i = 0; i < 10; i++) {
+            conditionSatisfiedAt.add(System.currentTimeMillis() + 1000 + (i * 100));
         }
-        long startMillis = System.currentTimeMillis();
-        AtomicInteger expected = new AtomicInteger(5);
-        Utility.waitingForFuture(list, integer -> (startMillis + integer * 100) < System.currentTimeMillis(), integer -> {
-            System.out.println("Done: " + integer);
-            System.out.println("Expected: " + expected.get());
-            assert  (integer == expected.get()) : integer + " " + expected.get();
-            // 5+5 = 10
-            expected.getAndIncrement();
-            // 5+6 != 10 (Assertion Error)
-            System.out.println("List Size: " + list.size());
-            System.out.println("Expected2: " + expected.get());
-            assert list.size() + expected.get() == 10 : list.size() + " + " + expected.get() + " != 10";
+        Consumer<Long> callback = aLong -> {
+            System.out.println("Done with " + aLong);
+        };
+
+        Filter<Long> satisfied = aLong -> aLong < System.currentTimeMillis(); // Satisfied if the time has passed
+
+        // Anti Hang Watchdog
+        Pool.daemon(() -> {
+            try {
+                Thread.sleep(10000);
+            }catch(InterruptedException e){
+
+            }
+            int size = conditionSatisfiedAt.size();
+            throw new ShouldNotHappenedException("WaitForCollection hang: " + size + " items left");
         });
+        Utility.waitForCollection(conditionSatisfiedAt, satisfied, callback);
+
+        assert conditionSatisfiedAt.isEmpty() : "conditionSatisfiedAt is not empty";
     }
 
     @Test
@@ -117,11 +126,11 @@ public class UtilityTest {
         assert test.equals(test2) == false;
         assert test.equals(test3) == false;
         int length1 = Random.getInt(10, 1200), length2 = Random.getInt(2, 10);
-        
+
         //extension
         assert FileUtility.getExtension(test).equals("temp");
         assert FileUtility.getNameWithoutExtension("assad.1984.temp").equals("assad.1984");
-        
+
         //write random
         byte[] b1 = new byte[length1], b2 = new byte[length2];
         Array.random(b1);
@@ -129,7 +138,7 @@ public class UtilityTest {
         assert Arrays.equals(b1, b2) == false;
         assert FileUtility.write(test, b1);
         assert FileUtility.write(test3, b2);
-        
+
         //assert
         assert test.exists();
         byte[] br1, brr1, br2, br3, brr3;
@@ -137,7 +146,7 @@ public class UtilityTest {
         br3 = FileUtility.readAllBytes(test3);
         assert Arrays.equals(br1, b1);
         assert Arrays.equals(br3, b2);
-        
+
         //copy
         assert FileUtility.copy(test, test2);
         assert FileUtility.copy(test, test2) == false;
@@ -145,18 +154,18 @@ public class UtilityTest {
         assert test2.exists();
         brr1 = FileUtility.readAllBytes(test2);
         assert Arrays.equals(b1, brr1);
-        
+
         //replace
         assert FileUtility.replace(test, test3);
         brr3 = FileUtility.readAllBytes(test3);
         assert Arrays.equals(b1, brr3);
-        
+
         //append
         assert FileUtility.write(test, b2, true);
         br2 = FileUtility.readAllBytes(test);
         assert br2.length == (b1.length + b2.length);
-        
-        
+
+
         //end
         assert test.delete();
         assert test.exists() == false;
