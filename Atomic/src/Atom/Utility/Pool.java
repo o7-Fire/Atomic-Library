@@ -139,7 +139,8 @@ public class Pool {
     }
     
     public static int getPossibleThreadCount(ExecutorService executor) {
-        return Math.max((int) Runtime.getRuntime().maxMemory(), Math.max(1, Runtime.getRuntime().availableProcessors() - 1));
+        double ramUsagePerThread = ramUsagePerThread(executor);
+        return Math.max((int) (Runtime.getRuntime().maxMemory() / ramUsagePerThread), Math.max(1, Runtime.getRuntime().availableProcessors() - 1));
     }
     
     public static void main(String[] args) {
