@@ -1,5 +1,8 @@
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+java {
+    // Java 8 is no longer supported; Gradle 9 and this library require Java 17+.
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 dependencies {
     compileOnly(group: 'org.reflections', name: 'reflections', version: '0.9.12')
     compileOnly(group: 'com.google.code.gson', name: 'gson', version: '2.8.7')
@@ -12,7 +15,7 @@ dependencies {
 }
 
 jar{
-    archiveFileName = "${project.archivesBaseName}.jar"
+    archiveFileName = "${project.name}.jar"
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }

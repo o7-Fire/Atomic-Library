@@ -1,5 +1,7 @@
-sourceCompatibility = 9
-targetCompatibility = 9
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 repositories {
     mavenCentral()
 }
@@ -23,7 +25,7 @@ dependencies {
     }
 }
 jar{
-    archiveFileName = "${project.archivesBaseName}.jar"
+    archiveFileName = "${project.name}.jar"
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }

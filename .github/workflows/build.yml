@@ -11,8 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Atomic targets Java 8; Desktop is only included on Java 9+ by settings.gradle.
-        version: [8, 17, 25]
+        version: [17, 25]
     name: Build & Test Java ${{ matrix.version }}
     runs-on: ubuntu-latest
     steps:

@@ -12,7 +12,10 @@ import java.util.Map;
 import static Atom.Reflect.Reflect.findDeclaredField;
 
 public class FieldTool {
-    //lol java 8 only
+    /**
+     * @deprecated only works on Java 8; since Java 12 access to {@code Field.modifiers} is blocked by the module system.
+     */
+    @Deprecated
     public static void setFinalStatic(Field field, Object newValue) throws Exception {
         field.setAccessible(true);
         Field modifiersField = Field.class.getDeclaredField("modifiers");

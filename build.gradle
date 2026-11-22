@@ -132,6 +132,7 @@ subprojects {
         compileOnly( group: 'org.jetbrains', name: 'annotations', version: '22.0.0')
         testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
         testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+        testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.7.2'
     }
     ext {
         smh = {
@@ -155,7 +156,7 @@ subprojects {
     }
 
     task sourcesJar(type: Jar, dependsOn: classes) {
-        classifier = 'sources'
+        archiveClassifier.set('sources')
         from sourceSets.main.allSource
     }
     artifacts {
@@ -182,7 +183,7 @@ subprojects {
     }
 
 }
-configure(((JavaVersion.current() > JavaVersion.VERSION_1_9) ? [":Atomic", ":Desktop"] : [":Atomic"]).collect{project(it)}){
+configure([":Atomic", ":Desktop"].collect{project(it)}){
     java{
         withJavadocJar()
         withSourcesJar()

@@ -588,19 +588,9 @@ public class Reflect {
         return a;
     }
 
-    /**
-     * Returns the packages defined by a class loader. {@code ClassLoader.getDefinedPackages()} is public from Java 9 onward;
-     * on Java 8 the internal {@code packages} field is the only option.
-     */
+    /** Returns the packages defined by a class loader. */
     public static Package[] getDefinedPackages(ClassLoader classLoader) {
-        try {
-            Object result = ClassLoader.class.getMethod("getDefinedPackages").invoke(classLoader);
-            if (result instanceof Package[]) return (Package[]) result;
-        }catch (ReflectiveOperationException ignored) {
-            // Java 8 has no public API for this.
-        }
-        Package[] legacy = (Package[]) getField(ClassLoader.class, "getPackages", classLoader);
-        return legacy == null ? new Package[0] : legacy;
+        return classLoader.getDefinedPackages();
     }
 
     /** Finds every class under a package with the given class loader. */
