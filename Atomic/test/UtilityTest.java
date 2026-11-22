@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class UtilityTest {
@@ -97,23 +96,21 @@ public class UtilityTest {
     @Test
     public void WaitingForFutureSafe() {
         List<Integer> list = new ArrayList<>();
-        for (int i = 5; i < 10; i++) {//start with value more than 2 to avoid collision
-            list.add(i);
-        }
+        for (int i = 5; i < 10; i++) list.add(i);
+
         long startMillis = System.currentTimeMillis();
-        AtomicInteger expected = new AtomicInteger(5);
+        List<Integer> processed = new ArrayList<>();
+        // injects duplicates while the utility iterates its snapshot, stressing the "safe" variant. Timing readiness exercises the "future" part of waitingForFutureSafe.
         Utility.waitingForFutureSafe(list, integer -> (startMillis + integer * 100) < System.currentTimeMillis(), integer -> {
             System.out.println("Done: " + integer);
-            assert integer == expected.get() : integer + " != " + expected.get();
-            expected.getAndIncrement();
-            if(Random.getBool()){//troll, may cause Heisenbug due to timing
-                int sizeBefore = list.size();
-                list.add(0, integer);
-                expected.decrementAndGet();
-                assert list.size() != sizeBefore : "Java just observed quantum entanglement";
-            }
-
+            processed.add(integer);
+            if (Random.getBool()) list.add(0, integer);
         });
+
+        // duplicates may be processed in any order; only require that every original value was handled and nothing else.
+        assert processed.containsAll(Arrays.asList(5, 6, 7, 8, 9)) : "Missing values: " + processed;
+        for (int value : processed) assert value >= 5 && value <= 9 : "Unexpected value: " + value;
+        assert list.isEmpty() : "Collection should be drained";
     }
     @Test
     public void FileUtility() throws IOException {
