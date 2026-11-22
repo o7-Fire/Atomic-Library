@@ -5,8 +5,23 @@ import Atom.Utility.Random;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Matrix {
+    private static final Set<Class<?>> MATRIX_TYPES = new HashSet<>(Arrays.asList(
+            char.class, Character.class, boolean.class, Boolean.class,
+            int.class, Integer.class, long.class, Long.class,
+            double.class, Double.class, float.class, Float.class,
+            short.class, Short.class, byte.class, Byte.class));
+    
+    private static void checkMatrixType(Class<?> type) {
+        if (type == null || !MATRIX_TYPES.contains(type)) {
+            // Keep the legacy message; Reflect's fuzzer uses it to ignore unsupported random Class parameters.
+            throw new IllegalArgumentException("Not a primitive: " + (type == null ? null : type.getClass()));
+        }
+    }
+
     public static boolean[][] randomBoolean() {
         return randomBoolean(Random.getInt(1, 12));
     }
@@ -225,47 +240,16 @@ public class Matrix {
         return list.toArray(arr[0]);
     }
     
-    //TODO automate this reptitive shit or just copy paste idk
     @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static Object[] makeTensor(Class<?> type, int x, int y, int z) {
-        if (type == char.class || type == Character.class) if (type.isPrimitive()) return new char[x][y][z];
-        else return new Character[x][y][z];
-        if (type == boolean.class || type == Boolean.class) if (type.isPrimitive()) return new boolean[x][y][z];
-        else return new Boolean[x][y][z];
-        if (type == int.class || type == Integer.class) if (type.isPrimitive()) return new int[x][y][z];
-        else return new Integer[x][y][z];
-        if (type == long.class || type == Long.class) if (type.isPrimitive()) return new long[x][y][z];
-        else return new Long[x][y][z];
-        if (type == double.class || type == Double.class) if (type.isPrimitive()) return new double[x][y][z];
-        else return new Double[x][y][z];
-        if (type == float.class || type == Float.class) if (type.isPrimitive()) return new float[x][y][z];
-        else return new Float[x][y][z];
-        if (type == short.class || type == Short.class) if (type.isPrimitive()) return new short[x][y][z];
-        else return new Short[x][y][z];
-        if (type == byte.class || type == Byte.class) if (type.isPrimitive()) return new byte[x][y][z];
-        else return new Byte[x][y][z];
-        throw new IllegalArgumentException("Not a primitive: " + type.getClass());
+        checkMatrixType(type);
+        return (Object[]) java.lang.reflect.Array.newInstance(type, x, y, z);
     }
     
     @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)
     public static Object[] makeMatrix(Class<?> type, int x, int y) {
-        if (type == char.class || type == Character.class) if (type.isPrimitive()) return new char[x][y];
-        else return new Character[x][y];
-        if (type == boolean.class || type == Boolean.class) if (type.isPrimitive()) return new boolean[x][y];
-        else return new Boolean[x][y];
-        if (type == int.class || type == Integer.class) if (type.isPrimitive()) return new int[x][y];
-        else return new Integer[x][y];
-        if (type == long.class || type == Long.class) if (type.isPrimitive()) return new long[x][y];
-        else return new Long[x][y];
-        if (type == double.class || type == Double.class) if (type.isPrimitive()) return new double[x][y];
-        else return new Double[x][y];
-        if (type == float.class || type == Float.class) if (type.isPrimitive()) return new float[x][y];
-        else return new Float[x][y];
-        if (type == short.class || type == Short.class) if (type.isPrimitive()) return new short[x][y];
-        else return new Short[x][y];
-        if (type == byte.class || type == Byte.class) if (type.isPrimitive()) return new byte[x][y];
-        else return new Byte[x][y];
-        throw new IllegalArgumentException("Not a primitive: " + type.getClass());
+        checkMatrixType(type);
+        return (Object[]) java.lang.reflect.Array.newInstance(type, x, y);
     }
     
     @MethodFuzzer(maxLong = 10, minLong = 1, minInteger = 1, maxInteger = 10)

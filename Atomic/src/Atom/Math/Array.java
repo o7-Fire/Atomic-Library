@@ -4,6 +4,9 @@ import Atom.Annotation.MethodFuzzer;
 import Atom.Utility.Random;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.Set;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unchecked")
@@ -18,10 +21,16 @@ public class Array {
             random((Object[]) arr);
         }
     }
-    
-    //TODO add anti dejaVu
+
+    //randomize every element so no infinite recursion
     public static void random(Object[] arr) {
+        random(arr, Collections.newSetFromMap(new IdentityHashMap<Object, Boolean>()));
+    }
+    
+    private static void random(Object[] arr, Set<Object> visited) {
+        if (!visited.add(arr)) return;
         for (Object element : arr) {
+            if (element == null) continue;
             Class<?> eClass = element.getClass();
             if (eClass == byte[].class) random((byte[]) element);
             else if (eClass == short[].class) random((short[]) element);
@@ -31,9 +40,8 @@ public class Array {
             else if (eClass == float[].class) random((float[]) element);
             else if (eClass == double[].class) random((double[]) element);
             else if (eClass == boolean[].class) random((boolean[]) element);
-            else random((Object[]) element);
+            else if (element instanceof Object[]) random((Object[]) element, visited);
         }
-    
     }
     
     

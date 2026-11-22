@@ -58,6 +58,11 @@ subprojects {
     apply plugin: 'jacoco'
     apply plugin: 'maven-publish'
 
+    // JaCoCo 0.8.14+ is required to instrument Java 25 classes (major version 69).
+    jacoco {
+        toolVersion = project.findProperty('jacocoVersion') ?: '0.8.16'
+    }
+
     group 'org.o7.Fire'
     version '5.0'
     /*
@@ -70,7 +75,9 @@ subprojects {
 
     jacocoTestReport {
         reports {
-            xml.enabled true
+            // Gradle 7.4+ uses `required`; the old `enabled` property is deprecated.
+            xml.required.set(true)
+            html.required.set(true)
         }
     }
     test {
@@ -116,6 +123,12 @@ subprojects {
         }
     }
     dependencies {
+        // Mindustry ships Arc; mods compile against the exact v8 revision the game uses.
+        // `compileOnly` keeps Arc out of the published artifacts so the game remains the single provider.
+        def arcCore = "com.github.Anuken.Arc:arc-core:${project.findProperty('arcHash') ?: '7445105cd2'}"
+        compileOnly arcCore
+        testImplementation arcCore
+
         compileOnly( group: 'org.jetbrains', name: 'annotations', version: '22.0.0')
         testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
         testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'

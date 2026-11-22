@@ -12,10 +12,19 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * A pool of objects that can be reused to avoid allocation.
+ *
+ * <p>Behavior matches Arc v8's {@code arc.util.pooling.Pool}: objects are popped from the end of the free list (O(1)), the
+ * maximum only limits how many objects are stored (objects are still reset when the pool is full), and {@link #peak} is public.
+ */
+@SuppressWarnings("unchecked")
 public abstract class PoolObject<T> implements ObjectPoolPattern<T> {
+    /** The maximum number of objects that will be pooled. */
     protected final int max;
     public static final Map<Class<?>, PoolObject<?>> pools = Collections.synchronizedMap(new HashMap<>());
-    protected int peak;
+    /** The highest number of free objects. Can be reset any time. */
+    public int peak;
     protected final List<T> freeObjects;
     
     public static <E> PoolObject<E> getPool(Class<E> eClass) {
@@ -24,11 +33,11 @@ public abstract class PoolObject<T> implements ObjectPoolPattern<T> {
     }
     
     public PoolObject() {
-        this(16, 2147483647);
+        this(16, Integer.MAX_VALUE);
     }
     
     public PoolObject(int initialCapacity) {
-        this(initialCapacity, 2147483647);
+        this(initialCapacity, Integer.MAX_VALUE);
     }
     
     public PoolObject(int initialCapacity, int max) {
@@ -80,7 +89,7 @@ public abstract class PoolObject<T> implements ObjectPoolPattern<T> {
     protected abstract T newObject();
     
     public T obtain() {
-        T that = this.freeObjects.size() == 0 ? this.newObject() : this.freeObjects.remove(0);
+        T that = this.freeObjects.isEmpty() ? this.newObject() : this.freeObjects.remove(this.freeObjects.size() - 1);
         if (that == null) {
             that = this.newObject();
         }
@@ -88,27 +97,28 @@ public abstract class PoolObject<T> implements ObjectPoolPattern<T> {
     }
     
     /**
-     * Return to list or ignore if the list is full
+     * Return to list or ignore if the list is full. The object is always reset, even when it is not stored.
      */
     public void free(T object) {
-        if (object == null){
+        if (object == null) {
             throw new IllegalArgumentException("object cannot be null.");
-        }else {
-            if (this.freeObjects.size() < this.max) {
-                this.freeObjects.add(object);
-                this.peak = Math.max(this.peak, this.freeObjects.size());
-                this.reset(object);
-            }
-
-
         }
+        if (this.freeObjects.size() < this.max) {
+            this.freeObjects.add(object);
+            this.peak = Math.max(this.peak, this.freeObjects.size());
+        }
+        this.reset(object);
+    }
+    
+    /** Arc v8 compatible alias for {@link #free(Iterable)}. */
+    public void freeAll(Iterable<T> objects) {
+        free(objects);
     }
     
     protected void reset(T object) {
         if (object instanceof Object) {
             ((Object) object).reset();
         }
-    
     }
     
     
@@ -137,6 +147,12 @@ public abstract class PoolObject<T> implements ObjectPoolPattern<T> {
     }
     
     public interface Object {
+        void reset();
+    }
+    
+    /** Arc v8 compatible name for a resettable pooled object. */
+    public interface Poolable extends Object {
+        @Override
         void reset();
     }
 }

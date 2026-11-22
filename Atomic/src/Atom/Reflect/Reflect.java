@@ -9,6 +9,9 @@ import Atom.String.WordGenerator;
 import Atom.Struct.Filter;
 import Atom.Struct.FunctionalPoolObject;
 import Atom.Utility.Random;
+import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.util.ConfigurationBuilder;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -580,10 +583,39 @@ public class Reflect {
     
     public static ArrayList<Package> findPackages(Filter<Package> filter, ClassLoader classLoader) {
         ArrayList<Package> a = new ArrayList<>();
-        for (Package p : (Package[]) getField(ClassLoader.class, "getPackages", classLoader))
+        for (Package p : getDefinedPackages(classLoader))
             if (filter.accept(p)) a.add(p);
         return a;
     }
-    //TODO complete this
-    
+
+    /**
+     * Returns the packages defined by a class loader. {@code ClassLoader.getDefinedPackages()} is public from Java 9 onward;
+     * on Java 8 the internal {@code packages} field is the only option.
+     */
+    public static Package[] getDefinedPackages(ClassLoader classLoader) {
+        try {
+            Object result = ClassLoader.class.getMethod("getDefinedPackages").invoke(classLoader);
+            if (result instanceof Package[]) return (Package[]) result;
+        }catch (ReflectiveOperationException ignored) {
+            // Java 8 has no public API for this.
+        }
+        Package[] legacy = (Package[]) getField(ClassLoader.class, "getPackages", classLoader);
+        return legacy == null ? new Package[0] : legacy;
+    }
+
+    /** Finds every class under a package with the given class loader. */
+    public static Set<Class<?>> findClasses(String packageName, ClassLoader classLoader) {
+        try {
+            ConfigurationBuilder config = new ConfigurationBuilder();
+            config.forPackages(packageName);
+            config.setClassLoaders(new ClassLoader[]{classLoader});
+            // The default scanner omits Object, so include it to get every scanned class.
+            config.setScanners(new SubTypesScanner(false));
+            return new Reflections(config).getSubTypesOf(Object.class);
+        }catch (Throwable ignored) {
+            // The optional reflections dependency or the scanned classpath may be unavailable.
+            return new HashSet<>();
+        }
+    }
+
 }

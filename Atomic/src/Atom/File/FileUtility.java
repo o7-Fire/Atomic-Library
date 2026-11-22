@@ -74,27 +74,11 @@ public class FileUtility {
         return f;
     }
 
-    //TODO fix this and get actual current working dir instead user data dir
     public static File getCurrentWorkingDir() {
-        File f;
-        try {
-            f = new File(System.getProperty("user.dir"));
-            if (!f.exists()) throw new RuntimeException("no u");
-        } catch (Throwable ignored) {
-            try {
-                f = new File(getAppdata(), "Atomic/");
-                if (!f.exists()) throw new RuntimeException("no u");
-            } catch (Throwable ignoreds) {
-                try {
-                    f = new File(getTempDir(), "Atomic/");
-                    if (!f.exists()) throw new RuntimeException("no u");
-                }catch (Throwable i) {
-                    f = new File("Atomic/");
-                    //gave up already
-                }
-            }
-        }
-        return f;
+        File cwd = cwd();
+        if (cwd.isDirectory()) return cwd;
+        File temp = new File(System.getProperty("java.io.tmpdir", "."));
+        return temp.isDirectory() ? temp : new File(".").getAbsoluteFile();
     }
     
     public static File getTempDir() {

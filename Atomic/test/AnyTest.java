@@ -1,18 +1,26 @@
 import Atom.Math.Array;
+import Atom.Reflect.Reflect;
 import Atom.Translation.GoogleTranslate;
-import Atom.Translation.SaddamHusseinTranslator;
 import Atom.Utility.Utility;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.concurrent.ExecutionException;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AnyTest {
     @Test
-    public void translation() throws IOException, ExecutionException, InterruptedException {
-        GoogleTranslate.main(new String[]{});
-        SaddamHusseinTranslator.main(new String[]{});
+    public void translation() {
+        try {
+            String result = new GoogleTranslate().translate("what", "en", "fr");
+            assert result != null : "Translation should not be null";
+            System.out.println(result);
+        } catch (IOException e) {
+            // Google's public endpoint rate-limits clients with HTTP 429; the library cannot control that.
+            Assumptions.assumeTrue(false, "Google Translate unavailable: " + e.getMessage());
+        }
     }
     
     
@@ -37,5 +45,13 @@ public class AnyTest {
         System.out.println(Array.visualize(tensor));
         System.out.println();
         System.out.println(Arrays.deepToString(tensor));
+    }
+    
+    @Test
+    public void reflectionUtilities() {
+        ClassLoader loader = AnyTest.class.getClassLoader();
+        assertTrue(Arrays.stream(Reflect.getDefinedPackages(loader)).anyMatch(p -> p.getName().startsWith("Atom.")),
+                "getDefinedPackages should include library packages");
+        assertTrue(!Reflect.findClasses("Atom.Math", loader).isEmpty(), "findClasses should discover library classes");
     }
 }

@@ -1,5 +1,6 @@
 package Atom.Noise;
 
+import Atom.Math.Meth;
 import Atom.Utility.Random;
 
 /**
@@ -131,8 +132,8 @@ public class PerlinNoisePrime implements Noise {
 	private double getValue(double x, double y) {
 		int Xint = (int) x;
 		int Yint = (int) y;
-		double Xfrac = x - Xint;
-		double Yfrac = y - Yint;
+		double Xfrac = Meth.clamp(x - Xint, 0.0, 1.0);
+		double Yfrac = Meth.clamp(y - Yint, 0.0, 1.0);
 		
 		// noise values
 		double n01 = noise(Xint - 1, Yint - 1);
@@ -190,7 +191,8 @@ public class PerlinNoisePrime implements Noise {
 	
 	@Override
 	public double noise(double x, double y) {
-		return getHeight(x, y);
+		// The Noise contract is normalized output; accumulated floating-point error can push a value a few ulps past 1.
+		return Meth.clamp(getHeight(x, y), -1.0, 1.0);
 	}
 	
 	
