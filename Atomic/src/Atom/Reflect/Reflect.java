@@ -44,7 +44,7 @@ public class Reflect {
         String osName = System.getProperty("os.name", "").toLowerCase();
         String osArch = System.getProperty("os.arch", "").toLowerCase();
         String abiType = System.getProperty("sun.arch.abi", "").toLowerCase();
-        String libPath = System.getProperty("sun.boot.library.path", "").toLowerCase();
+        String libPath = System.getProperty("java.library.path", "").toLowerCase();
         if (jvmName.startsWith("dalvik") && osName.startsWith("linux")){
             osName = "android";
         }else if (jvmName.startsWith("robovm") && osName.startsWith("darwin")){

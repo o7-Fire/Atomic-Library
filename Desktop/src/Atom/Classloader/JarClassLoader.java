@@ -2,7 +2,6 @@ package Atom.Classloader;
 
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLStreamHandlerFactory;
@@ -53,15 +52,11 @@ public class JarClassLoader extends URLClassLoader {
 	}
 	
 	protected Class<?> bootstrapFindClass(String name) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-		Method method = ClassLoader.class.getDeclaredMethod("findBootstrapClassOrNull", String.class);
-		method.setAccessible(true);
-		return (Class<?>) method.invoke(getParent(), new Object[]{name});
+		return Class.forName(name, false, null);
 	}
 	
 	protected Class<?> parentLoadClass(String name, boolean resolve) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-		Method method = ClassLoader.class.getDeclaredMethod("loadClass", String.class, boolean.class);
-		method.setAccessible(true);
-		return (Class<?>) method.invoke(getParent(), new Object[]{name, resolve});
+		return Class.forName(name, resolve, getParent());
 	}
 	
 	//why im doing this

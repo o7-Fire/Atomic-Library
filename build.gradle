@@ -181,6 +181,9 @@ subprojects {
         options.encoding = "UTF-8"
 
     }
+    tasks.withType(Javadoc) {
+        options.encoding = "UTF-8"
+    }
 
 }
 configure([":Atomic", ":Desktop"].collect{project(it)}){

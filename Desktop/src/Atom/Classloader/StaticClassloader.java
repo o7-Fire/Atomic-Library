@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -15,21 +14,15 @@ import java.util.zip.ZipInputStream;
 
 //that a lot of exception
 public class StaticClassloader {
+	private static final URLClassLoader systemClassLoader = new JarClassLoader(ClassLoader.getSystemClassLoader());
 	
 	//totally legit interface for modified and non modified URLClassloader
 	public static Package[] getPackages() throws IllegalAccessException {
-		return getPackages(getURLSystemCl());
+		return ClassLoader.getSystemClassLoader().getDefinedPackages();
 	}
 	
 	public static Package[] getPackages(URLClassLoader loader) {
-		
-		try {
-			java.lang.reflect.Method method = ClassLoader.class.getDeclaredMethod("getPackages");
-			method.setAccessible(true);
-			return (Package[]) method.invoke(loader, new Object[0]);
-		}catch (Throwable ignored) {
-		}
-		return Package.getPackages();
+		return loader.getDefinedPackages();
 	}
 	
 	public static void addURL(URL url) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
@@ -69,17 +62,6 @@ public class StaticClassloader {
 				classNames.add(className.substring(0, className.length() - ".class".length()));
 			}
 		}
-		try {
-			Method method = ClassLoader.class.getDeclaredMethod("loadClass", String.class, boolean.class);
-			method.setAccessible(true);
-			for (String s : classNames) {
-				if (s.equals("module-info")) continue;
-				method.invoke(loader, s, true);
-			}
-			return;
-		}catch (Throwable ignored) {
-		}
-		
 		for (String s : classNames) {
 			if (s.equals("module-info")) continue;
 			loader.loadClass(s);
@@ -96,15 +78,16 @@ public class StaticClassloader {
 	
 	public static void addURL(URLClassLoader loader, URL url) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
 		if (isAlreadyLoaded(loader, url)) return;
-		
-		java.lang.reflect.Method method = java.net.URLClassLoader.class.getDeclaredMethod("addURL", java.net.URL.class);
-		method.setAccessible(true);
-		method.invoke(loader, url);
+		if (loader instanceof AtomClassLoader) {
+			((AtomClassLoader) loader).addURL(url);
+		}else if (loader instanceof JarClassLoader) {
+			((JarClassLoader) loader).addURL(url);
+		}else {
+			throw new IllegalAccessException("Cannot add URL to " + loader.getClass().getName() + "; use AtomClassLoader");
+		}
 	}
 	
 	public static URLClassLoader getURLSystemCl() throws IllegalAccessException {
-		if (!(ClassLoader.getSystemClassLoader() instanceof URLClassLoader))
-			throw new IllegalAccessException("system classloader is not URLClassloader");
-		return (URLClassLoader) ClassLoader.getSystemClassLoader();
+		return systemClassLoader;
 	}
 }
